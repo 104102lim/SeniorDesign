@@ -2,17 +2,6 @@ import pyodbc
 import pandas as pd
 import numpy as np
 
-DUMMY = False
-
-#connect to sql server
-def connect():
-    if DUMMY:
-        cnxn = pyodbc.connect("DRIVER={SQL Server}; SERVER=MYPC\SQLEXPRESS; DATABASE=RiskReduction; UID = SQLDummy; PWD = bushdid9/11")
-    else:
-        cnxn = pyodbc.connect("DRIVER={SQL Server}; SERVER=MYPC\SQLEXPRESS; DATABASE=BHBackupRestore; UID = SQLDummy; PWD = bushdid9/11")
-    cursor = cnxn.cursor()
-    return cursor
-
 def mergeFrames(frames, keys, framesToMerge):
     for mergeToIdx in range(1, len(framesToMerge)):
         mergeFromIdx = framesToMerge[0]
@@ -26,27 +15,6 @@ def mergeFrames(frames, keys, framesToMerge):
                             frames[mergeToIdx].set_value(idxTo, col, frames[mergeFromIdx].loc[idxFrm][col])
     del frames[mergeFromIdx]
     del keys[mergeFromIdx]
-
-def getFrames(tableNames, cursor):
-    frames = []
-    for name in tableNames:
-        cursor.execute('SELECT * FROM [dbo].[' + name + ']');
-        table = cursor.fetchall()
-        columns = [column[0] for column in cursor.description]
-        dictArr = []
-        for row in table:
-            entry = {}
-            for col in columns:
-                entry[columns.index(col)] = row[columns.index(col)]
-            dictArr.append(entry)
-        frame = pd.DataFrame(dictArr)
-        if len(frame.columns) == 0:
-            for col in columns:
-                frame[col] = [None]
-        else:
-            frame.columns = columns
-        frames.append(frame)
-    return frames
  
 def idFramesToMerge(frames, keys):
     ret = []
@@ -68,31 +36,60 @@ def idFramesToMerge(frames, keys):
                 break
     return ret
  
-# 
+#connect to sql server
+def connect():
+    cnxn = pyodbc.connect("DRIVER={SQL Server}; SERVER=MYPC\SQLEXPRESS; DATABASE=BHBackupRestore; UID = SQLDummy; PWD = bushdid9/11")
+    cursor = cnxn.cursor()
+    return cursor
+ 
 def getTableNames():
-    if DUMMY:
-        tbNamesDf = pd.read_csv('RiskReduction.csv')
-    else:
-        tbNamesDf = pd.read_csv('FilteredDictionary.csv')
+    tbNamesDf = pd.read_csv('FilteredDictionary.csv')
     tableNames = []
     for index, row in tbNamesDf.iterrows():
         tableNames.append(row[0])
     return tableNames
 
-def getKeys(frames):
-    keys = []
-    for frame in frames:
-        keys.append(frame.columns[0])
+def getFrames(tableNames, cursor):
+    frames = []
+    for name in tableNames:
+        cursor.execute('SELECT * FROM [dbo].[' + name + ']');
+        table = cursor.fetchall()
+        columns = [column[0] for column in cursor.description]
+        dictArr = []
+        for row in table:
+            entry = {}
+            for col in columns:
+                entry[columns.index(col)] = row[columns.index(col)]
+            dictArr.append(entry)
+        frame = pd.DataFrame(dictArr)
+        if len(frame.columns) == 0:
+            for col in columns:
+                frame[col] = [None]
+        else:
+            frame.columns = columns
+        frames.append(frame)
+    return frames
+
+def getKeys(tableNames, cursor):
+    keys = {}
+    for name in tableNames:
+        #cursor.getname
+        #add name to list key[name] = ...
     return keys
 
-cursor = connect()
-tableNames = getTableNames()
-frames = getFrames(tableNames, cursor)
-keys = getKeys(frames)
-while len(keys) > 1:
-    framesToMerge = idFramesToMerge(frames, keys)
-    mergeFrames(frames, keys, framesToMerge)  
-print(frames)
+########## main ##########
+if __name__ == "__main__":
+    cursor = connect()
+    tableNames = getTableNames()
+    frames = getFrames(tableNames, cursor)
+    keys = getKeys(tableNames, cursor)
+    print(keys)
+
+
+#while len(keys) > 1:
+#    framesToMerge = idFramesToMerge(frames, keys)
+#    mergeFrames(frames, keys, framesToMerge)  
+#print(frames)
    
 
 
