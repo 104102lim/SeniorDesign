@@ -36,6 +36,8 @@ def idFramesToMerge(frames, keys):
                 break
     return ret
  
+    
+
 #connect to sql server
 def connect():
     cnxn = pyodbc.connect("DRIVER={SQL Server}; SERVER=MYPC\SQLEXPRESS; DATABASE=BHBackupRestore; UID = SQLDummy; PWD = bushdid9/11")
@@ -73,8 +75,19 @@ def getFrames(tableNames, cursor):
 def getKeys(tableNames, cursor):
     keys = {}
     for name in tableNames:
-        #cursor.getname
-        #add name to list key[name] = ...
+        cursor.execute("SELECT Col.Column_Name from " +  
+                           "INFORMATION_SCHEMA.TABLE_CONSTRAINTS Tab, " +
+                           "INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE Col " + 
+                       "WHERE " +
+                           "Col.Constraint_Name = Tab.Constraint_Name " +
+                           "AND Col.Table_Name = Tab.Table_Name " + 
+                           "AND Constraint_Type = 'PRIMARY KEY' " +
+                           "AND Col.Table_Name = '" + name + "'")
+        table = cursor.fetchall()
+        tableKeys = []
+        for key in table:
+            tableKeys.append(key[0])
+        keys[name] = tableKeys
     return keys
 
 ########## main ##########
