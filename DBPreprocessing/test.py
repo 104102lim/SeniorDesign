@@ -1,6 +1,10 @@
+#Indexed in dictionary by table name:
+#    All paths from table to the origin
+#    All features in the table
+#    
+#The common index for two or more tables will be the primary key of the first common ancestor between all tables
+
 import pyodbc
-import pandas as pd
-import numpy as np
 
 cnxn = pyodbc.connect("DRIVER={SQL Server}; SERVER=MYPC\SQLEXPRESS; DATABASE=BHBackupRestore; UID = SQLDummy; PWD = bushdid9/11")
 cursor = cnxn.cursor()
