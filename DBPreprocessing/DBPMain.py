@@ -1,42 +1,6 @@
 import pyodbc
 import pandas as pd
-import numpy as np
-
-def mergeFrames(frames, keys, framesToMerge):
-    for mergeToIdx in range(1, len(framesToMerge)):
-        mergeFromIdx = framesToMerge[0]
-        #create new columns
-        for col in frames[mergeFromIdx].columns.values:
-            if col != keys[mergeFromIdx]:
-                frames[mergeToIdx][col] = np.nan
-                for idxTo in range(len(frames[mergeToIdx].index)):
-                    for idxFrm in range(len(frames[mergeFromIdx].index)):
-                        if frames[mergeToIdx].loc[idxTo][keys[mergeFromIdx]] == frames[mergeFromIdx].loc[idxFrm][keys[mergeFromIdx]]:
-                            frames[mergeToIdx].set_value(idxTo, col, frames[mergeFromIdx].loc[idxFrm][col])
-    del frames[mergeFromIdx]
-    del keys[mergeFromIdx]
- 
-def idFramesToMerge(frames, keys):
-    ret = []
-    for idx in range(len(frames)): 
-        commonKeys = []
-        for col in list(frames[idx].columns.values):
-            for key in keys:
-                if key == col:
-                    commonKeys.append(key)
-        if len(commonKeys) == 1:
-            frameWithOneKey = idx
-            break
-    ret.append(frameWithOneKey)
-
-    for idx in range(len(frames)):
-        for col in list(frames[idx].columns.values):
-            if (col == commonKeys[0]) and (idx != ret[0]):
-                ret.append(idx)
-                break
-    return ret
- 
-    
+import numpy as np    
 
 #connect to sql server
 def connect():
@@ -52,7 +16,7 @@ def getTableNames():
     return tableNames
 
 def getFrames(tableNames, cursor):
-    frames = []
+    frames = {}
     for name in tableNames:
         cursor.execute('SELECT * FROM [dbo].[' + name + ']');
         table = cursor.fetchall()
@@ -69,7 +33,7 @@ def getFrames(tableNames, cursor):
                 frame[col] = [None]
         else:
             frame.columns = columns
-        frames.append(frame)
+        frames[name] = frame
     return frames
 
 def getKeys(tableNames, cursor):
@@ -90,13 +54,62 @@ def getKeys(tableNames, cursor):
         keys[name] = tableKeys
     return keys
 
+#broken
+def idFramesToMerge(frames, keys):
+    ret = []
+    for idx in range(len(frames)): 
+        commonKeys = []
+        for col in list(frames[idx].columns.values):
+            for key in keys:
+                if key == col:
+                    commonKeys.append(key)
+        if len(commonKeys) == 1:
+            frameWithOneKey = idx
+            break
+    ret.append(frameWithOneKey)
+
+    for idx in range(len(frames)):
+        for col in list(frames[idx].columns.values):
+            if (col == commonKeys[0]) and (idx != ret[0]):
+                ret.append(idx)
+                break
+    return ret
+
+#broken
+def mergeIDdFrames(frames, PKs, framesToMerge):
+    for mergeToIdx in range(1, len(framesToMerge)):
+        mergeFromIdx = framesToMerge[0]
+        #create new columns
+        for col in frames[mergeFromIdx].columns.values:
+            if col != keys[mergeFromIdx]:
+                frames[mergeToIdx][col] = np.nan
+                for idxTo in range(len(frames[mergeToIdx].index)):
+                    for idxFrm in range(len(frames[mergeFromIdx].index)):
+                        if frames[mergeToIdx].loc[idxTo][keys[mergeFromIdx]] == frames[mergeFromIdx].loc[idxFrm][keys[mergeFromIdx]]:
+                            frames[mergeToIdx].set_value(idxTo, col, frames[mergeFromIdx].loc[idxFrm][col])
+    del frames[mergeFromIdx]
+    del keys[mergeFromIdx]
+ 
+def mergeFrames(frames, PKs):
+    while True:
+        #first element is frame to merge into the other frames named
+        namesToMerge = idFramesToMerge(frames, PKs)
+        if namesToMerge.len() == 0:
+            break
+        #merge first named frame into all the other named frames based on matching primary key elements
+        #first named frame gets removed from frames and keys
+        mergeIDdFrames(frames, PKs, namesToMerge)
+    return frames 
+
 ########## main ##########
 if __name__ == "__main__":
     cursor = connect()
     tableNames = getTableNames()
     frames = getFrames(tableNames, cursor)
-    keys = getKeys(tableNames, cursor)
-    print(keys)
+    PKs = getKeys(tableNames, cursor)
+    finalFrames = mergeFrames(frames, PKs)
+    print(finalFrames)
+    
 
 
 #while len(keys) > 1:
