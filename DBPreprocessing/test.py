@@ -1,6 +1,6 @@
 #Indexed in dictionary by table name:
-#    All paths from table to the origin
 #    All features in the table
+#    All paths from table to the origin
 #    
 #The common index for two or more tables will be the primary key of the first common ancestor between all tables
 

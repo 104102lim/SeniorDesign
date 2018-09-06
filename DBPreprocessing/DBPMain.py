@@ -1,6 +1,19 @@
 import pyodbc
 import pandas as pd
-import numpy as np    
+import numpy as np 
+
+GETPRIMARYKEYSQLCODE = "SELECT Col.Column_Name from " +  \
+                           "INFORMATION_SCHEMA.TABLE_CONSTRAINTS Tab, " +  \
+                           "INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE Col " +  \
+                       "WHERE " +  \
+                           "Col.Constraint_Name = Tab.Constraint_Name " +  \
+                           "AND Col.Table_Name = Tab.Table_Name " +  \
+                           "AND Constraint_Type = 'PRIMARY KEY' " +  \
+                           "AND Col.Table_Name = '"
+                    
+GETFEATURESSQLCODE = "SELECT COLUMN_NAME " +  \
+                     "FROM INFORMATION_SCHEMA.COLUMNS " +  \
+                     "WHERE TABLE_NAME = '"
 
 #connect to sql server
 def connect():
@@ -54,69 +67,36 @@ def getKeys(tableNames, cursor):
         keys[name] = tableKeys
     return keys
 
-#broken
-def idFramesToMerge(frames, keys):
-    ret = []
-    for idx in range(len(frames)): 
-        commonKeys = []
-        for col in list(frames[idx].columns.values):
-            for key in keys:
-                if key == col:
-                    commonKeys.append(key)
-        if len(commonKeys) == 1:
-            frameWithOneKey = idx
-            break
-    ret.append(frameWithOneKey)
+def getFeatures(tableNames, cursor):
+    features = {}
+    for name in tableNames:
+        cursor.execute("SELECT COLUMN_NAME " +
+                       "FROM INFORMATION_SCHEMA.COLUMNS " +
+                       "WHERE TABLE_NAME = '" + name + "'")
+        table = cursor.fetchall()
+        tableFeatures = []
+        for feature in table:
+            tableFeatures.append(feature[0])
+        features[name] = tableFeatures
+    return features
 
-    for idx in range(len(frames)):
-        for col in list(frames[idx].columns.values):
-            if (col == commonKeys[0]) and (idx != ret[0]):
-                ret.append(idx)
-                break
-    return ret
-
-#broken
-def mergeIDdFrames(frames, PKs, framesToMerge):
-    for mergeToIdx in range(1, len(framesToMerge)):
-        mergeFromIdx = framesToMerge[0]
-        #create new columns
-        for col in frames[mergeFromIdx].columns.values:
-            if col != keys[mergeFromIdx]:
-                frames[mergeToIdx][col] = np.nan
-                for idxTo in range(len(frames[mergeToIdx].index)):
-                    for idxFrm in range(len(frames[mergeFromIdx].index)):
-                        if frames[mergeToIdx].loc[idxTo][keys[mergeFromIdx]] == frames[mergeFromIdx].loc[idxFrm][keys[mergeFromIdx]]:
-                            frames[mergeToIdx].set_value(idxTo, col, frames[mergeFromIdx].loc[idxFrm][col])
-    del frames[mergeFromIdx]
-    del keys[mergeFromIdx]
- 
-def mergeFrames(frames, PKs):
-    while True:
-        #first element is frame to merge into the other frames named
-        namesToMerge = idFramesToMerge(frames, PKs)
-        if namesToMerge.len() == 0:
-            break
-        #merge first named frame into all the other named frames based on matching primary key elements
-        #first named frame gets removed from frames and keys
-        mergeIDdFrames(frames, PKs, namesToMerge)
-    return frames 
+def getTableInfo(tableNames, cursor, sqlCode):
+    infoListByName = {}
+    for name in tableNames:
+        cursor.execute(sqlCode + name + "'")
+        rawInfo = cursor.fetchall()
+        infoInList = []
+        for k in rawInfo:
+            infoInList.append(k[0])
+        infoListByName[name] = infoInList
+    return infoListByName
+    
 
 ########## main ##########
 if __name__ == "__main__":
     cursor = connect()
     tableNames = getTableNames()
-    frames = getFrames(tableNames, cursor)
-    PKs = getKeys(tableNames, cursor)
-    finalFrames = mergeFrames(frames, PKs)
-    print(finalFrames)
-    
-
-
-#while len(keys) > 1:
-#    framesToMerge = idFramesToMerge(frames, keys)
-#    mergeFrames(frames, keys, framesToMerge)  
-#print(frames)
-   
-
-
- 
+    PKs = getTableInfo(tableNames, cursor, GETPRIMARYKEYSQLCODE)
+    features = getTableInfo(tableNames, cursor, GETFEATURESSQLCODE)
+    print(PKs)
+    print(features)
