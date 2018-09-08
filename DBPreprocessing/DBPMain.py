@@ -10,7 +10,9 @@ GETPRIMARYKEYSQLCODE = "SELECT Col.Column_Name from " +  \
                            "AND Col.Table_Name = Tab.Table_Name " +  \
                            "AND Constraint_Type = 'PRIMARY KEY' " +  \
                            "AND Col.Table_Name = '"
-                    
+
+GETFOREIGNKEYSQLCODE = GETPRIMARYKEYSQLCODE.replace("PRIMARY KEY", "FOREIGN KEY")
+
 GETFEATURESSQLCODE = "SELECT COLUMN_NAME " +  \
                      "FROM INFORMATION_SCHEMA.COLUMNS " +  \
                      "WHERE TABLE_NAME = '"
@@ -39,29 +41,32 @@ def getTableInfo(tableNames, cursor, sqlCode):
         infoListByName[name] = infoInList
     return infoListByName
 
-def findParentTables(tableName, tablePK, features):
+def findParentTables(tableName, tablePK, FKs):
     parentNames = []
-    for name, featureList in features.items():
-        if (tableName != name) and keyContains(tablePK, featureList):
+    for name, tableFK in FKs.items():
+        if (tableName != name) and keyContains(tablePK, tableFK):
             parentNames.append(name)
     return parentNames
 
-def keyContains(key, featureList):
+def keyContains(tablePK, tableFK):
     matches = 0
-    for k in key:
-        for feature in featureList:
-            if k == feature:
+    for p in tablePK:
+        for f in tableFK:
+            if p == f:
                 matches += 1
-    return (matches == len(key))
+    return (matches == len(tablePK))
 
+#This method is all wrong. Need to do DFS the other way where number of items preserved at each step is the cost of the step.
+#DFS should start from terminal parents instead of end at terminal parents.
 #returns dictionary indexed by table name with lists of paths from table to terminal parent 
-def createPaths(tableNames, PKs, features):
+def createPaths(tableNames, PKs, FKs):
     paths = {}
     for name in tableNames:
         pathGroup = []
         paths[name] = pathGroup
-        #@@@@@@@@GIVES KEY ERROR CHECK THAT ORIGINAL TABLE IS NOT TERMINAL TABLE@@@@@@@@
-        directParents = findParentTables(name, PKs[name], features)
+        directParents = findParentTables(name, PKs[name], FKs)
+        if len(directParents) == 0:
+            continue
         for parent in directParents:
             path = []
             path.append(parent)
@@ -71,18 +76,24 @@ def createPaths(tableNames, PKs, features):
             pathsToAdd = []
             pathToRemove = []
             for path in pathGroup:
-                nextParents = findParentTables(path[len(path) - 1], PKs[len(path) - 1], features)
+                nextParents = findParentTables(path[len(path) - 1], PKs[path[len(path) - 1]], FKs)
+                nextParentsHold = nextParents.copy()
+                for parent in nextParentsHold:
+                    if parent in path:
+                       nextParents.remove(parent)
                 if len(nextParents) != 0:
                     pathToRemove = path.copy()
                     for parent in nextParents:
-                        pathsToAdd.apend(path.copy().append(parent))
+                        addHold = path.copy()
+                        addHold.append(parent)
+                        pathsToAdd.append(addHold.copy())
                     break
             if (len(pathsToAdd) == 0) and (len(pathToRemove) == 0):
                 pathsCompleted = True
             else:
                 pathGroup.remove(pathToRemove)
                 for path in pathsToAdd:
-                    pathGroup.append(path)
+                    pathGroup.append(path.copy())
         paths[name] = pathGroup
     return paths
 
@@ -91,9 +102,7 @@ if __name__ == "__main__":
     cursor = connect()
     tableNames = getTableNames()
     PKs = getTableInfo(tableNames, cursor, GETPRIMARYKEYSQLCODE)
+    FKs = getTableInfo(tableNames, cursor, GETFOREIGNKEYSQLCODE)
     features = getTableInfo(tableNames, cursor, GETFEATURESSQLCODE)
-    print(createPaths(tableNames, PKs, features))
-    
-#    for name in tableNames:
-#        print(findParentTables(name, PKs[name], features))
-#        print()
+    allPaths = createPaths(tableNames, PKs, FKs)
+    print()
