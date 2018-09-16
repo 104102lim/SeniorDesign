@@ -22,7 +22,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 # 1. DATA PROCESSING MODULE CONNECTION
 #    GUI MODULE CONNECTION
 # Needs to connect local or remote SQL Database here
-# Also, needs to GUI Module here
+# Also, needs to GUI Module Connection here
 # (NOT UPDATED - NEEDS TO BE CHANGED
 #-----------------------------------------------------------------------
 
