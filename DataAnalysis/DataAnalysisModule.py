@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 """
+-----------------------------------------------------------------------
   DataAnalysisModule.py
-  Data Analysis Module for Software Applcation
-  09/15/2018
+  : Data Analysis Module for Software Applcation
+  Author: Sungho Lim, Joey Gallardo
+  09/16/2018
+-----------------------------------------------------------------------
 """
+
 
 #-----------------------------------------------------------------------
 # 0. NECESSARY LIBRARY
@@ -19,11 +23,11 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 
 #-----------------------------------------------------------------------
-# 1. DATA PROCESSING MODULE CONNECTION
-#    GUI MODULE CONNECTION
+# 1. (I) DATA PROCESSING MODULE CONNECTION
+#    (II) GUI MODULE CONNECTION
 # Needs to connect local or remote SQL Database here
 # Also, needs to GUI Module Connection here
-# (NOT UPDATED - NEEDS TO BE CHANGED
+# (**NOT UPDATED - NEEDS TO BE CHANGED)
 #-----------------------------------------------------------------------
 
 def connect():
@@ -110,17 +114,21 @@ while len(keys) > 1:
 #-----------------------------------------------------------------------
 # INPUTS FROM GUI:
 # 1) Feature Selection (2 or 3)
-# 2) Regression Type - Linear Regression, Ridge Regression, Lasso Regression, Gradient Boosting, ...
-# 3) Threshold - From x1 to x2 something
+# 2) Regression Type - Linear Regression, Ridge Regression, Lasso Regression, Gradient Boosting, Neural Network if time permits
+# 3) Threshold - property, logic operator, text values
 # 4) Excel (.csv) Option
-# (NEEDS TO THINK ABOUT HOW TO GET INPUTS FROM GUI MODULE)
+#
+# (**NEEDS TO THINK ABOUT HOW TO GET INPUTS FROM GUI MODULE)
+# (**NOT UPDATED - NEEDS TO BE CHANGED)
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 # OUTPUTS TO GUI:
 # 1) Visualization (2D or 3D)
-# 2) Indicators - R^2, y-intercept, MSE, ...
+# 2) Indicators - R^2, y-intercept, MSE, Cross Validation (CV)
 # 3) Optional .csv
-# (NEEDS TO THINK ABOUT HOW TO SEND OUTPUTS TO GUI MODULE)
+#
+# (**NEEDS TO THINK ABOUT HOW TO SEND OUTPUTS TO GUI MODULE)
+# (**NOT UPDATED - NEEDS TO BE CHANGED)
 #-----------------------------------------------------------------------
 
     
@@ -193,7 +201,7 @@ threshold = int(input("Enter threshold: "))
 
 print "\n" + firstFeature + " vs. " + secondFeature
        
-# 1. get filtered two features
+# 1. get filtered two features (needs to provide more threshold options)
 mean_x = np.mean(dataset[firstFeature])
 mean_y = np.mean(dataset[secondFeature])
 # first feature
@@ -205,7 +213,7 @@ for k in range(0, len(dataset[secondFeature])):
     if dataset[secondFeature][k] < threshold:
         dataset[secondFeature][k] = mean_y
             
-# 2. do linear regression
+# 2. linear regression (needs to provide more regression options)
 train_x = dataset[firstFeature].reshape(-1, 1)
 train_y = dataset[secondFeature]
 
@@ -214,7 +222,7 @@ linearRegression.fit(train_x, train_y)
 
 pred_y = linearRegression.predict(train_x)
 
-# 3. plot the result
+# 3. output(?) visualization
 title = firstFeature + " vs. " + secondFeature
 plt.title(title)
 plt.xlabel(firstFeature)
@@ -223,7 +231,7 @@ plt.scatter(train_x, train_y,  color='blue')
 plt.plot(train_x, pred_y, color='orange', linewidth=3)
 plt.show()
 
-# 4. show indicators
+# 4. output(?) indicators
 # Model coefficient(s)
 print '\nCoefficients:', linearRegression.coef_
 # Mean squared error
