@@ -7,16 +7,22 @@ Created on Sun Apr 15 20:39:23 2018
 """
 
 import sys
+import numpy as np
 from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout
+from PyQt5 import QtCore
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
-
 import random
+
 
 class Window(QDialog):
     def __init__(self, parent = None):
+        x = np.linspace(-1, 1, 50)
+        y1 = 2 * x + 1
+        y2 = x ** 2
+
         super(Window, self).__init__(parent)
 
         # a figure instance to plot on
@@ -31,20 +37,29 @@ class Window(QDialog):
         self.toolbar = NavigationToolbar(self.canvas, self)
 
         # Just some button connected to `plot` method
-        self.button = QPushButton('Plot')
-        self.button.clicked.connect(self.plot)
+        self.pbutton = QPushButton('Plot')
+        self.pbutton.clicked.connect(lambda: self.plot(x, y1))
+
+        self.lButton = QPushButton('Load')
+        self.lButton.clicked.connect(lambda: self.load(x, y2))
+
+        self.eButton = QPushButton('Exit')
+        self.eButton.clicked.connect(self.exitButton)
 
         # set the layout
         layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
-        layout.addWidget(self.button)
+        layout.addWidget(self.pbutton)
+        layout.addWidget(self.lButton)
+        layout.addWidget(self.eButton)
         self.setLayout(layout)
 
-    def plot(self):
+    def plot(self, x, y):
         ''' plot some random stuff '''
         # random data
-        data = [random.random() for i in range(10)]
+        # data = [random.random() for i in range(10)]
+        data = [x, y]
 
         # instead of ax.hold(False)
         self.figure.clear()
@@ -56,10 +71,21 @@ class Window(QDialog):
         # ax.hold(False) # deprecated, see above
 
         # plot data
-        ax.plot(data, '*-')
+        ax.plot(data)
 
         # refresh canvas
         self.canvas.draw()
+
+    def load(self, x, y):
+        data = [x, y]
+        self.figure.clear()
+        ax = self.figure.add_subplot(111)
+        ax.plot(data)
+        self.canvas.draw()
+
+    def exitButton(self):
+        QtCore.QCoreApplication.instance().quit()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
