@@ -30,6 +30,7 @@ def getTableNames():
         tableNames.append(row[0])
     return tableNames
 
+# gets featurese, FKs, PKs, etc...
 def getTableInfo(tableNames, cursor, sqlCode):
     infoListByName = {}
     for name in tableNames:
@@ -41,6 +42,7 @@ def getTableInfo(tableNames, cursor, sqlCode):
         infoListByName[name] = infoInList
     return infoListByName
 
+# returns names of tables that contain tableName as a foreign table
 def findParentTables(tableName, tablePK, FKs):
     parentNames = []
     for name, tableFK in FKs.items():
@@ -48,6 +50,7 @@ def findParentTables(tableName, tablePK, FKs):
             parentNames.append(name)
     return parentNames
 
+# returns true if PK matches FK
 def keyContains(tablePK, tableFK):
     matches = 0
     for p in tablePK:
