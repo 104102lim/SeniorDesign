@@ -59,46 +59,15 @@ def keyContains(tablePK, tableFK):
                 matches += 1
     return (matches == len(tablePK))
 
-#This method is all wrong. Need to do DFS the other way where number of items preserved at each step is the cost of the step.
-#DFS should start from terminal parents instead of end at terminal parents.
-#returns dictionary indexed by table name with lists of paths from table to terminal parent 
-def createPaths(tableNames, PKs, FKs):
-    paths = {}
-    for name in tableNames:
-        pathGroup = []
-        paths[name] = pathGroup
-        directParents = findParentTables(name, PKs[name], FKs)
-        if len(directParents) == 0:
-            continue
-        for parent in directParents:
-            path = []
-            path.append(parent)
-            pathGroup.append(path)   
-        pathsCompleted = False
-        while not pathsCompleted:
-            pathsToAdd = []
-            pathToRemove = []
-            for path in pathGroup:
-                nextParents = findParentTables(path[len(path) - 1], PKs[path[len(path) - 1]], FKs)
-                nextParentsHold = nextParents.copy()
-                for parent in nextParentsHold:
-                    if parent in path:
-                       nextParents.remove(parent)
-                if len(nextParents) != 0:
-                    pathToRemove = path.copy()
-                    for parent in nextParents:
-                        addHold = path.copy()
-                        addHold.append(parent)
-                        pathsToAdd.append(addHold.copy())
-                    break
-            if (len(pathsToAdd) == 0) and (len(pathToRemove) == 0):
-                pathsCompleted = True
-            else:
-                pathGroup.remove(pathToRemove)
-                for path in pathsToAdd:
-                    pathGroup.append(path.copy())
-        paths[name] = pathGroup
-    return paths
+#TODO
+def getChildlessTables(tableNames, PKs, FKs):
+    for name1 in tableNames:
+        hasParent = False
+        tablefks = FKs[name1]
+        for name2 in tableNames:
+            tablepk = PKs[name2]
+            if keyContains(tablepk, tablefks):
+                hasParent = True
 
 ########## main ##########
 if __name__ == "__main__":
@@ -107,5 +76,3 @@ if __name__ == "__main__":
     PKs = getTableInfo(tableNames, cursor, GETPRIMARYKEYSQLCODE)
     FKs = getTableInfo(tableNames, cursor, GETFOREIGNKEYSQLCODE)
     features = getTableInfo(tableNames, cursor, GETFEATURESSQLCODE)
-    allPaths = createPaths(tableNames, PKs, FKs)
-    print()
