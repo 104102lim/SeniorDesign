@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
------------------------------------------------------------------------
-  DataAnalysisModule.py
-  : Data Analysis Module for Software Applcation
-  Author: Sungho Lim, Joey Gallardo
-  09/16/2018
------------------------------------------------------------------------
-"""
+    -----------------------------------------------------------------------
+    DataAnalysisModule.py
+    : Data Analysis Module for Software Applcation
+    Author: Sungho Lim, Joey Gallardo
+    09/16/2018
+    -----------------------------------------------------------------------
+    """
 
 
 #-----------------------------------------------------------------------
@@ -67,10 +67,10 @@ def getFrames(tableNames, cursor):
             dictArr.append(entry)
         frames.append(pd.DataFrame(dictArr))
     return frames
- 
+
 def idFramesToMerge(frames, keys):
     ret = []
-    for idx in range(len(frames)): 
+    for idx in range(len(frames)):
         commonKeys = []
         for col in list(frames[idx].columns.values):
             for key in keys:
@@ -81,13 +81,13 @@ def idFramesToMerge(frames, keys):
             break
     ret.append(frameWithOneKey)
 
-    for idx in range(len(frames)):
-        for col in list(frames[idx].columns.values):
-            if (col == commonKeys[0]) and (idx != ret[0]):
-                ret.append(idx)
-                break
+for idx in range(len(frames)):
+    for col in list(frames[idx].columns.values):
+        if (col == commonKeys[0]) and (idx != ret[0]):
+            ret.append(idx)
+            break
     return ret
-        
+
 
 
 # Database Preprocessing
@@ -101,7 +101,7 @@ frames = getFrames(tableNames, cursor)
 while len(keys) > 1:
     framesToMerge = idFramesToMerge(frames, keys)
     mergeFrames(frames, keys, framesToMerge)
-    
+
 
 
 
@@ -131,9 +131,8 @@ while len(keys) > 1:
 # (**NOT UPDATED - NEEDS TO BE CHANGED)
 #-----------------------------------------------------------------------
 
-    
+dataset = frames[0]      # original dataset
 
-dataset = frames[0]      # panda dataframe for merged dataset
 COLUMN = dataset.columns # column list for "dataset"
 NUM_COLUMN = COLUMN.size # number of columns in "COLUMN"
 
@@ -141,6 +140,82 @@ print "Single Merged Dataset: \n"
 print dataset, '\n'
 
 
+
+def data_analysis_module_init():
+    print "------------------ initializing data analysis module... ------------------"
+    # data processing module connection
+    # dataset initialization
+    # + anything that requires
+    print "------------------ initializing done ------------------"
+
+
+
+def data_analysis_module_linear_regression(feature1, feature2, y_intercept, r_squared):
+    print "------------------ Linear Regression ------------------"
+    # make sure:
+    # feature1 - string
+    # feature2 - string
+    # y_intercept - boolean
+    # rsquared - boolearn
+    
+    print "\n" + feature1 + " vs. " + feature2
+    
+    # 1. get filtered two features (needs to provide more threshold options)
+    mean_x = np.mean(dataset[feature1])
+    mean_y = np.mean(dataset[feature2])
+    # first feature
+    for k in range(0, len(dataset[feature1])):
+        if dataset[feature1][k] < threshold:
+            dataset[feature1][k] = mean_x
+    # second feature
+    for k in range(0, len(dataset[feature2])):
+        if dataset[feature2][k] < threshold:
+            dataset[feature2][k] = mean_y
+
+    # 2. linear regression
+    train_x = dataset[feature1].reshape(-1, 1)
+    train_y = dataset[feature2]
+
+    linearRegression = linear_model.LinearRegression()
+    linearRegression.fit(train_x, train_y)
+
+    pred_y = linearRegression.predict(train_x)
+
+    # 3. output visualization
+    title = feature1 + " vs. " + feature2
+    plt.title(title)
+    plt.xlabel(feature1)
+    plt.ylabel(feature2)
+    plt.scatter(train_x, train_y,  color='blue')
+    plt.plot(train_x, pred_y, color='orange', linewidth=3)
+    plt.show()
+    
+    # 4. output indicators
+    # Model coefficient(s)
+    print '\nCoefficients:', linearRegression.coef_
+    # Mean squared error
+    print 'MSE:', mean_squared_error(train_y, pred_y)
+    # Variance score: 1 is perfect prediction
+    print 'R^2:', r2_score(train_y, pred_y)
+    print 'Y-intecept:', linearRegression.coef_
+    print '\n\n'
+    print "------------------ Linear Regression done ------------------\n"
+
+
+def data_analysis_module_filtering(feature1, feature2, logic, theshold):
+    # code goes here
+    # error checking required
+    # feature 1 & feature 2 should string type
+    # logic should be one of the followings: >, <, >=, <=, !=. ==, contains, !contains
+    # threshold should be one of the types: int, string
+
+
+
+
+
+
+
+#-----------------IGNORE HERE--------------------
 # do Linear Regression for each column
 print "------------------ All Linear Regression ------------------"
 threshold = 0 # threshold
@@ -165,16 +240,16 @@ for i in range(0, NUM_COLUMN-1):
         for k in range(0, len(dataset[COLUMN[j]])):
             if dataset[COLUMN[j]][k] < threshold:
                 dataset[COLUMN[j]][k] = mean_y
-            
+    
         # 2. do linear regression
         train_x = dataset[COLUMN[i]].reshape(-1, 1)
         train_y = dataset[COLUMN[j]]
-
+        
         linearRegression = linear_model.LinearRegression()
         linearRegression.fit(train_x, train_y)
-
+        
         pred_y = linearRegression.predict(train_x)
-
+        
         # 3. plot the result
         title = COLUMN[i] + " vs. " + COLUMN[j]
         plt.title(title)
@@ -183,7 +258,7 @@ for i in range(0, NUM_COLUMN-1):
         plt.scatter(train_x, train_y,  color='blue')
         plt.plot(train_x, pred_y, color='orange', linewidth=3)
         plt.show()
-
+        
         # 4. show indicators
         # Model coefficient(s)
         print '\nCoefficients:', linearRegression.coef_
@@ -191,54 +266,11 @@ for i in range(0, NUM_COLUMN-1):
         print 'MSE:', mean_squared_error(train_y, pred_y)
         # Variance score: 1 is perfect prediction
         print 'R^2:', r2_score(train_y, pred_y)
-        print '\n\n'
+    print '\n\n'
 
 
-print "------------------ Selected Linear Regression ------------------"
-firstFeature = str(input("Enter first feature: "))
-secondFeature = str(input("Enter second feature: "))
-threshold = int(input("Enter threshold: "))
 
-print "\n" + firstFeature + " vs. " + secondFeature
-       
-# 1. get filtered two features (needs to provide more threshold options)
-mean_x = np.mean(dataset[firstFeature])
-mean_y = np.mean(dataset[secondFeature])
-# first feature
-for k in range(0, len(dataset[firstFeature])):
-    if dataset[firstFeature][k] < threshold:
-        dataset[firstFeature][k] = mean_x
-# second feature
-for k in range(0, len(dataset[secondFeature])):
-    if dataset[secondFeature][k] < threshold:
-        dataset[secondFeature][k] = mean_y
-            
-# 2. linear regression (needs to provide more regression options)
-train_x = dataset[firstFeature].reshape(-1, 1)
-train_y = dataset[secondFeature]
 
-linearRegression = linear_model.LinearRegression()
-linearRegression.fit(train_x, train_y)
-
-pred_y = linearRegression.predict(train_x)
-
-# 3. output(?) visualization
-title = firstFeature + " vs. " + secondFeature
-plt.title(title)
-plt.xlabel(firstFeature)
-plt.ylabel(secondFeature)
-plt.scatter(train_x, train_y,  color='blue')
-plt.plot(train_x, pred_y, color='orange', linewidth=3)
-plt.show()
-
-# 4. output(?) indicators
-# Model coefficient(s)
-print '\nCoefficients:', linearRegression.coef_
-# Mean squared error
-print 'MSE:', mean_squared_error(train_y, pred_y)
-# Variance score: 1 is perfect prediction
-print 'R^2:', r2_score(train_y, pred_y)
-print '\n\n'
 
 
 
