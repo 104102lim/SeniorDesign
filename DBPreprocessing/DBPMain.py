@@ -42,14 +42,6 @@ def getTableInfo(tableNames, cursor, sqlCode):
         infoListByName[name] = infoInList
     return infoListByName
 
-# returns names of tables that contain tableName as a foreign table
-def findParentTables(tableName, tablePK, FKs):
-    parentNames = []
-    for name, tableFK in FKs.items():
-        if (tableName != name) and keyContains(tablePK, tableFK):
-            parentNames.append(name)
-    return parentNames
-
 # returns true if PK matches FK
 def keyContains(tablePK, tableFK):
     matches = 0
@@ -61,13 +53,18 @@ def keyContains(tablePK, tableFK):
 
 #TODO
 def getChildlessTables(tableNames, PKs, FKs):
+    childlessTables = []
     for name1 in tableNames:
         hasParent = False
         tablefks = FKs[name1]
         for name2 in tableNames:
             tablepk = PKs[name2]
-            if keyContains(tablepk, tablefks):
+            if keyContains(tablepk, tablefks) and name1 != name2:
                 hasParent = True
+                break
+        if hasParent == False:
+            childlessTables.append(name1)
+    return childlessTables
 
 ########## main ##########
 if __name__ == "__main__":
@@ -76,3 +73,29 @@ if __name__ == "__main__":
     PKs = getTableInfo(tableNames, cursor, GETPRIMARYKEYSQLCODE)
     FKs = getTableInfo(tableNames, cursor, GETFOREIGNKEYSQLCODE)
     features = getTableInfo(tableNames, cursor, GETFEATURESSQLCODE)
+    while True:    
+        childlessTables = getChildlessTables(tableNames, PKs, FKs)
+        if len(childlessTables) == 0:
+            print(len(tableNames))
+            print()
+            for name in tableNames:
+                print(name + " PKs: " + str(PKs[name]) + " FKs: " + str(FKs[name]))
+            print()
+            for name in tableNames:
+                holdTN = tableNames.copy()
+                holdFKs = FKs.copy()
+                holdPKs = PKs.copy()
+                holdTN.remove(name)
+                holdFKs.pop(name)
+                holdPKs.pop(name)
+                holdCT = getChildlessTables(holdTN, holdFKs, holdPKs)
+                if len(holdCT) != 0:
+                    print(name + " PKs: " + str(PKs[name]) + " FKs: " + str(FKs[name]))
+                    print()
+                    break
+            break
+        for name in childlessTables:
+            tableNames.remove(name)
+            PKs.pop(name)
+            FKs.pop(name)
+
