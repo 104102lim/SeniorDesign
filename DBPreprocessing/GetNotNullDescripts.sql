@@ -6,6 +6,7 @@ SELECT [class_name]
       ,[attr_descript]
   FROM [dbo].[DICTIONARY]
   WHERE 
+  class
   attr_descript IS NOT NULL 
   AND attr_descript NOT LIKE 'Internal identifier for %'
   AND attr_descript NOT LIKE 'Row timestamp'
