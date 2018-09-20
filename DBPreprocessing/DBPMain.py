@@ -1,6 +1,6 @@
 import pyodbc
 import pandas as pd
-import numpy as np 
+import numpy as np
 
 GETPRIMARYKEYSQLCODE = "SELECT Col.Column_Name from " +  \
                            "INFORMATION_SCHEMA.TABLE_CONSTRAINTS Tab, " +  \
@@ -30,7 +30,7 @@ def getTableNames():
         tableNames.append(row[0])
     return tableNames
 
-# gets featurese, FKs, PKs, etc...
+# gets features, FKs, PKs, etc...
 def getTableInfo(tableNames, cursor, sqlCode):
     infoListByName = {}
     for name in tableNames:
@@ -43,28 +43,60 @@ def getTableInfo(tableNames, cursor, sqlCode):
     return infoListByName
 
 # returns true if PK matches FK
-def keyContains(tablePK, tableFK):
+def relationHolds(child, parent, PKs, FKs):
+    if child == parent:
+        return False
     matches = 0
+    tablePK = PKs[child]
+    tableFK = FKs[parent]
     for p in tablePK:
         for f in tableFK:
             if p == f:
                 matches += 1
     return (matches == len(tablePK))
 
-#TODO
-def getChildlessTables(tableNames, PKs, FKs):
-    childlessTables = []
+
+
+
+
+
+#@@@@@@@@@@@SHOULD START AT ROOT AND END AT CHILDREN@@@@@@@@@@@@@@@@@@@
+
+def getChildlessTable(tableNames, PKs, FKs):
     for name1 in tableNames:
         hasParent = False
-        tablefks = FKs[name1]
         for name2 in tableNames:
-            tablepk = PKs[name2]
-            if keyContains(tablepk, tablefks) and name1 != name2:
+            if relationHolds(name1, name2, PKs, FKs):
                 hasParent = True
                 break
         if hasParent == False:
-            childlessTables.append(name1)
-    return childlessTables
+            return name1
+    return None
+
+def getParents(name, tableNames, PKs, FKs):
+    parents = []
+    for n in tableNames:
+        if relationHolds(name, n, PKs, FKs):
+            parents.append(n)
+    return parents
+
+def joinTables(child, parent, PKs, FKs, SQL):
+    return
+
+def handleBHAC(tableNames, PKs, FKs, SQL):
+    return
+
+def createOneTable(tableNames, PKs, FKs):
+    while True:
+        child = getChildlessTable(tableNames, PKs, FKs)
+        if child is None:
+            SQL = handleBHAC(tableNames, PKs, FKs, SQL)
+
+        parents = getParents(child, tableNames, PKs, FKs)
+        if len(parents) == 0:
+            termParents.append(child)
+        else:
+            for parent in parents:
 
 ########## main ##########
 if __name__ == "__main__":
@@ -72,30 +104,4 @@ if __name__ == "__main__":
     tableNames = getTableNames()
     PKs = getTableInfo(tableNames, cursor, GETPRIMARYKEYSQLCODE)
     FKs = getTableInfo(tableNames, cursor, GETFOREIGNKEYSQLCODE)
-    features = getTableInfo(tableNames, cursor, GETFEATURESSQLCODE)
-    while True:    
-        childlessTables = getChildlessTables(tableNames, PKs, FKs)
-        if len(childlessTables) == 0:
-            print(len(tableNames))
-            print()
-            for name in tableNames:
-                print(name + " PKs: " + str(PKs[name]) + " FKs: " + str(FKs[name]))
-            print()
-            for name in tableNames:
-                holdTN = tableNames.copy()
-                holdFKs = FKs.copy()
-                holdPKs = PKs.copy()
-                holdTN.remove(name)
-                holdFKs.pop(name)
-                holdPKs.pop(name)
-                holdCT = getChildlessTables(holdTN, holdFKs, holdPKs)
-                if len(holdCT) != 0:
-                    print(name + " PKs: " + str(PKs[name]) + " FKs: " + str(FKs[name]))
-                    print()
-                    break
-            break
-        for name in childlessTables:
-            tableNames.remove(name)
-            PKs.pop(name)
-            FKs.pop(name)
 
