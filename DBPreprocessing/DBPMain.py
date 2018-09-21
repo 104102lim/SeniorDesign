@@ -46,6 +46,7 @@ def getTableInfo(tableNames, cursor, sqlCode):
 def relationHolds(child, parent, ti):
     if child == parent:
         return False
+    #accounts for the BHAC cycles
     if "BHAC_IDENTIFIER" in ti[1][child] and "BHAC_IDENTIFIER" in ti[1][parent]:
         return False
     matches = 0
@@ -64,6 +65,13 @@ def getParents(name, ti):
             parents.append(n)
     return parents
 
+def getChildren(name, ti):
+    children = []
+    for n in ti[0]:
+        if relationHolds(n, name, ti):
+            children.append(n)
+    return children
+
 def getRootParents(ti):
     roots = []
     for name in ti[0]:
@@ -71,12 +79,55 @@ def getRootParents(ti):
             roots.append(name)
     return roots
 
-def createOneTable(ti):
+def createComd(root, ti):
+    included = []
+    included.append(root)
+    cmd = "SELECT * FROM " + root
+    children = {}
+    children[root] = getChildren(root, ti)
+    numChildren = len(children[root])
+    while numChildren > 0:    # No no no lol
+        newChildren = {}
+        for p in children:
+            for c in children[p]:
+                if c not in included:
+                    included.append(c)
+                    newChildren[c] = getChildren(c, ti)
+                    # Potential problem with multi column keys
+                    cmd += " FULL JOIN " + c + " ON " + p + "." + ti[1][c][0] + \
+                           "=" + c + "." + ti[1][c][0]
+        children = newChildren
+        numChildren = 0
+        for p in children:
+            numChildren += len(children[p])
+    return cmd
+
+def getFrame(cmd, cursor):
+    cursor.execute(cmd)
+    raw = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    dictArr = []
+    for row in raw:
+        entry = {}
+        for col in columns:
+            entry[columns.index(col)] = row[columns.index(col)]
+        dictArr.append(entry)
+    frame = pd.DataFrame(dictArr)
+    if len(frame.columns) == 0:
+        for col in columns:
+            frame[col] = [None]
+    else:
+        frame.columns = columns
+    return frame
+
+def createOneTable(ti, cursor):
     roots = getRootParents(ti)
     cmds = {}
+    frames = {}
     for r in roots:
-        cmds[r] = "SELECT * FROM " + r
-    return roots
+        cmds[r] = createComd(r, ti)
+        frames[r] = getFrame(cmds[r], cursor)
+    return frames
 
 def printTable(name, ti):
     print("Name: " + name + " PK: " + str(ti[1][name]) + " FKs: " +
@@ -92,9 +143,5 @@ if __name__ == "__main__":
     ti[0] = tableNames
     ti[1] = PKs
     ti[2] = FKs
-    roots = createOneTable(ti)
-    for n1 in tableNames:
-        if "BHAC_IDENTIFIER" in PKs[n1]:
-            printTable(n1, ti)
-
+    print(createOneTable(ti, cursor))
 
