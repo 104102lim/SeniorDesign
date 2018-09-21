@@ -42,61 +42,45 @@ def getTableInfo(tableNames, cursor, sqlCode):
         infoListByName[name] = infoInList
     return infoListByName
 
-# returns true if PK matches FK
-def relationHolds(child, parent, PKs, FKs):
+# returns true if child's PK is in parent's FKs
+def relationHolds(child, parent, ti):
     if child == parent:
         return False
+    if ti[1][child] == ti[1][parent]:
+        return False
     matches = 0
-    tablePK = PKs[child]
-    tableFK = FKs[parent]
-    for p in tablePK:
-        for f in tableFK:
+    PK = ti[1][child]
+    FK = ti[2][parent]
+    for p in PK:
+        for f in FK:
             if p == f:
                 matches += 1
-    return (matches == len(tablePK))
+    return matches == len(PK)
 
-
-
-
-
-
-#@@@@@@@@@@@SHOULD START AT ROOT AND END AT CHILDREN@@@@@@@@@@@@@@@@@@@
-
-def getChildlessTable(tableNames, PKs, FKs):
-    for name1 in tableNames:
-        hasParent = False
-        for name2 in tableNames:
-            if relationHolds(name1, name2, PKs, FKs):
-                hasParent = True
-                break
-        if hasParent == False:
-            return name1
-    return None
-
-def getParents(name, tableNames, PKs, FKs):
+def getParents(name, ti):
     parents = []
-    for n in tableNames:
-        if relationHolds(name, n, PKs, FKs):
+    for n in ti[0]:
+        if relationHolds(name, n, ti):
             parents.append(n)
     return parents
 
-def joinTables(child, parent, PKs, FKs, SQL):
-    return
+def getRootParents(ti):
+    roots = []
+    for name in ti[0]:
+        if len(getParents(name, ti)) == 0:
+            roots.append(name)
+    return roots
 
-def handleBHAC(tableNames, PKs, FKs, SQL):
-    return
+def createOneTable(ti):
+    roots = getRootParents(ti)
+    cmds = {}
+    for r in roots:
+        cmds[r] = "SELECT * FROM " + r
+    return roots
 
-def createOneTable(tableNames, PKs, FKs):
-    while True:
-        child = getChildlessTable(tableNames, PKs, FKs)
-        if child is None:
-            SQL = handleBHAC(tableNames, PKs, FKs, SQL)
-
-        parents = getParents(child, tableNames, PKs, FKs)
-        if len(parents) == 0:
-            termParents.append(child)
-        else:
-            for parent in parents:
+def printTable(name, ti):
+    print("Name: " + name + " PK: " + str(ti[1][name]) + " FKs: " +
+          str(ti[2][name]))
 
 ########## main ##########
 if __name__ == "__main__":
@@ -104,4 +88,12 @@ if __name__ == "__main__":
     tableNames = getTableNames()
     PKs = getTableInfo(tableNames, cursor, GETPRIMARYKEYSQLCODE)
     FKs = getTableInfo(tableNames, cursor, GETFOREIGNKEYSQLCODE)
+    ti = {}
+    ti[0] = tableNames
+    ti[1] = PKs
+    ti[2] = FKs
+    roots = createOneTable(ti)
+    for r in roots:
+        printTable(r, ti)
+
 
