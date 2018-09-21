@@ -46,7 +46,7 @@ def getTableInfo(tableNames, cursor, sqlCode):
 def relationHolds(child, parent, ti):
     if child == parent:
         return False
-    if ti[1][child] == ti[1][parent]:
+    if "BHAC_IDENTIFIER" in ti[1][child] and "BHAC_IDENTIFIER" in ti[1][parent]:
         return False
     matches = 0
     PK = ti[1][child]
@@ -93,7 +93,8 @@ if __name__ == "__main__":
     ti[1] = PKs
     ti[2] = FKs
     roots = createOneTable(ti)
-    for r in roots:
-        printTable(r, ti)
+    for n1 in tableNames:
+        if "BHAC_IDENTIFIER" in PKs[n1]:
+            printTable(n1, ti)
 
 
