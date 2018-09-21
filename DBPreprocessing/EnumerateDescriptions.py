@@ -25,7 +25,7 @@ tableNames = getTableNames()
 SQLCODE = SQLCODEHEAD
 for name in tableNames:
     if tableNames.index(name) != (len(tableNames) - 1):    
-        SQLCODE += "class_name = '" + name + "' OR " 
+        SQLCODE += "class_name = '" + name + "' OR \n" 
     else:
         SQLCODE += "class_name = '" + name + "') "
 SQLCODE += SQLCODETAIL
@@ -39,5 +39,5 @@ for row in table:
     for col in columns:
         entry[columns.index(col)] = row[columns.index(col)]
         dictArr.append(entry)
-    frame = pd.DataFrame(dictArr)
+frame = pd.DataFrame(dictArr)
 print(frame)
