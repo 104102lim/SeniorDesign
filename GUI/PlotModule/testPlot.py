@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 def test():
     print("test main funtion")
-    x = np.linspace(-1, 1, 50)
+    x = np.linspace(0, 10, 50)
     y1 = 2 * x + 1
     y2 = x**2
     color = 'red'
@@ -23,9 +23,15 @@ def test():
 
 
 def plot(x, y, color, linewidth, linestyle, xlabel, ylabel):
+    plt.figure()
     plt.plot(x, y, color, linewidth, linestyle)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
+
+    df = pd.DataFrame(columns=['X', 'Y'])
+    df['X'] = x
+    df['Y'] = y
+    plt.table(colLabels=df.columns)
     plt.show()
 
 
