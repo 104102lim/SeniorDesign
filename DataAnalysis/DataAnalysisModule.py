@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
------------------------------------------------------------------------
-DataAnalysisModule.py
-: Data Analysis Module for BH Oil Characterization Software Applcation
-Author: Sungho Lim, Joey Gallardo
-09/19/2018
     -----------------------------------------------------------------------
-"""
+    DataAnalysisModule.py
+    : Data Analysis Module for BH Oil Characterization Software Applcation
+    Author: Sungho Lim, Joey Gallardo
+    09/19/2018
+    -----------------------------------------------------------------------
+    """
 
 
 #-----------------------------------------------------------------------
@@ -19,7 +19,7 @@ import pyodbc
 import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
-
+import struct
 
 
 #-----------------------------------------------------------------------
@@ -41,7 +41,7 @@ def data_analysis_module_init():
 
 
 #**** FOR TEST DATA ANALYSIS MODULE - LATER DELETED
-data = [[1,2,3,4,5], [6,7,8,9,10], [11,12,13,14,15], [16,17,18,19,20], [21,22,23,24,25]]
+data = [[1,2,3,4,5], [23,7,8,9,10], [5,7,13,14,15], [8,-5,18,19,20], [21,9,23,24,25]]
 cols = ["Feature1","Feature2","Feature3","Feature4","Feature5"]
 
 dataset = pd.DataFrame(data, columns=cols, dtype=float)  # original dataset
@@ -52,7 +52,6 @@ NUM_COLUMN = COLUMN.size # number of columns in "COLUMN"
 print "Orginial Dataset: \n"
 print dataset, '\n'
 
-#data_analysis_module_linear_regression_all()
 
 
 
@@ -81,7 +80,7 @@ print dataset, '\n'
 # (**NOT UPDATED - NEEDS TO BE CHANGED)
 #-----------------------------------------------------------------------
 
-def data_analysis_module_linear_regression(feature1, feature2, y_intercept, r_squared):
+def data_analysis_module_linear_regression(feature1, feature2):
     print "------------------ Linear Regression ------------------"
     # make sure:
     # feature1 - string
@@ -91,23 +90,21 @@ def data_analysis_module_linear_regression(feature1, feature2, y_intercept, r_sq
     if (type(feature1) != str or type(feature2) != str):
         print "feature(s) should be str type\n"
         return 0
-    if (type(y_intercept) != bool or type(r_squared) != bool):
-        print "y_intercept or r_squared should be bool type\n"
-        return 0
-    
+
     print "\n" + feature1 + " vs. " + feature2
-    
+
     # 1. get filtered two features (needs to provide more threshold options)
-    mean_x = np.mean(dataset[feature1])
-    mean_y = np.mean(dataset[feature2])
+    #mean_x = np.mean(dataset[feature1])
+    #mean_y = np.mean(dataset[feature2])
     # first feature
-    for k in range(0, len(dataset[feature1])):
-        if dataset[feature1][k] < threshold:
-            dataset[feature1][k] = mean_x
+    #for k in range(0, len(dataset[feature1])):
+    #    if dataset[feature1][k] < threshold:
+    #        dataset[feature1][k] = mean_x
     # second feature
-    for k in range(0, len(dataset[feature2])):
-        if dataset[feature2][k] < threshold:
-            dataset[feature2][k] = mean_y
+    #for k in range(0, len(dataset[feature2])):
+    #    if dataset[feature2][k] < threshold:
+    #        dataset[feature2][k] = mean_y
+
 
     # 2. linear regression
     train_x = dataset[feature1].reshape(-1, 1)
@@ -119,36 +116,43 @@ def data_analysis_module_linear_regression(feature1, feature2, y_intercept, r_sq
     pred_y = linearRegression.predict(train_x)
 
     # 3. output visualization
-    title = feature1 + " vs. " + feature2
-    plt.title(title)
-    plt.xlabel(feature1)
-    plt.ylabel(feature2)
-    plt.scatter(train_x, train_y,  color='blue')
-    plt.plot(train_x, pred_y, color='orange', linewidth=3)
-    plt.show()
-    
+    #title = feature1 + " vs. " + feature2
+    #plt.title(title)
+    #plt.xlabel(feature1)
+    #plt.ylabel(feature2)
+    #plt.scatter(train_x, train_y,  color='blue')
+    #plt.plot(train_x, pred_y, color='orange', linewidth=3)
+    #plt.show()
+
     # 4. output indicators
-    # Model coefficient(s)
-    print '\nCoefficients:', linearRegression.coef_
-    # Mean squared error
-    print 'MSE:', mean_squared_error(train_y, pred_y)
-    # Variance score: 1 is perfect prediction
-    if (y_intercept):
-        print 'Y-intecept:', linearRegression.coef_
-    
-    if (r_squared):
-        print 'R^2:', r2_score(train_y, pred_y)
+    # Features
+    rawDataSet = {feature1 : dataset[feature1], feature2 : dataset[feature2]}
+    rawDataFrame = pd.DataFrame(data=rawDataSet)
 
-    print '\n\n'
-    print "------------------ Linear Regression done ------------------\n"
+    # output the package for GUI Module
+    # output[0] = rawDataFrame
+    # output[1] = coefficient of linear model
+    # output[2] = Y_intercept
+    # output[3] = R^2
+    output = [rawDataFrame, linearRegression.coef_,
+              linearRegression.intercept_, r2_score(train_y, pred_y)]
+        
+    print '\nRaw features:'
+    print output[0]
+    print '\nCoefficients:', output[1]
+    print 'Y-intecept:', output[2]
+    print 'R^2:', output[3]
+    print "\n------------------ Linear Regression done ------------------\n"
+    return output
 
 
 
-def data_analysis_module_filtering(feature1, feature2, logic, theshold):
+
+def data_analysis_module_filtering(feature1, feature2, logic, threshold):
     # code goes here
     # error checking required
     # feature 1 & feature 2 should string type
-    # logic should be one of the followings: >, <, >=, <=, !=. ==, contains, !contains
+    # logic should be one of the followings: >, <, >=, <=, ==. !=, contains, !contains
     # threshold should be one of the types: int, string
     if (type(feature1) != str or type(feature2) != str):
         print "feature(s) should be str type\n"
@@ -164,12 +168,34 @@ def data_analysis_module_filtering(feature1, feature2, logic, theshold):
         print "threshold should be int, float, or str type\n"
         return 0
         
+        
+    feat1 = dataset[feature1]
+    feat2 = dataset[feature2]
+        
+        
+        
+    if logic == '>':  # 1. ">"
+    return 0
+    elif logic == '<': # 2. "<"
+    return 0
+        
+        # 2. <
+        # 3. >=
+        # 4. <=
+        # 5. ==
+        # 6. !=
+        # 7. contains
+        # 8. !contains
+        
     return 0
 
 
 
 def data_analysis_module_polynomial_regression(feature1, feature2, logic, theshold):
     # implement...
+    return 0
+
+
 
 
 
@@ -228,12 +254,16 @@ def data_analysis_module_linear_regression_all():
         print 'MSE:', mean_squared_error(train_y, pred_y)
         # Variance score: 1 is perfect prediction
         print 'R^2:', r2_score(train_y, pred_y)
-        print '\n\n'
+    print '\n\n'
 
 
 
 
 
-
+#-----------------------------------------
+#                TEST
+#-----------------------------------------
+#data_analysis_module_linear_regression_all()
+data_analysis_module_linear_regression(cols[0], cols[1])
 
 
