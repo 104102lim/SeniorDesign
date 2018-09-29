@@ -13,17 +13,14 @@
 
 import pandas as pd
 import numpy as np
-import pyodbc
-import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
-import struct
 
 
 #-----------------------------------------------------------------------------------------------
 #                       DATA ANALYSIS MODULE
 #
-# Backend part of the software application for GUI Module
+# Backend parts of the software application for GUI Module
 #
 # INPUTS FROM GUI:
 # 1) Analysis Type - Linear Regression, Polynomial Regression, or Filtering
@@ -81,6 +78,7 @@ class DataAnalysis():
     
     #-----------------------------------------------------------------------------------------------
     # Function: linearRegression
+    # Public function to do linear regression given existing two feature string inputs
     # Inputs:   string names of two feature
     # Outputs:  raw datasets, coefficients of linear regression,
     #           y-intercept, r^2
@@ -137,6 +135,7 @@ class DataAnalysis():
     
     #-----------------------------------------------------------------------------------------------
     # Function: filtering
+    # Public function to do filtering the second feature given existing two feature string inputs
     # Inputs:   string names of two feature, logic, and threshold
     #           - feature 1 & feature 2 should str type
     #           - logic should be one of the followings: 
@@ -230,50 +229,17 @@ class DataAnalysis():
     
     #-----------------------------------------------------------------------------------------------
     # Function: polynomialRegression
+    # Public function to do polynomial regression given existing two feature string inputs
     # Inputs:   string names of two feature
     # Outputs:  raw datasets, coefficients of ploynomial regression,
     #           y-intercept, r^2 (?)
     #-----------------------------------------------------------------------------------------------
     def polynomialRegression(self, feature1, feature2, logic, theshold):  
-        # implementation goes here
+        # Implementation goes here
         return 0
-    
-    
-    
-    
-    
- 
-    
 
 
 
-#-----------------------------------------
-#                TEST
-#-----------------------------------------  
-da = DataAnalysis()
-da.__testInialization__()
-da.__printDataset__()
-linearRegressionOutput = da.linearRegression('Feature1', 'Feature2')
-filteringOutput = da.filtering('Feature1', 'Feature2', '>', 0)
-
-print linearRegressionOutput[0]
-print '\nCoefficients:', linearRegressionOutput[1]
-print 'Y-intecept:', linearRegressionOutput[2]
-print 'R^2:', linearRegressionOutput[3]
-
-print "\nFirst feature:"
-print filteringOutput[0]
-print "\nFiltered second feature:"
-print filteringOutput[1]
 
 
-
-#data_analysis_module_linear_regression(cols[0], cols[1])
-#data_analysis_module_linear_regression(cols[1], cols[2])
-#data_analysis_module_linear_regression(cols[2], cols[3])
-#data_analysis_module_linear_regression(cols[3], cols[4])
-#data_analysis_module_linear_regression(cols[0], cols[2])
-#data_analysis_module_linear_regression(cols[0], cols[3])
-
-#data_analysis_module_filtering(cols[0], cols[1], '>', 0)
 
