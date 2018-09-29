@@ -234,7 +234,7 @@ class DataAnalysis():
     # Outputs:  raw datasets, coefficients of ploynomial regression,
     #           y-intercept, r^2 (?)
     #-----------------------------------------------------------------------------------------------
-    def polynomialRegression(self, feature1, feature2, logic, theshold):  
+    def polynomialRegression(self, feature1, feature2):  
         # Implementation goes here
         return 0
 
