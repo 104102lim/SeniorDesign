@@ -31,7 +31,6 @@ def plot(x, y, color, linewidth, linestyle, xlabel, ylabel):
     df = pd.DataFrame(columns=['X', 'Y'])
     df['X'] = x
     df['Y'] = y
-    plt.table(colLabels=df.columns)
     plt.show()
 
 

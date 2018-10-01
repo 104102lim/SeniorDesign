@@ -22,6 +22,11 @@ class Window(QDialog):
         x = np.linspace(-1, 1, 50)
         y1 = 2 * x + 1
         y2 = x ** 2
+        color = 'red'
+        linewidth = 1.0
+        linestyle = '--'
+        xlabel = 'I am x'
+        ylabel = 'I am y'
 
         super(Window, self).__init__(parent)
 
@@ -38,10 +43,10 @@ class Window(QDialog):
 
         # Just some button connected to `plot` method
         self.pbutton = QPushButton('Plot')
-        self.pbutton.clicked.connect(lambda: self.plot(x, y1))
+        self.pbutton.clicked.connect(lambda: self.plot(x, y1, color, linewidth, linestyle, xlabel, ylabel))
 
         self.lButton = QPushButton('Load')
-        self.lButton.clicked.connect(lambda: self.load(x, y2))
+        self.lButton.clicked.connect(lambda: self.load(x, y2, color, linewidth, linestyle, xlabel, ylabel))
 
         self.eButton = QPushButton('Exit')
         self.eButton.clicked.connect(self.exitButton)
@@ -55,11 +60,10 @@ class Window(QDialog):
         layout.addWidget(self.eButton)
         self.setLayout(layout)
 
-    def plot(self, x, y):
+    def plot(self, x, y, color, linewidth, linestyle, xlabel, ylabel):
         ''' plot some random stuff '''
         # random data
         # data = [random.random() for i in range(10)]
-        data = [x, y]
 
         # instead of ax.hold(False)
         self.figure.clear()
@@ -71,16 +75,15 @@ class Window(QDialog):
         # ax.hold(False) # deprecated, see above
 
         # plot data
-        ax.plot(data)
+        ax.plot(x, y, color, linewidth, linestyle)
 
         # refresh canvas
         self.canvas.draw()
 
-    def load(self, x, y):
-        data = [x, y]
+    def load(self, x, y, color, linewidth, linestyle, xlabel, ylabel):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
-        ax.plot(data)
+        ax.plot(x, y, color, linewidth, linestyle)
         self.canvas.draw()
 
     def exitButton(self):
