@@ -39,4 +39,5 @@ def getValidNamesFrame(cursor, tableNames):
     for d in toDrop:
         frame = frame.drop(d)
     frame = frame.reset_index()
+    frame = frame.drop('index', axis=1)
     return frame

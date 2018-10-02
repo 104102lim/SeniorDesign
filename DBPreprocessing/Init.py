@@ -1,6 +1,6 @@
 import pyodbc
 import pandas as pd
-import Tree
+from Tree import Tree
 import EnumerateDescriptions as ED
 import AssociationFunctions as AF
 
@@ -23,12 +23,14 @@ class Init:
     cursor = None
     ti = None
     validDescriptions = None
+    validDescriptionsRaw = None
     trees = None
 
     @classmethod
-    def __connect(cls):
+    def __connect(cls, server, dbName, UID, PWD):
         cnxn = pyodbc.connect(
-            "DRIVER={SQL Server}; SERVER=MYPC\SQLEXPRESS; DATABASE=BHBackupRestore; UID = SQLDummy; PWD = bushdid9/11")
+            "DRIVER={SQL Server}; SERVER=" + server + ";" +
+            " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
         cursor = cnxn.cursor()
         return cursor
 
@@ -55,24 +57,21 @@ class Init:
 
     @classmethod
     def __getValidDescriptions(cls):
-        namesFrame = ED.getValidNamesFrame(cls.cursor, cls.ti[0])
+        cls.validDescriptionsRaw = ED.getValidNamesFrame(cls.cursor, cls.ti[0])
         names = []
-        for i in range(len(namesFrame.index)):
-            names.append(namesFrame["feat_description"][i])
+        for i in range(len(cls.validDescriptionsRaw.index)):
+            names.append(cls.validDescriptionsRaw["feat_description"][i])
         return names
 
     @classmethod
-    def init(cls):
-        cls.cursor = cls.__connect()
-        tableNames = cls.__getTableNames()
-        PKs = cls.__getTableInfo(cls.__GETPRIMARYKEYSQLCODE)
-        FKs = cls.__getTableInfo(cls.__GETFOREIGNKEYSQLCODE)
+    def init(cls, server, dbName, UID, PWD):
+        cls.cursor = cls.__connect(server, dbName, UID, PWD)
         cls.ti = {}
-        cls.ti[0] = tableNames
-        cls.ti[1] = PKs
-        cls.ti[2] = FKs
+        cls.ti[0] = cls.__getTableNames()
+        cls.ti[1] = cls.__getTableInfo(cls.__GETPRIMARYKEYSQLCODE)
+        cls.ti[2] = cls.__getTableInfo(cls.__GETFOREIGNKEYSQLCODE)
         cls.validDescriptions = cls.__getValidDescriptions()
-        roots = AF.getRootParents()
+        roots = AF.getRootParents(cls.ti)
         cls.trees = []
         for r in roots:
             cls.trees.append(Tree(r, cls.ti))
