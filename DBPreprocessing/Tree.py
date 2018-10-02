@@ -1,4 +1,4 @@
-import Node
+from Node import Node
 import AssociationFunctions as AF
 
 class Tree:

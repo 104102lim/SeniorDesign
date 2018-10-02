@@ -1,0 +1,920 @@
+,table_name,feature_name,feat_description
+0,ANN_SECT,ANSE_CSG_GRADE,Casing Grade (if type is casing)
+1,ANN_SECT,ANSE_CSG_LINWT,Casing Linear Weight  (if type is casing)
+2,ANN_SECT,ANSE_CSG_OD,Casing Outside Diameter (if type is casing)
+3,ANN_SECT,ANSE_DIAM,Annulus section diameter
+4,ANN_SECT,ANSE_FLOWRATE,Flow rate through annulus
+5,ANN_SECT,ANSE_POSITION,Position within hole
+6,ANN_SECT,ANSE_TOP_MDEPTH,Measured annular section top depth
+7,ANN_SECT,ANSE_TYPE,Annulus type
+8,ANN_SECT,ANSE_TYPE_NAME,Annulus type name
+9,ANNULUS,ANNU_CS_MDEPTH,Casing Shoe measured depth
+10,ANNULUS,ANNU_MDEPTH,Hole measured depth
+11,ANNULUS,ANNU_NAME,Annulus name
+12,ANNULUS,ANNU_PIT_FRAC,Fracture pressure gradient at PIT
+13,ANNULUS,ANNU_PIT_MDEPTH,PIT measured depth
+14,ANNULUS,ANNU_TIME,Date/time
+15,ANNULUS,ANNU_WK_FRAC,Fracture pressure of weakest formation
+16,ANNULUS,ANNU_WK_MDEPTH,Weakest formation measured depth
+17,AVAILABLE_CONVERSION,AVCV_CONVERSION_MULTIPLIER,A multiplier used in the conversion of a measurement between unit types
+18,AVAILABLE_CONVERSION,AVCV_CONVERSION_OFFSET,An offset used in the conversion of a measurement between unit types
+19,AVAILABLE_CONVERSION,AVCV_CONVERSION_POWER,A constant used in the conversion of a measurement between unit types.
+20,AVAILABLE_CONVERSION,AVCV_DISPLAY_DECIMALS,Number of decimals places used to display a measurement of a certain type
+21,AVAILABLE_CONVERSION,AVCV_DISPLAY_WIDTH,Number of characters used to display a measurement of a certain type.
+22,AVAILABLE_CONVERSION,VDDM_DIMENSION_CODE,Valid dimension identifier
+23,AVAILABLE_CONVERSION,VDUT_MEASUREMENT_UNIT_CODE,The measurement unit from/to which the user requires the conversion to take place
+24,BHA_COMPONENT,BHAC_ACT_LINWT,Actual linear weight
+25,BHA_COMPONENT,BHAC_ACTUAL_LENGTH,Actual length of component
+26,BHA_COMPONENT,BHAC_AVG_STDLEN,Average stand length
+27,BHA_COMPONENT,BHAC_AXIAL_DAMPING,Axial Spring Constant
+28,BHA_COMPONENT,BHAC_BEND_DAMPING,Bending Stiffness
+29,BHA_COMPONENT,BHAC_BOT_CONNECTION_THREAD,Bottom connection thread type
+30,BHA_COMPONENT,BHAC_CONNECTION_ID,Connection inner diameter
+31,BHA_COMPONENT,BHAC_CONNECTION_LENGTH,Connection length
+32,BHA_COMPONENT,BHAC_CONNECTION_OD,Connection outer diameter
+33,BHA_COMPONENT,BHAC_CUM_FOOTAGE_RUN,Cumulative footage run
+34,BHA_COMPONENT,BHAC_CUM_ROTATING_HOURS,Cumulative rotating hours
+35,BHA_COMPONENT,BHAC_FISH_NECK_LENGTH,Length of the fishing neck
+36,BHA_COMPONENT,BHAC_FISH_NECK_SIZE,Size of the fishing neck
+37,BHA_COMPONENT,BHAC_GAUGE_OD,Gauge outer diameter
+38,BHA_COMPONENT,BHAC_ID,Inner diameter of component
+39,BHA_COMPONENT,BHAC_JTS_STD,Drill pipe joints/stand
+40,BHA_COMPONENT,BHAC_MANUF,Component Manufacturer
+41,BHA_COMPONENT,BHAC_MAX_COL_PRESSURE,Maximum collapse pressure
+42,BHA_COMPONENT,BHAC_MAX_INT_PRESSURE,Maximum internal pressure
+43,BHA_COMPONENT,BHAC_NAME,Component name
+44,BHA_COMPONENT,BHAC_NO_OF_ITEMS,Number of sub components
+45,BHA_COMPONENT,BHAC_NOM_LINWT,Nominal linear weight
+46,BHA_COMPONENT,BHAC_NOM_OD,Nominal Tool OD
+47,BHA_COMPONENT,BHAC_OD,Outside diameter of component
+48,BHA_COMPONENT,BHAC_PART_NUMBER,Tool Part Number
+49,BHA_COMPONENT,BHAC_POISS_RATIO,Poissons ratio
+50,BHA_COMPONENT,BHAC_POLAR_MOM,Polar Moment of Inertia
+51,BHA_COMPONENT,BHAC_SEQUENCE_POSITION,Position of component in string
+52,BHA_COMPONENT,BHAC_SERIAL_NUM,Serial number of component
+53,BHA_COMPONENT,BHAC_TENSILE_STRENGTH,Tensile strength
+54,BHA_COMPONENT,BHAC_TOP_CONNECTION_THREAD,Top connection thread type
+55,BHA_COMPONENT,BHAC_TORS_DAMPING,Torsional Spring Constant
+56,BHA_COMPONENT,BHAC_TYPE_POS,Component position of this component type
+57,BHA_COMPONENT,BHAC_WEIGHT_PER_LENGTH,Weight per length of component
+58,BHA_COMPONENT,BHAC_YIELD_STRENGTH,Yield strength
+59,BHA_COMPONENT,BHAC_YOUNGS_MOD,Youngs Modulus
+60,BHA_DRILLING_PARAMETERS,BDRP_AVG_ROP,Average rate of penetration
+61,BHA_DRILLING_PARAMETERS,BDRP_BIT_RPM,Bit RPM
+62,BHA_DRILLING_PARAMETERS,BDRP_BUILD_STEER_FORCE,Build steer force
+63,BHA_DRILLING_PARAMETERS,BDRP_CIRC_HOURS,Circulating off bottom time
+64,BHA_DRILLING_PARAMETERS,BDRP_COMMENTS,Comments
+65,BHA_DRILLING_PARAMETERS,BDRP_DELTA_PRESSURE,Delta pressure
+66,BHA_DRILLING_PARAMETERS,BDRP_DISTANCE,Distance
+67,BHA_DRILLING_PARAMETERS,BDRP_DRILL_HOURS,Drilling time
+68,BHA_DRILLING_PARAMETERS,BDRP_DURATION,Total time
+69,BHA_DRILLING_PARAMETERS,BDRP_END_DEPTH,Measured depth to
+70,BHA_DRILLING_PARAMETERS,BDRP_END_TIME,End time
+71,BHA_DRILLING_PARAMETERS,BDRP_FLOW_RATE,Flow rate
+72,BHA_DRILLING_PARAMETERS,BDRP_GAS_FLOW_RATE,Gas flow rate
+73,BHA_DRILLING_PARAMETERS,BDRP_MEAS_ANN_PRESS,Measured ECD
+74,BHA_DRILLING_PARAMETERS,BDRP_MEAS_ANN_TEMP,Measured annulus temperature
+75,BHA_DRILLING_PARAMETERS,BDRP_MEAS_DH_TOB,Measured DH TOB
+76,BHA_DRILLING_PARAMETERS,BDRP_MEAS_DH_WOB,Measured DH WOB
+77,BHA_DRILLING_PARAMETERS,BDRP_MEAS_INT_PRESS,Measured Int Pressure
+78,BHA_DRILLING_PARAMETERS,BDRP_MEAS_INT_TEMP,Measured Int temperature
+79,BHA_DRILLING_PARAMETERS,BDRP_MOTOR_RPM,Motor RPM
+80,BHA_DRILLING_PARAMETERS,BDRP_MUD_DENSITY,Mud weight
+81,BHA_DRILLING_PARAMETERS,BDRP_MUD_TEMP_IN,Mud temperature in
+82,BHA_DRILLING_PARAMETERS,BDRP_MUD_TEMP_OUT,Mud temperature out
+83,BHA_DRILLING_PARAMETERS,BDRP_PICK_UP_HKLD,Pick up hookload
+84,BHA_DRILLING_PARAMETERS,BDRP_PRESSURE_OFF_BTM,Pressure off bottom
+85,BHA_DRILLING_PARAMETERS,BDRP_PRESSURE_ON_BTM,Pressure on bottom
+86,BHA_DRILLING_PARAMETERS,BDRP_ROTATING_HKLD,Rotating hookload
+87,BHA_DRILLING_PARAMETERS,BDRP_SLACK_OFF_HKLD,Slack off hookload
+88,BHA_DRILLING_PARAMETERS,BDRP_STAB_GAUGE,Guage stabilizer size
+89,BHA_DRILLING_PARAMETERS,BDRP_START_DEPTH,Measured depth from
+90,BHA_DRILLING_PARAMETERS,BDRP_START_TIME,Start time
+91,BHA_DRILLING_PARAMETERS,BDRP_SURFACE_RPM,Surface RPM
+92,BHA_DRILLING_PARAMETERS,BDRP_TARGET_INC,Target inclination
+93,BHA_DRILLING_PARAMETERS,BDRP_TFO,TFO
+94,BHA_DRILLING_PARAMETERS,BDRP_TORQUE_OFF_BTM,Torque off bottom
+95,BHA_DRILLING_PARAMETERS,BDRP_TORQUE_ON_BTM,Torque on bottom
+96,BHA_DRILLING_PARAMETERS,BDRP_VECTOR_DIRECTION,Vector direction
+97,BHA_DRILLING_PARAMETERS,BDRP_WALK_FORCE,Walk force
+98,BHA_DRILLING_PARAMETERS,BDRP_WOB,Weight on bit
+99,BHA_RUN,BHAR_10MINGELS,10m Gels
+100,BHA_RUN,BHAR_10SECGELS,10s Gels
+101,BHA_RUN,BHAR_ATK_RERUN_NUM,Autotrak rerun number
+102,BHA_RUN,BHAR_ATK_RUN_NUM,Autotrak run number
+103,BHA_RUN,BHAR_AVG_CIRC_PRESSURE,Average circulating pressure over the run
+104,BHA_RUN,BHAR_AVG_CIRC_RATE,Average flow rate over this run
+105,BHA_RUN,BHAR_AVG_PV,Average plastic viscosity value over the run
+106,BHA_RUN,BHAR_AVG_YP,Average yield point value over the run
+107,BHA_RUN,BHAR_BHA_WEIGHT,Weight of BHA
+108,BHA_RUN,BHAR_BIT_RUN_NUMBER,Bit run number within BHA run
+109,BHA_RUN,BHAR_DP_CIRC_HOURS,Cumulative circulating hours
+110,BHA_RUN,BHAR_DP_CIRC_OFF_BTM_HOURS,Cumulative circulating off bottom hours
+111,BHA_RUN,BHAR_DP_CIRC_ON_BTM_HOURS,Bha on bottom circulating time
+112,BHA_RUN,BHAR_DP_DRILLING_DISTANCE,Cumulative drilling distance
+113,BHA_RUN,BHAR_DP_HOLDING_CIRC_HOURS,Cumulative holding circulating hours
+114,BHA_RUN,BHAR_DP_HOLDING_DISTANCE,Cumulative holding distance
+115,BHA_RUN,BHAR_DP_HOLDING_ROP_AVG,Holding avg ROP
+116,BHA_RUN,BHAR_DP_ORIENT_CIRC_HOURS,Cumulative orient circulating hours
+117,BHA_RUN,BHAR_DP_RIBS_OFF_CIRC_HOURS,Cumulative ribs off circulating hours
+118,BHA_RUN,BHAR_DP_RIBS_OFF_DISTANCE,Cumulative ribs off distance
+119,BHA_RUN,BHAR_DP_RIBS_OFF_ROP_AVG,Ribs off avg ROP
+120,BHA_RUN,BHAR_DP_ROTATING_CIRC_HOURS,Cumulative rotating circulating hours
+121,BHA_RUN,BHAR_DP_ROTATING_DISTANCE,Cumulative rotating distance
+122,BHA_RUN,BHAR_DP_ROTATING_ROP_AVG,Rotating avg ROP
+123,BHA_RUN,BHAR_DP_SLIDING_CIRC_HOURS,Cumulative sliding circulating hours
+124,BHA_RUN,BHAR_DP_SLIDING_DISTANCE,Cumulative sliding distance
+125,BHA_RUN,BHAR_DP_SLIDING_ROP_AVG,Sliding avg ROP
+126,BHA_RUN,BHAR_DP_STEERING_CIRC_HOURS,Cumulative steering circulating hours
+127,BHA_RUN,BHAR_DP_STEERING_DISTANCE,Cumulative steering distance
+128,BHA_RUN,BHAR_DP_STEERING_ROP_AVG,Steering avg ROP
+129,BHA_RUN,BHAR_DRL_TIME,Total drilling time
+130,BHA_RUN,BHAR_END_MDEPTH,End measured depth for run
+131,BHA_RUN,BHAR_END_TIME,End Date/time for run
+132,BHA_RUN,BHAR_HOLE_SECTION,Hole diameter
+133,BHA_RUN,BHAR_IN_AZI,Azimuth at the start of the run
+134,BHA_RUN,BHAR_IN_INC,Inclination at start of run
+135,BHA_RUN,BHAR_IN_VDEPTH,TDV at the start of the run
+136,BHA_RUN,BHAR_JAR_TOTAL_TIME,Jar Total Time
+137,BHA_RUN,BHAR_LAYDOWN_TIME,BHA L/D Time
+138,BHA_RUN,BHAR_MAX_AZI,Maximum Azimuth over this run
+139,BHA_RUN,BHAR_MAX_DLS,Maximum Dog leg severity over the run
+140,BHA_RUN,BHAR_MAX_DLS_PLANNED,Maximum dogleg severity planned
+141,BHA_RUN,BHAR_MAX_INC,Maximum Inclination over this run
+142,BHA_RUN,BHAR_MAX_OFF_BTM_TORQUE,Maximum of bottom torque
+143,BHA_RUN,BHAR_MAX_ON_BTM_RPM,Maximum on bottom RPM
+144,BHA_RUN,BHAR_MAX_ON_BTM_TORQUE,Maximum on bottom torque
+145,BHA_RUN,BHAR_MAX_SURFACE_RPM,Maximum surface RPM
+146,BHA_RUN,BHAR_MAX_TEMP,Maximum temperature over this run
+147,BHA_RUN,BHAR_MAX_TVD,Maximum true vertical depth
+148,BHA_RUN,BHAR_MIN_AZI,Minimum Azimuth over this run
+149,BHA_RUN,BHAR_MIN_DLS,Minimum dogleg severity
+150,BHA_RUN,BHAR_MIN_INC,Minimum Inclination over this run
+151,BHA_RUN,BHAR_MIN_OFF_BTM_TORQUE,Minimum off bottom torque
+152,BHA_RUN,BHAR_MIN_ON_BTM_RPM,Minimum on bottom RPM
+153,BHA_RUN,BHAR_MIN_ON_BTM_TORQUE,Minimum on bottom torque
+154,BHA_RUN,BHAR_MIN_SURFACE_RPM,Minimum surface RPM
+155,BHA_RUN,BHAR_MIN_WOB,Minimum weight on bit
+156,BHA_RUN,BHAR_MOTOR_RERUN_NUM,Motor rerun number
+157,BHA_RUN,BHAR_MOTOR_RUN_NUM,Motor run number
+158,BHA_RUN,BHAR_MWD_RUN_NUM,MWD run number
+159,BHA_RUN,BHAR_NUMBER,BHA run number
+160,BHA_RUN,BHAR_OBJECTIVE,Objective of BHA run
+161,BHA_RUN,BHAR_OBSERVATIONS,Bha Performance and Observations
+162,BHA_RUN,BHAR_OUT_AZI,Azimuth at the end of the run
+163,BHA_RUN,BHAR_OUT_INC,Inclination at end of run
+164,BHA_RUN,BHAR_OUT_VDEPTH,True vertical depth at the end of the run
+165,BHA_RUN,BHAR_PICKUP_TIME,BHA P/U Time
+166,BHA_RUN,BHAR_REASON_POOH,Reason for POOH
+167,BHA_RUN,BHAR_RECOMMENDATIONS,Bha Conclusions and Recommendations
+168,BHA_RUN,BHAR_ROP_AVG,Bit run average ROP
+169,BHA_RUN,BHAR_SAND,Sand
+170,BHA_RUN,BHAR_SHOCK_SUB_TOTAL_TIME,Shock Sub Total Time
+171,BHA_RUN,BHAR_SOLIDS,Retort Solids
+172,BHA_RUN,BHAR_START_MDEPTH,Start measured depth for run
+173,BHA_RUN,BHAR_START_TIME,Start Date/time for run
+174,BHA_RUN,BHAR_SURVEY_IN_MD,Survey in MD
+175,BHA_RUN,BHAR_SURVEY_OUT_MD,Survey out MD
+176,BHA_RUN,BHAR_WOB_MAX,Bit run maximum WOB
+177,BIT_CONDITION,BITC_1_INNER_CUTTERS,"The condition of the inner 2/3rds of the cutting structure of the bit. 0 - No wear, 8 - No useable cutting structure."
+178,BIT_CONDITION,BITC_2_OUTER_CUTTERS,"The condition of the outer 2/3rds of the cutting structure of the bit. 0 - No wear, 8 - No useable cutting structure."
+179,BIT_CONDITION,BITC_3_DULL_CHARACTERISTICS,"The IADC classification for the dulling of the bit e.g. BC, BT, BU"
+180,BIT_CONDITION,BITC_4_DULL_LOCATION,"The location of the dull characteristics noted in the 3rd component of the IADC code e.g. C, N, T"
+181,BIT_CONDITION,BITC_5_BEARING_SEALS_COND,"The IADC code for the conditions of the bearings and seals e.g. 0,1,E,X,F"
+182,BIT_CONDITION,BITC_6_GAUGE,The amount by which the bit gauge differs from its specification. This is coded to IADC definitions.
+183,BIT_CONDITION,BITC_7_OTHER_CHARACTERISTICS,"IADC bit cutter other characteristics attribute e.g. BC, BT, BU"
+184,BIT_CONDITION,BITC_8_REASON_PULLED,"IADC bit reason pulled code e.g. BHA, DMF, DSF"
+185,BIT_CONDITION,BITC_GRADED_BY,Name of person who graded bit
+186,BIT_CONDITION,BITC_IN_1_INNER_CUTTERS,Bit Grade In: Inner (I)
+187,BIT_CONDITION,BITC_IN_2_OUTER_CUTTERS,Bit Grade In: Outer (O)
+188,BIT_CONDITION,BITC_IN_3_DULL_CHARISTICS,Bit Grade In: Dullness (D)
+189,BIT_CONDITION,BITC_IN_4_DULL_LOCATION,Bit Grade In: Location (N)
+190,BIT_CONDITION,BITC_IN_5_BEARING_SEALS_CON,Bit Grade In: Bearings (B)
+191,BIT_CONDITION,BITC_IN_6_GAUGE,Bit Grade In: Gauge (G)
+192,BIT_CONDITION,BITC_IN_7_OTHER_CHARISTICS,Bit Grade In: Other (O)
+193,BIT_JETS,BIJE_DIAM,Bit Jet/Nozzle diameter
+194,BIT_JETS,BIJE_DISCHARGE_COEF,Nozzle discharge coefficient
+195,BIT_JETS,BIJE_NUMBER,Bit Jet number
+196,BLOCK,AREA_MNEMONIC,Mnemonic used to distinguish between areas within a country.
+197,BLOCK,BLCK_NUMBER,Name of block
+198,BLOCK,BLCK_USER_CREATED,User created y/n
+199,BLOCK,CTRY_MNEMONIC,Standard United Nations country code
+200,CAT_FLUID_PRODUCTS,CAFP_DENSITY,Product density
+201,CAT_FLUID_PRODUCTS,CAFP_DESCRIPT,Product description
+202,CAT_FLUID_PRODUCTS,CAFP_LIQUID,Product is liquid (Y/N)
+203,CAT_FLUID_PRODUCTS,CAFP_MFR,MFR for this product
+204,CAT_FLUID_PRODUCTS,CAFP_MSDF_FILE,msds filename
+205,CAT_FLUID_PRODUCTS,CAFP_NAME,Product name
+206,CAT_FLUID_PRODUCTS,CAFP_UPDATE_BY,Name of user who updated record
+207,CAT_FLUID_PRODUCTS,CAFP_UPDATE_DATE,Date record updated
+208,CAT_FLUID_PRODUCTS,CAFP_USER_CREATED,Flag (y/n) to indicate whether the row was created by a user.
+209,CAT_PUMP,PPCG_DATA_SOURCE,The original source of the catalogue data.
+210,CAT_PUMP,PPCG_DISPLACEMENT_CAPACITY,The displacement capacity of the pump with the specified liner.
+211,CAT_PUMP,PPCG_LINER_SIZE,The size of the standard liner fitted to the pump. This is applicable to cement pumps only.
+212,CAT_PUMP,PPCG_MANUFACTURER,Name of the manufacturer of the pump.
+213,CAT_PUMP,PPCG_MAX_DISPLACEMENT_RATE,The maximum displacement rate which a pump can achieve.
+214,CAT_PUMP,PPCG_MAX_STROKES_PER_MIN,The maximum number of strokes per minute which a pump can achieve.
+215,CAT_PUMP,PPCG_MODEL_NAME,The manufacturers model name for the pump.
+216,CAT_PUMP,PPCG_POWER_RATING,The power rating of the pump.
+217,CAT_PUMP,PPCG_PRESSURE_RATING,The maximum pressure rating at which a pump can operate.
+218,CAT_PUMP,PPCG_PUMP_TYPE,"The type of pump e.g. duplex, triplex, other"
+219,CAT_PUMP,PPCG_ROD_DIAMETER,The diameter of the rod within a pump to which the plunger or piston is attached.
+220,CAT_PUMP,PPCG_STROKE_LENGTH,The stroke of a pump i.e. the distance travelled by the plunger on one complete movement in or out.
+221,COMPANY_NAME,CPFR_FUNCTION_TYPE,Used to group roles for a particular function
+222,COMPANY_NAME,CPNM_ADDRESS,Organisation's address
+223,COMPANY_NAME,CPNM_COMPANY_DIV,Division responsible for well
+224,COMPANY_NAME,CPNM_CONTRACT_TIME,Date/time contract commenced
+225,COMPANY_NAME,CPNM_ENG_ADDRESS,Engineer's address
+226,COMPANY_NAME,CPNM_ENG_BPHONE,Engineer's business phone
+227,COMPANY_NAME,CPNM_ENG_FAX,Engineer's fax number
+228,COMPANY_NAME,CPNM_ENG_HPHONE,Engineer's home phone number
+229,COMPANY_NAME,CPNM_ENG_NAME,Engineer's name
+230,COMPANY_NAME,CPNM_FA_GUID,First Alert Company Guid Identifier
+231,COMPANY_NAME,CPNM_GEOL_ADDRESS,Geologist's address
+232,COMPANY_NAME,CPNM_GEOL_BPHONE,Geologist's business phone
+233,COMPANY_NAME,CPNM_GEOL_HPHONE,Geologist's home phone
+234,COMPANY_NAME,CPNM_GEOL_NAME,Geologist's name
+235,COMPANY_NAME,CPNM_LOGO,Holds path to directory structure where company logo file is held.
+236,COMPANY_NAME,CPNM_NAME,Name of the organisation
+237,COMPANY_NAME,CPNM_RELEASE_TIME,Date/Time contract ceased.
+238,COMPANY_NAME,CPNM_UPDATE_DATE,Date company details updated
+239,COMPANY_NAME,CPNM_UPDATED_BY,Name of user who updated company details
+240,COMPANY_NAME,CPNM_USER_CREATED,Flag to dtermine whether company details created by user (Y/N)
+241,CSG,CASG_CENTRALIZER_INT,Centralizer interval
+242,CSG,CASG_CENTRALIZER_OD,Centralizer Outside Diameter
+243,CSG,CASG_COL_RES,Collapse Resistance
+244,CSG,CASG_CONN_TYPE,Connection type - ASCII
+245,CSG,CASG_DRIFT_DIAM,Drift Diameter
+246,CSG,CASG_SPEC_OD,Special Outside Diameter
+247,CSG,CASG_YLD_PR,Yield Pressure
+248,DAILY_REPORT,DLRP_24HR_SUMMARY,24 hour summary
+249,DAILY_REPORT,DLRP_COMMENTS,report comments
+250,DAILY_REPORT,DLRP_IADC_NO_OF_TOURS,Number of tours performed on the facility for the duration of the report.
+251,DAILY_REPORT,DLRP_IADC_REPORTING_YN,IADC reporting flag y/n
+252,DAILY_REPORT,DLRP_REPORT_LOCKED_YN,Report locked y/n. Report is locked once it has been submitted to town.
+253,DAILY_REPORT,DLRP_REPORT_NUMBER,"A sequentially assigned number, starting at 1 for each job/program, for each daily report"
+254,DAILY_REPORT,DLRP_REPORTED_BY,Name of the user who created the drilling report
+255,DAILY_REPORT,DLRP_START_DATE,Date and time at which morning report was created.
+256,DAILY_REPORT,DLRP_STEERING_PERF_CMT,Steering performance / activities comments
+257,DBIT,DBIT_ASSEMBLY,Bit assembly number
+258,DBIT,DBIT_CONE_DIAM,Cone diameter
+259,DBIT,DBIT_CONE_LENGTH,Cone length
+260,DBIT,DBIT_CONE_WIDTH,Cone width
+261,DBIT,DBIT_CORE_DIAM,Core diameter
+262,DBIT,DBIT_COST,Bit cost
+263,DBIT,DBIT_DISCHARGE_COEFF,Discharge coefficient
+264,DBIT,DBIT_GAUGE_LEN,Bit Gauge Length
+265,DBIT,DBIT_GAUGE_WIDTH,Bit Gauge Width
+266,DBIT,DBIT_IADC_NO,Bit IADC code
+267,DBIT,DBIT_NUMBER,Bit Number
+268,DBIT,DBIT_RADIUS,Radius of bit
+269,DBIT,DBIT_RERUN_NUMBER,New/Rerun flag (0 new 1 rerun)
+270,DBIT,DBIT_TFA,Bit total flow area
+271,DBIT,DBIT_TOOTH_ANGLE,Tooth angle
+272,DBIT,DBIT_TOOTH_BACK_RAKE_ANGLE,Tooth back rake angle
+273,DBIT,DBIT_TOOTH_CONE,Teeth per cone
+274,DBIT,DBIT_TOOTH_EFFICIENCY,Teeth efficency
+275,DBIT,DBIT_TOOTH_LENGTH,Tooth length
+276,DBIT,DBIT_TOOTH_ROWS,Teeth rows per cone
+277,DBIT,DBIT_TOOTH_WIDTH,Tooth width
+278,DBIT,DBIT_TYPE,Bit type like Roller cone PDC Mosaic
+279,DRILLCOLLAR,DRCO_BOX_LENGTH,Box Length
+280,DRILLCOLLAR,DRCO_CONN_TYPE,Connection Type
+281,DRILLCOLLAR,DRCO_MAXTORQUE,Maximum Torque
+282,DRILLCOLLAR,DRCO_PIN_LENGTH,Pin Length
+283,DRILLCOLLAR,DRCO_TENS_YLD,Tensile Yield
+284,DRILLCOLLAR,DRCO_TORS_YLD,Torsional Yield
+285,DRILLCOLLAR,DRCO_TYPE,Type (e.g. smooth spiral)
+286,DRILLPIPE,DRPI_CLASS,"C, N or P"
+287,DRILLPIPE,DRPI_CONN_TENS_YLD,Connection Tensile Yield
+288,DRILLPIPE,DRPI_CONN_TORS_YLD,Connection Torsional Yield
+289,DRILLPIPE,DRPI_PROTECTOR_INT,Protector Interval
+290,DRILLPIPE,DRPI_PROTECTOR_LENGTH,Protector Length
+291,DRILLPIPE,DRPI_PROTECTOR_OD,Protector Outside Diameter
+292,DRILLPIPE,DRPI_PROTECTOR_WEIGHT,Protector Weight
+293,DRILLPIPE,DRPI_RATIO,Ratio
+294,DRILLPIPE,DRPI_TORQUE_DIAM,Torque radius (for TRSubs)
+295,FACILITY_TAB,COSE_NAME,Name of conversion set
+296,FACILITY_TAB,DMRF_DATUM_MNEMONIC,Mnemonic used to refer to a particular datum.
+297,FACILITY_TAB,FCTR_TYPE_MNEMONIC,Mnemonic used to indicate the type of facility.
+298,FACILITY_TAB,FCTY_ACTUAL_YN,Flag for whether planned  (N) or actual reference points (Y)
+299,FACILITY_TAB,FCTY_COORD_BASE,the coordinate base used
+300,FACILITY_TAB,FCTY_CURR_MAG_DEC,The current difference in azimuth between magnetic North and true North at the facility
+301,FACILITY_TAB,FCTY_CURR_MAG_DIP,"the current difference, in a vertical sense, between the direction of magnetic North and the horizon at the Facility"
+302,FACILITY_TAB,FCTY_DATUM_BAY_HEADING,A line against which parallel (U) and perpendicular (V) distances can be measured.
+303,FACILITY_TAB,FCTY_DBO_TO_FRP_DIST,Distance between drill datum bay origin and the facilty ref pt.
+304,FACILITY_TAB,FCTY_DBO_TO_FRP_ROT,Angle from slot bay heading to the facilty reference point
+305,FACILITY_TAB,FCTY_DENSITY_GA_METER_SN,Density GA meter serial number.
+306,FACILITY_TAB,FCTY_DEPTH_BASE,the depth base used
+307,FACILITY_TAB,FCTY_ENVIRONMENT_TYPE,Indication of type of environment on which facility is located
+308,FACILITY_TAB,FCTY_ERR_CASING_CLEAR,error in the casing tag
+309,FACILITY_TAB,FCTY_ERR_DEPTH,error in the depth tag
+310,FACILITY_TAB,FCTY_ERR_DEPTH_ZERO,error in the zero depth tag
+311,FACILITY_TAB,FCTY_ERR_ELLIPSE,error ellipse tag
+312,FACILITY_TAB,FCTY_ERR_LEVEL,error level tag
+313,FACILITY_TAB,FCTY_ERR_SEABED,error in the seabed tag
+314,FACILITY_TAB,FCTY_ERR_SUM,error summary tag
+315,FACILITY_TAB,FCTY_ERR_SURF_POS,error in the surface position tag
+316,FACILITY_TAB,FCTY_FAC_CENTRE_REF_YN,Centre referencing y/n
+317,FACILITY_TAB,FCTY_GRID_CONVERGENCE,grid convergence angle for the facility reference point
+318,FACILITY_TAB,FCTY_GRID_TYPE,Type of Grid used
+319,FACILITY_TAB,FCTY_IADC_NUMBER_OF_TOURS,Number of work tours per day currently performed on the facility
+320,FACILITY_TAB,FCTY_IADC_REPORTING_YN,Flag to indicate whether IADC reporting is currently being performed.
+321,FACILITY_TAB,FCTY_INVENTORY_IN_USE_YN,Falg to indicate whether inventory system is in use at the facility
+322,FACILITY_TAB,FCTY_LOCATION_TOLERANCES,Defined tolerances within which faciity must be located with respect to the planned location
+323,FACILITY_TAB,FCTY_MEAN_SEATEMP,Mean sea temperature
+324,FACILITY_TAB,FCTY_NAME,Facility name
+325,FACILITY_TAB,FCTY_NEUTRON_PNM_METER_SN,Neutron PNM meter serial number
+326,FACILITY_TAB,FCTY_NORTH,flag as to whether the North used at the facility is true North or grid North
+327,FACILITY_TAB,FCTY_NUMBER_OF_SLOTS,Number of slots which the facility supports
+328,FACILITY_TAB,FCTY_PARENT,Parent facility
+329,FACILITY_TAB,FCTY_REALITY,Conceptual or real facility (C/R)
+330,FACILITY_TAB,FCTY_REF_POINT_EASTING,Distance in E-W direction between origin of grid and facility's reference point
+331,FACILITY_TAB,FCTY_REF_POINT_LATITUDE,Latitude of the facility's reference point
+332,FACILITY_TAB,FCTY_REF_POINT_LONGITUDE,Longtitude of the facility's reference point.
+333,FACILITY_TAB,FCTY_REF_POINT_NORTHING,Distance in N-S direction between the origin of grid and the facility's reference point.
+334,FACILITY_TAB,FCTY_REF_PT_TO_MSL,Distance from facility reference point to mean sea level
+335,FACILITY_TAB,FCTY_REFERENCE_POINT,Description of exact position of facility as defined by a reference point
+336,FACILITY_TAB,FCTY_RIG_RATE_REPORTING_YN,Flag to indicate if rig rate reporting is mandatory on the facility.
+337,FACILITY_TAB,FCTY_SCALED_NORTH,the scaled north value
+338,FACILITY_TAB,FCTY_SEABED_CONDITIONS,Description of seabed conditions around the facility.
+339,FACILITY_TAB,FCTY_SEAWTR_DENS,Description of sea water density around the facility.
+340,FACILITY_TAB,FCTY_SLOT_BAY_HEADING,The direction to which the slot relative positions are referenced.
+341,FACILITY_TAB,FCTY_SLOT_BAY_ORIG_FRP_DIST,distance from the slot bay origin to the facility reference point
+342,FACILITY_TAB,FCTY_SLOT_BAY_ORIG_FRP_ROT,clockwise rotation from the U axis of the slot bay to the facility reference point
+343,FACILITY_TAB,FCTY_SURFACE_GEAR_SN,Surface equipment serial number
+344,FACILITY_TAB,FCTY_TIGHT_YN,Tight facility flag (Y/N)
+345,FACILITY_TAB,FCTY_TIME_REPORTING_LEVEL,Level of activity reporting
+346,FACILITY_TAB,FCTY_TOTAL_NUMBER_OF_BEDS,Total no on beds available for personnel on the facility
+347,FACILITY_TAB,FCTY_UPDATE_DATE,Date facility details updated
+348,FACILITY_TAB,FCTY_UPDATED_BY,Name of user who updated facilty details
+349,FACILITY_TAB,FCTY_VERT_OFFSET,vertical offset from the field reference point
+350,FACILITY_TAB,FCTY_WATER_DEPTH_MSL,Water depth at facilty ref. pt. as determined by mean sea level.
+351,FACILITY_TAB,PJRF_PROJECTION_MNEMONIC,A mnemonic used to refer to a particular projection.
+352,FLOAT_COLLAR,FLCO_TFA,Total flow area
+353,FLUID_CHECKS,FLUC_BENTONITE,Bentonite
+354,FLUID_CHECKS,FLUC_BENTONITE_WT,Bentonite wt/vol
+355,FLUID_CHECKS,FLUC_BIT_DEPTH,Bit depth
+356,FLUID_CHECKS,FLUC_BRINE,Brine
+357,FLUID_CHECKS,FLUC_CA,Calcium
+358,FLUID_CHECKS,FLUC_CACL,CaCl
+359,FLUID_CHECKS,FLUC_CACL_ACTIVITY,Chemical potential of the brine
+360,FLUID_CHECKS,FLUC_CACL_WPS_BRINE,Water phase salinity with brine in calculation
+361,FLUID_CHECKS,FLUC_CACL_WPS_NO_BRINE,Water phase salinity without brine in calculation
+362,FLUID_CHECKS,FLUC_CACL_WT,CaCl by wt/vol
+363,FLUID_CHECKS,FLUC_CBHT,Circulating BHT
+364,FLUID_CHECKS,FLUC_CHECK_NUM,many checks can be run in a day which one is this
+365,FLUID_CHECKS,FLUC_CHECK_TIME,Date/time of check
+366,FLUID_CHECKS,FLUC_CHLOR,C1
+367,FLUID_CHECKS,FLUC_DRILLSLD,Drill Solids
+368,FLUID_CHECKS,FLUC_DRILLSLD_WT,Drill Solids wt/vol
+369,FLUID_CHECKS,FLUC_FILTCAKE,Cake Thickness
+370,FLUID_CHECKS,FLUC_FILTRATE,Filtrate
+371,FLUID_CHECKS,FLUC_FL_TEMP,FL Temp
+372,FLUID_CHECKS,FLUC_FUNVIS,Funnel Visc
+373,FLUID_CHECKS,FLUC_GEL10M,10 min gels
+374,FLUID_CHECKS,FLUC_GEL10S,10 sec gels
+375,FLUID_CHECKS,FLUC_GEL30M,30 min gels
+376,FLUID_CHECKS,FLUC_GLYCOL,Glycol
+377,FLUID_CHECKS,FLUC_HGSLD,HGS
+378,FLUID_CHECKS,FLUC_HGSLD_WT,HGS wt/vol
+379,FLUID_CHECKS,FLUC_HTHPCAKE,HTHP filter cake
+380,FLUID_CHECKS,FLUC_HTHPFILTR,HTHP Filtrate
+381,FLUID_CHECKS,FLUC_HTHPPRESS,HTHP pressure
+382,FLUID_CHECKS,FLUC_HTHPTEMP,HTHP Temp
+383,FLUID_CHECKS,FLUC_INC,inclination
+384,FLUID_CHECKS,FLUC_K,K content
+385,FLUID_CHECKS,FLUC_KCL,KCL
+386,FLUID_CHECKS,FLUC_KCL_WT,Potassium chloride weight
+387,FLUID_CHECKS,FLUC_LGSLD,LGS
+388,FLUID_CHECKS,FLUC_LGSLD_WT,LGS wt/vol
+389,FLUID_CHECKS,FLUC_LIME,Excess Lime
+390,FLUID_CHECKS,FLUC_LOCATION,Location
+391,FLUID_CHECKS,FLUC_LUBRICANT,Lubricant
+392,FLUID_CHECKS,FLUC_MBT,MBT ml/ml mud
+393,FLUID_CHECKS,FLUC_MDEPTH,MD
+394,FLUID_CHECKS,FLUC_MF,Alk Filt (mf)
+395,FLUID_CHECKS,FLUC_MG,Mg content
+396,FLUID_CHECKS,FLUC_MGCL,MGCL
+397,FLUID_CHECKS,FLUC_MGCL_WT,Magnesium chloride weight
+398,FLUID_CHECKS,FLUC_MUD_DENS,Density
+399,FLUID_CHECKS,FLUC_NACL,NACL
+400,FLUID_CHECKS,FLUC_NACL_WT,NaCl by wt/vol
+401,FLUID_CHECKS,FLUC_NAGNO,0.282 N AgNO3
+402,FLUID_CHECKS,FLUC_OIL,Oil
+403,FLUID_CHECKS,FLUC_OIL_RATIO,Oil ratio
+404,FLUID_CHECKS,FLUC_PH,pH
+405,FLUID_CHECKS,FLUC_PM,Alk Mud (pm)
+406,FLUID_CHECKS,FLUC_PV,PV
+407,FLUID_CHECKS,FLUC_RHETEMP,Rheo Temp
+408,FLUID_CHECKS,FLUC_SOL_WT,ASG
+409,FLUID_CHECKS,FLUC_SOLCALC,Corrected Solids
+410,FLUID_CHECKS,FLUC_STAB,Electrical stability
+411,FLUID_CHECKS,FLUC_TVD,TVD
+412,FLUID_CHECKS,FLUC_UDEF1_LABEL,User defined property 1 label
+413,FLUID_CHECKS,FLUC_UDEF1_VALUE,User defined property 1 value
+414,FLUID_CHECKS,FLUC_UDEF2_LABEL,User defined property 2 label
+415,FLUID_CHECKS,FLUC_UDEF2_VALUE,User defined property 2 value
+416,FLUID_CHECKS,FLUC_UDEF3_LABEL,User defined property 3 label
+417,FLUID_CHECKS,FLUC_UDEF3_VALUE,User defined property 3 value
+418,FLUID_CHECKS,FLUC_UDEF4_LABEL,User defined property 4 label
+419,FLUID_CHECKS,FLUC_UDEF4_VALUE,User defined property 4 value
+420,FLUID_CHECKS,FLUC_UNWEIGHTED_YN,Fluid unweighted (y/n)
+421,FLUID_CHECKS,FLUC_VISC_100,Viscometer reading at 100 rpm
+422,FLUID_CHECKS,FLUC_VISC_200,Viscometer reading at 200 rpm
+423,FLUID_CHECKS,FLUC_VISC_3,Viscometer reading at 3 rpm
+424,FLUID_CHECKS,FLUC_VISC_300,Viscometer reading at 300 rpm
+425,FLUID_CHECKS,FLUC_VISC_6,Viscometer reading at 6 rpm
+426,FLUID_CHECKS,FLUC_VISC_600,Viscometer reading at 600 rpm
+427,FLUID_CHECKS,FLUC_WATER,Water
+428,FLUID_CHECKS,FLUC_WATER_RATIO,Water ratio
+429,FLUID_CHECKS,FLUC_WFCA,0.1 EDTA
+430,FLUID_CHECKS,FLUC_YP,YP
+431,FLUID_HYDRAULICS,FHYD_BIT_2_SURF,Bottoms up time
+432,FLUID_HYDRAULICS,FHYD_BIT_PDROP,Pressure drop across the bit
+433,FLUID_HYDRAULICS,FHYD_ECD_SHOE,Equivolent circulating density at the last csg shoe
+434,FLUID_HYDRAULICS,FHYD_ECD_TD,Equivolent circulating density at Total depth
+435,FLUID_HYDRAULICS,FHYD_FLOW_RATE,Mud flow rate
+436,FLUID_HYDRAULICS,FHYD_HHP_BIT,Hydraulic horsepower at bit
+437,FLUID_HYDRAULICS,FHYD_K,Fluid consistency index
+438,FLUID_HYDRAULICS,FHYD_MAX_AV_CSG,Max Annular Velocity at the deaptest Cased Hole depth
+439,FLUID_HYDRAULICS,FHYD_MAX_AV_OH,max Annular Velocity in the Open Hole section
+440,FLUID_HYDRAULICS,FHYD_MAX_AV_RISER,Max Annular Velocity in the Riser
+441,FLUID_HYDRAULICS,FHYD_MIN_AV_CSG,min Annular Velocity in the cased hole section
+442,FLUID_HYDRAULICS,FHYD_MIN_AV_OH,min Annular Velocity in the Open Hole section
+443,FLUID_HYDRAULICS,FHYD_MIN_AV_RISER,Min Annular Velocity in the Riser
+444,FLUID_HYDRAULICS,FHYD_N,Power Law Exponent (dimensionless)
+445,FLUID_HYDRAULICS,FHYD_NOZZ_VEL,Nozzle velocity of bit jets
+446,FLUID_HYDRAULICS,FHYD_PCIRC,Circulating pressure
+447,FLUID_HYDRAULICS,FHYD_SURF_2_BIT,Surface to bit circulating time
+448,FLUID_HYDRAULICS,FHYD_TOTAL_CIRC,Total system circulating time
+449,FLUID_IADC_HOUR,FHRS_HOUR,IADC hours for an operation.
+450,FLUID_INTERVAL,FLUI_COMMENTS,todays comment
+451,FLUID_INTERVAL,FLUI_NAME,name for this interval
+452,FLUID_INTERVAL,FLUI_NUMBER,number for this interval
+453,FLUID_INV,FLIN_COMMENT,comments
+454,FLUID_INV,FLIN_ENG_CUM,cost of engineers to date
+455,FLUID_INV,FLIN_ENG_CUM_2,cost of engineers to date in secondary currency
+456,FLUID_INV,FLIN_ENG_TODAY,cost of engineers today
+457,FLUID_INV,FLIN_ENG_TODAY_2,cost of engineers today in secondary currency
+458,FLUID_INV,FLIN_PROD_CUM,cost of all products used to date
+459,FLUID_INV,FLIN_PROD_CUM_2,cost of all products used to date in secondary currency
+460,FLUID_INV,FLIN_PROD_TODAY,cost of products used today
+461,FLUID_INV,FLIN_PROD_TODAY_2,cost of products used today in secondary currency
+462,FLUID_INV,FLIN_TAX_CUM,cum tax
+463,FLUID_INV,FLIN_TAX_CUM_2,cum tax in secondary currency
+464,FLUID_INV,FLIN_TAX_TODAY,todays tax
+465,FLUID_INV,FLIN_TAX_TODAY_2,todays tax in secondary currency
+466,FLUID_INV,FLIN_TOTAL_CUM,Total cumulative cost to date
+467,FLUID_INV,FLIN_TOTAL_CUM_2,Total cumulative cost to date in secondary currency
+468,FLUID_INV,FLIN_TOTAL_TODAY,Total cost today
+469,FLUID_INV,FLIN_TOTAL_TODAY_2,Total cost today in secondary currency
+470,FLUID_MGT,FLUM_ACTIVE_CURR,cumulative casing volume
+471,FLUID_MGT,FLUM_ACTIVE_PREV,previous total active
+472,FLUID_MGT,FLUM_CASING_PREV,previous casing volume
+473,FLUID_MGT,FLUM_DRILL_STR_CURR,cumulative drillstring volume
+474,FLUID_MGT,FLUM_DRILL_STR_PREV,previoud drillstring volume
+475,FLUID_MGT,FLUM_OPEN_HOLE_CURR,cumulative open hole volume
+476,FLUID_MGT,FLUM_OPEN_HOLE_PREV,previous open hole volume
+477,FLUID_MGT,FLUM_RESERVE_CURR,current reports reserve volume
+478,FLUID_MGT,FLUM_RESERVE_PREV,previous reports reserve volume
+479,FLUID_PITS,FLUP_CONTENTS,name of fluid contents
+480,FLUID_PITS,FLUP_CURRENT_VOL,current volume
+481,FLUID_PITS,FLUP_DENSITY,density of fluid
+482,FLUID_PITS,FLUP_NAME,name of the pit
+483,FLUID_PITS,FLUP_PIT_WEIGHT,pit weight
+484,FLUID_PITS,FLUP_PREVIOUS_VOL,starting volume
+485,FLUID_PITS,RGPT_NUMBER,Pit number
+486,FLUID_PLIST,FLPL_IDENTIFIER,Internal identifier fir FLUID_PLIST
+487,FLUID_PLIST,FLPL_UNIT_PRICE,cost per unit for this job
+488,FLUID_PLIST,FLPL_UNIT_PRICE_2,cost per unit in secondary currency
+489,FLUID_PRODUCTS_INV,FLPI_COST_CUM,cost of prod used to date
+490,FLUID_PRODUCTS_INV,FLPI_COST_CUM_2,cost of prod used to date for secondary currency
+491,FLUID_PRODUCTS_INV,FLPI_COST_TODAY,cost of prod used today
+492,FLUID_PRODUCTS_INV,FLPI_COST_TODAY_2,cost of prod used today for secondary currency
+493,FLUID_PRODUCTS_INV,FLPI_CUR_ACT_CONC,curent concentration
+494,FLUID_PRODUCTS_INV,FLPI_CUR_RES_CONC,curent reserve concentration
+495,FLUID_PRODUCTS_INV,FLPI_FINAL_AMT,current units
+496,FLUID_PRODUCTS_INV,FLPI_INV_COST,"cost of products in inventory, not in system"
+497,FLUID_PRODUCTS_INV,FLPI_INV_COST_2,"cost of products in inventory, not in system in secondary currency"
+498,FLUID_PRODUCTS_INV,FLPI_INV_WEIGHT,"weight of products in inventory, not in system"
+499,FLUID_PRODUCTS_INV,FLPI_LOST_AMT,lost units
+500,FLUID_PRODUCTS_INV,FLPI_REC_AMT,received units
+501,FLUID_PRODUCTS_INV,FLPI_RET_AMT,returned units
+502,FLUID_PRODUCTS_INV,FLPI_START_AMT,starting units
+503,FLUID_PRODUCTS_INV,FLPI_UNIT_PRICE,Cost per unit
+504,FLUID_PRODUCTS_INV,FLPI_UNIT_PRICE_2,Cost per unit in secondary currency
+505,FLUID_PRODUCTS_INV,FLPI_USED_ACT_AMT,used units
+506,FLUID_PRODUCTS_INV,FLPI_USED_RES_AMT,used reserve units
+507,FLUID_PUMP_STATUS,FLPS_CIRCULATION_RATE,1.1
+508,FLUID_SOLIDS,FLUS_COMMENT,Comments on equipment
+509,FLUID_SOLIDS,FLUS_EQUIP_NAME,Name of equipment
+510,FLUID_SOLIDS,FLUS_HOURS,Hours using equipment
+511,FLUID_SOLIDS,FLUS_SCREEN_SIZES,"text string of screen sizes (ie. 10X10X10, 20X20X20)"
+512,FLUID_SOLIDS,FLUS_VOLUME_LOST_ACT,Volume of fluids lost
+513,FLUID_VOLUMES,FLUV_CASED_OFF_LOSS,1.11
+514,FLUID_VOLUMES,FLUV_OTHER_LOSS,Active all other losses
+515,FLUID_VOLUMES,FLUV_TOTAL_LOST,Active total volume lost
+516,HEAVYWT,HYWT_RANGE,Range
+517,HEAVYWT,HYWT_SUPP_LENGTH,Support Length
+518,HEAVYWT,HYWT_SUPP_OD,Support Outer Diameter
+519,JARS,JARS_DIRECTION,Direction
+520,JARS,JARS_FLOW_MAX,Maximum flow rate for Pressure Loss.
+521,JARS,JARS_FLOW_MIN,Minimum flow rate for Pressure Loss.
+522,JARS,JARS_HOURS,Hours on Jars
+523,JARS,JARS_NUMBER,Model number
+524,JARS,JARS_SET_PRESS,Set Pressure
+525,JARS,JARS_TRIP_PRESS,Trip Pressure
+526,JARS,JARS_TYPE,Type Description
+527,MODEL_DOC,MODO_DATE,Date of patch / revision no
+528,MODEL_DOC,MODO_PATCH_NO,Patch revision no
+529,MODEL_DOC,MODO_TEXT,Description of changes in patch
+530,MODEL_DOC,MOVE_VERSION,Version of data model
+531,MOTOR,MOTR_BYPASS_FLOW,Percentage of flowrate through bearings
+532,MOTOR,MOTR_L2,Drive sub length (GEOBUR input)
+533,MOTOR,MOTR_L3,Lower bearing housing length (GEOBUR input)
+534,MOTOR,MOTR_L4,Length upper bearing housing to bent (GEOBUR input)
+535,MOTOR,MOTR_L5,Stator length (GEOBUR input)
+536,MOTOR,MOTR_L6,Length top stator to third contact point (GEOBUR input)
+537,MOTOR,MOTR_MAX_AKO,Maximum possible AKO setting
+538,MOTOR,MOTR_MAX_BIT_SIZE,Maximum hole size for motor
+539,MOTOR,MOTR_MAX_DELTA_P,Maximum differential pressure
+540,MOTOR,MOTR_MAX_FLOW,Maximum flow rate
+541,MOTOR,MOTR_MAX_OVERPULL,Maximum backreaming
+542,MOTOR,MOTR_MAX_POWER,Maximum power output
+543,MOTOR,MOTR_MAX_SPEED,Maximum bit speed
+544,MOTOR,MOTR_MAX_TORQUE,Maximum torque
+545,MOTOR,MOTR_MAX_WOB,Maximum WOB
+546,MOTOR,MOTR_MIN_BIT_SIZE,Minimum hole size for motor
+547,MOTOR,MOTR_MIN_FLOW,Minimum flow rate
+548,MOTOR,MOTR_MIN_SPEED,Minimum bit speed
+549,MOTOR,MOTR_MOTOR_SIZE,Nominal motor size
+550,MOTOR,MOTR_NOLOAD_DELTA_P,No load pressure drop
+551,MOTOR,MOTR_OP_DELTA_P,Operating differential pressure
+552,MOTOR,MOTR_OP_POWER,Operating power output
+553,MOTOR,MOTR_OP_TORQUE,Operating torque
+554,MOTOR,MOTR_OP_WOB,Operating WOB
+555,MOTOR,MOTR_PDM_GAP_IN,Measurement from driveshaft to housing before the tool is put in hole
+556,MOTOR,MOTR_STABILIZATION,Stabilization (0=full)
+557,MOTOR,MOTR_TUR_NOM_FLOWRATE,Turbine reference flowrate
+558,MOTOR,MOTR_TUR_NOM_MUDDENS,Turbine reference mud density
+559,MOTOR,MOTR_TUR_NOM_PRESS_DROP,Turbine reference pressure drop
+560,MOTOR,MOTR_TURBO_MIN_PRESSURE,Motor minimum pressure to rotate
+561,MOTOR,MOTR_TURBO_RATE,Motor rate/volume constant
+562,MOTOR,MOTR_TYPE,Motor type (1=NaviDrill)
+563,MOTOR,MOTR_WEIGHT,Motor weight
+564,MUD_EQUIPMENT,EQCR_EQUIP_CODE,A unique code used to distinguish between different types of equipment.
+565,MUD_REPORT,MDRP_BASE,Mud base
+566,MUD_REPORT,MDRP_BIT_GAUGE,Bit guage size
+567,MUD_REPORT,MDRP_BOT_MD,bottom depth
+568,MUD_REPORT,MDRP_COMPANY_REP,Name of company representative
+569,MUD_REPORT,MDRP_DRILLING_HOUR,Total drilling hours for mud report
+570,MUD_REPORT,MDRP_END_TIME,End of mud report
+571,MUD_REPORT,MDRP_ENGINEER_PHONE,Mud engineer's phone number
+572,MUD_REPORT,MDRP_MUD_COMPANY_NAME,Name of mud company
+573,MUD_REPORT,MDRP_MUD_ENGINEER,Name of mud engineer
+574,MUD_REPORT,MDRP_NO_CHECK,flag if report has no FLUID_CHECKS (0 false 1 true)
+575,MUD_REPORT,MDRP_REPORT_LOCKED_YN,Report locked y/n
+576,MUD_REPORT,MDRP_SERVICE_HOUR,Total service hours for mud report
+577,MUD_REPORT,MDRP_START_TIME,Start of mud report
+578,MUD_REPORT,MDRP_TOP_MD,top depth
+579,MUD_REPORT,MDRP_TRIPPING_HOUR,Total tripping hours for mud report
+580,MUD_REPORT,MDRP_TVD,Total vertical depth
+581,MWD_TOOL,MWDC_DENSITY_DEPENDENCE,Density Dependence factor for pressure drop
+582,MWD_TOOL,MWDC_HAS_CONST_PULSE_HEIGHT,Tool has constant pulse height
+583,MWD_TOOL,MWDC_HAS_INTERNAL_ANNULUS,Has the tool internal annulus
+584,MWD_TOOL,MWDC_IN_ANN_DISTANCE,Distance between internal stabilizer
+585,MWD_TOOL,MWDC_IN_ANN_EFA,Internal annulus Flow area at internal stabilizer
+586,MWD_TOOL,MWDC_IN_ANN_ID,ID of internal annulus
+587,MWD_TOOL,MWDC_IN_ANN_LENGTH,Internal annulus length
+588,MWD_TOOL,MWDC_IN_ANN_OD,OD of internal annulus
+589,MWD_TOOL,MWDC_PULSE_HEIGHT,Constant pulse height
+590,MWD_TOOL,MWDC_SENSOR_EFA,MWD Sensor Area between ribs
+591,MWD_TOOL,MWDC_SENSOR_LENGTH,MWD Sensor Length
+592,MWD_TOOL,MWDC_SENSOR_OD,MWD Sensor OD
+593,MWD_TOOL,MWDC_SENSOR_OFFSET,MWD Sensor Offset from bottom shoulder
+594,MWD_TOOL,MWTO_DATA_RATE,Data rate of mwd tool
+595,MWD_TOOL,MWTO_DIS_COEFF,Discharge Coefficient
+596,MWD_TOOL,MWTO_ENCODE,Type of data encoding used
+597,MWD_TOOL,MWTO_FLOW_RATE,Flow rate for Pressure Loss
+598,MWD_TOOL,MWTO_FLOW_RATE2,Flow rate for Pressure Loss 2
+599,MWD_TOOL,MWTO_FLOW_RATE3,Flow rate for Pressure Loss 3
+600,MWD_TOOL,MWTO_INTERNAL_SL,Internal scribe line correction
+601,MWD_TOOL,MWTO_MDL_SL,Scribe line correction from high side
+602,MWD_TOOL,MWTO_MOTOR_SL,Motor Scribeline correction
+603,MWD_TOOL,MWTO_NM_ABOVE,Non magnetic pace above tool
+604,MWD_TOOL,MWTO_NM_BELOW,Non magnetic space below tool
+605,MWD_TOOL,MWTO_NOM_LENGTH,Nominal Length
+606,MWD_TOOL,MWTO_NOM_MUD_DENS,Mud density for pressure drop
+607,MWD_TOOL,MWTO_PRS_LOSS,Pressure Loss
+608,MWD_TOOL,MWTO_PRS_LOSS2,Pressure Loss 2
+609,MWD_TOOL,MWTO_PRS_LOSS3,Pressure Loss 3
+610,MWD_TOOL,MWTO_RNT_DUMMY_SN,Serial number of sensor sub w/ Dummy RNT
+611,MWD_TOOL,MWTO_RNT_SN,Serial number of sensor sub w/ RNT
+612,MWD_TOOL,MWTO_SHE_SN,SHE serial number for sensor sub
+613,MWD_TOOL,MWTO_TELEMETRY,Telemetry format used
+614,MWD_TOOL,MWTO_TOOL_TO_BIT,Distance (offset) from bottom of MWD tool to bit
+615,MWD_TOOL,MWTO_TURBO_RATE,Turbo rate for MWD Navigator tool
+616,OBJECT_OF_INTEREST_TAB,ODST_STATUS_CODE,Code for the object of interest development status
+617,OBJECT_OF_INTEREST_TAB,OOIN_NAME,Name of object of interest
+618,OBJECT_OF_INTEREST_TAB,OOIN_REALITY,Real or Conceptual object of interest ( R/C)
+619,OBJECT_OF_INTEREST_TAB,OOIN_TIGHT_YN,Object of interest tight flag (Y/N)
+620,OBJECT_OF_INTEREST_TAB,OOIN_UPDATE_DATE,Date object of interest details updated.
+621,OBJECT_OF_INTEREST_TAB,OOIN_UPDATED_BY,Name of user who updated object of interest details
+622,OBJECT_OF_INTEREST_TAB,STAT_MNEMONIC,Mnemonic used to distinguish between states within a country
+623,PATH,PATH_AVG_AZI,Average Azimuth over this path
+624,PATH,PATH_AVG_INC,Average Inclination over this path
+625,PATH,PATH_AZIM_TD,Azimuth at total depth for this path
+626,PATH,PATH_CLOSURE_TD,Closure at total depth for this path
+627,PATH,PATH_END_TIME,End time for this path
+628,PATH,PATH_INC_TD,Inclination at total depth for this path
+629,PATH,PATH_MAX_AZI,Maximum Azimuth over this path
+630,PATH,PATH_MAX_INC,Maximum Inclination over this path
+631,PATH,PATH_MAX_MUDWT,Maximum Mud density for this path
+632,PATH,PATH_MD_TD,measured depth at total depth for this path
+633,PATH,PATH_MIN_AZI,Minimum Azimuth over this path
+634,PATH,PATH_MIN_INC,Minimum Inclination over this path
+635,PATH,PATH_MUDWT_TD,Mud density at total depth for this path
+636,PATH,PATH_NAME,Path name
+637,PATH,PATH_ORIG_PATH_ID,Original (Raw) Path identifier
+638,PATH,PATH_PARENT_ID,Parent Path identifier
+639,PATH,PATH_PATH_TYPE,Path type
+640,PATH,PATH_ST_TIME,Start time for this path
+641,PATH,PATH_TVD_TD,True vertical depth at total depth for this path
+642,PROGRAM_TAB,CRRF_CURRENCY_MNEMONIC,"A three letter mnemonic assigned to a currency as per ISO standard 4217 e.g. GBP, USD, NOK"
+643,PROGRAM_TAB,PROG_ACTUAL_END_DATE,Date the program/job was completed or suspended
+644,PROGRAM_TAB,PROG_ACTUAL_START_DATE,Date the program/job began
+645,PROGRAM_TAB,PROG_AFE_COST,The total amount of money estimated and authorised to be spent for a program/job
+646,PROGRAM_TAB,PROG_AFE_NUMBER,Authority for expenditure document name
+647,PROGRAM_TAB,PROG_BUDGET,Amount of money allocated for program/job
+648,PROGRAM_TAB,PROG_CLOSED_BY,Name of user who closed the program/job
+649,PROGRAM_TAB,PROG_CLOSURE_DATE,Date program/job was closed
+650,PROGRAM_TAB,PROG_CONTRACT_MODE,"S, V or F"
+651,PROGRAM_TAB,PROG_DATE_TIME_REPORT_ONE,Date and Time of first activity tracking report
+652,PROGRAM_TAB,PROG_INIT_BY,Name of user who initialised program/job
+653,PROGRAM_TAB,PROG_INIT_DATE,Date program/job was initialised
+654,PROGRAM_TAB,PROG_JOB_YN,Flag to indicate whether recording a job (Y) or program (N)
+655,PROGRAM_TAB,PROG_MIGRATED,Determines source of migrated data
+656,PROGRAM_TAB,PROG_NAME,Name of program or job
+657,PROGRAM_TAB,PROG_NUMBER,INTEQ's assigned job number
+658,PROGRAM_TAB,PROG_OBJECTIVE,A statement of what the program/job is intended to achieve
+659,PROGRAM_TAB,PROG_PARENT_IDENTIFIER,Internal identifier of previous program/job
+660,PROGRAM_TAB,PROG_PJA_UPDATE_DATE,Date row was updated
+661,PROGRAM_TAB,PROG_PLAN_END_DATE,Date the program/job is expected to be completed or suspended
+662,PROGRAM_TAB,PROG_PLAN_START_DATE,Date the program/job is expected to begin
+663,PROGRAM_TAB,PROG_PREV_CUMULATIVE_COST,Cumulative cost of well up to the start of this program/job
+664,PROGRAM_TAB,PROG_REMARKS,Remarks
+665,PROGRAM_TAB,PROG_REPORT_INT_DURATION,Time interval used for activity tracking reports
+666,PROGRAM_TAB,PROG_UPDATE_DATE,Date the program/job details were last updated
+667,PROGRAM_TAB,PROG_UPDATED_BY,Name of user who updated program/job details
+668,REF_AREA,AREA_NAME,The usual name by which the area of a country is known
+669,REF_AREA,AREA_UPDATE_DATE,Date/time row updated
+670,REF_AREA,AREA_USER_CREATED,Row user created y/n
+671,REF_CASING_PURPOSE,CSPR_ALIAS,Alternate name for casing purpose.
+672,REF_CASING_PURPOSE,CSPR_PURPOSE_TYPE,"Purpose of Casing ( Liner, Conductor etc. )"
+673,REF_CASING_PURPOSE,CSPR_UPDATED_BY,user who updated row
+674,REF_CASING_PURPOSE,CSPR_USER_CREATED,flag (y/n) to indicate whether row was created by a user.
+675,REF_COUNTRY,CTRY_FA_GUID,First Alert Country Guid Identifier
+676,REF_COUNTRY,CTRY_NAME,Usual name of the country
+677,REF_COUNTRY,CTRY_NUMERIC,Numeric code assigned to each country
+678,REF_COUNTRY,CTRY_USER_CREATED,User created row y/n
+679,REF_FLUID_NAME,FLNM_ALIAS,Alias for name of fluid
+680,REF_FORMATION,FORM_ALIAS,Alternate name for formation unit.
+681,REF_FORMATION,FORM_NAME,The unit name associated with a group of lithologies of a predetermined depositional environment.
+682,REF_FORMATION,FORM_SHORT_NAME,Abbreviated name of the lithostratigraphic term.
+683,REF_FORMATION,FORM_UPDATE_DATE,Date row updated
+684,REF_FORMATION,FORM_UPDATED_BY,User who updated row
+685,REF_FORMATION,FORM_USER_CREATED,Flag (y/n) to indicate whether row was created by a user.
+686,REF_INTEQ_TITLE,INTL_UPDATE_DATE,Date row update
+687,REF_INTEQ_TITLE,INTL_UPDATED_BY,Name of user who last updated record.
+688,REF_INTEQ_TITLE,INTL_USER_CREATED,Record user created y/n
+689,REF_LITHOLOGY,LITH_USER_CREATED,user created y/n
+690,REF_MUD_TYPE,MTPR_ALIAS,Alternate names for
+691,REF_RIGLINK_GROUP,RLGP_ALIAS,Identifier of alternate name for group.
+692,REF_RIGLINK_GROUP,RLGP_NAME,"Name of the group in RigLink e.g. Admin, Field engineer etc."
+693,REF_RIGLINK_GROUP,RLGP_UPDATED_BY,Name of user who updated row.
+694,REF_STATE,STAT_NAME,The name of a state within a country
+695,REPLICAUDIT,BHAR_ATK_RUN_NUM,Autotrak run number from last bha run entered for this Job
+696,REPLICAUDIT,BHAR_NUMBER,Last bha run entered for this Job
+697,REPLICAUDIT,MDRP_REPORT_NUMBER,Last mud report entered for this Job
+698,REPLICAUDIT,PROG_IDENTIFIER,Last daily report entered for this Job
+699,REPLICAUDIT,REPL_APPLICATION_NAME,Name of replication application last used to import the data from this job.
+700,REPLICAUDIT,REPL_DELETED_BY_APP,Updated by trigger when program is deleted from PROGRAM_TAB.  Application used to delete the program
+701,REPLICAUDIT,REPL_DELETED_BY_USER,Updated by trigger when program is deleted from PROGRAM_TAB.  User that deleted the program.
+702,REPLICAUDIT,REPL_FILENAME,Name of last file imported for this job.
+703,REPLICAUDIT,REPL_PROG_DELETED,Updated by trigger when program is deleted from PROGRAM_TAB
+704,REPLICAUDIT,REPL_RCV_SERVER_NAME,Name of the database server where REPL_FILENAME was imported.
+705,REPLICAUDIT,REPL_RCV_USER_NAME,Name of user who imported the REPL_FILENAME
+706,RIG,DRLG_NAME,Rig name
+707,RIG,DRTP_RIG_TYPE,The usual name for the drilling rig type.
+708,RIG_DATUM_HISTORY,RDHS_DD_TO_MSL_MD,measured depth from the drill datum on the rig to mean sea level.
+709,RIG_DATUM_HISTORY,RDHS_DD_TO_MSL_TVD,true vertical depth from the drill datum on the rig to mean sea level.
+710,RIG_DATUM_HISTORY,RDHS_DD_TO_MUD_LINE_MD,Distance from the mud line to the rigs's current drill datum.
+711,RIG_DATUM_HISTORY,RDHS_DD_TO_MUD_LINE_TVD,True vertical distance from the mud line to the rigs's current drill datum.
+712,RIG_DATUM_HISTORY,RDHS_DD_TO_WRP_MD,The measured distance from the drilling datum to the slot/well reference point
+713,RIG_DATUM_HISTORY,RDHS_DD_TO_WRP_TVD,The true vertical distance from the drilling datum to the slot/well reference point
+714,RIG_DATUM_HISTORY,RDHS_IDENTIFIER,Internal identifier RIG_DATUM_HISTORY
+715,RIG_DATUM_HISTORY,RDHS_VALID_FROM_DATE,The date and time from which the associated rig datum details are defined.
+716,RIG_DATUM_HISTORY,RDHS_VALID_TO_DATE,The date and time at which the associated rig datum details were no longer valid for current operations.
+717,RIG_PIT_SPECIFICATION,PSTR_PIT_STATUS_CODE,"Pit status code - (A)ctive, (R)eserved, (O)ther."
+718,RIG_PIT_SPECIFICATION,RGPT_CURRENT_YN,Pit is currently used (y/n)
+719,RIG_PIT_SPECIFICATION,RGPT_NAME,Pit name
+720,RIG_PIT_SPECIFICATION,RGPT_NOM_VOL_CAPACITY,nominal capacity (volume) of the pit
+721,RIG_PUMP,RGPU_CURRENT_YN,Flag (y/n) to indicate whether pump is currently allocated on the rig.
+722,RIG_PUMP,RGPU_LINER_SIZE,The liner size fitted to the rig pump. Only required for cement pumps.
+723,RIG_PUMP,RGPU_MANUFACTURER,Rig pump manufacturers name.
+724,RIG_PUMP,RGPU_MAXIMUM_PRESSURE,The pressure rating of the pump.
+725,RIG_PUMP,RGPU_MODEL_NAME,The model name of the pump.
+726,RIG_PUMP,RGPU_MUD_PUMP_YN,A flag (y/n) to indicate whether this is a mud pump. If not then it is a cement pump.
+727,RIG_PUMP,RGPU_POWER_RATING,The maximum power output which can be achieved by the pump.
+728,RIG_PUMP,RGPU_PUMP_NO,A unique number assigned to each pump on the rig in order to allow identification.
+729,RIG_PUMP,RGPU_PUMP_TYPE,"The type of mud pump e.g. (D)uplex, (T)riplex, (C)entrifugal"
+730,RIG_PUMP,RGPU_STROKE_LENGTH,The stroke length of the pump.
+731,RIG_PUMP,RGPU_UPDATE_DATE,Date/time record last updated.
+732,RIG_PUMP,RGPU_UPDATED_BY,Name of user who last updated record
+733,RIG_SPECIFICATION,RGSP_BOP_BORE_SIZE,The bore size of the drilling rig's blow out preventor.
+734,RIG_SPECIFICATION,RGSP_BOP_PRESSURE_RATING,The pressure rating of the rig's blow out preventor.
+735,RIG_SPECIFICATION,RGSP_BOP_TEMPERATURE_RATING,The temperatrure rating i.e. maximum temperature that the BOP on the rig can withstand.
+736,RIG_SPECIFICATION,RGSP_CHOKE_LINE_ID,Inner diameter of the choke line.
+737,RIG_SPECIFICATION,RGSP_CHOKE_LINE_PRESS_RATING,The pressue rating of the choke line.
+738,RIG_SPECIFICATION,RGSP_CT_CABLE_OD,Coiled Tubing Cable Outside Diameter
+739,RIG_SPECIFICATION,RGSP_CT_DRUM_DIAM,Coiled Tubing Drum Diameter
+740,RIG_SPECIFICATION,RGSP_CT_DRUM_LEN,Coiled Tubing Drum Length
+741,RIG_SPECIFICATION,RGSP_CT_ID,Coiled Tubing Inside Diameter
+742,RIG_SPECIFICATION,RGSP_CT_LEN,Coiled Tubing Length
+743,RIG_SPECIFICATION,RGSP_CT_OD,Coiled Tubing Outside Diameter
+744,RIG_SPECIFICATION,RGSP_DERRICK_HEIGHT,The height of the drilling rig derrick.
+745,RIG_SPECIFICATION,RGSP_DERRICK_RATING,The rating of the drilling rig derrick i.e. how much weight it can handle.
+746,RIG_SPECIFICATION,RGSP_DIV_L_1_CLOSE_SPEED,The time it takes for the diverter's first line to close.
+747,RIG_SPECIFICATION,RGSP_DIV_L_1_PRESS_RATING,The maximum pressure which the diverters first line can withstand.
+748,RIG_SPECIFICATION,RGSP_DIV_L_2_CLOSE_SPEED,The time it takes for the diverter's second line to close.
+749,RIG_SPECIFICATION,RGSP_DIV_L_2_PRESS_RATING,The maximum pressure which the diverters second line can withstand.
+750,RIG_SPECIFICATION,RGSP_DIVERTER_LINE_1_ID,The internal diameter of the diverters first line.
+751,RIG_SPECIFICATION,RGSP_DIVERTER_LINE_1_LENGTH,The length of the diverters first line.
+752,RIG_SPECIFICATION,RGSP_DIVERTER_LINE_2_ID,The internal diameter of the diverters second line.
+753,RIG_SPECIFICATION,RGSP_DIVERTER_LINE_2_LENGTH,The length of the diverters second line.
+754,RIG_SPECIFICATION,RGSP_DIVERTER_MANUFACTURER,"The manufacturer of the rigs diverter, if it has one."
+755,RIG_SPECIFICATION,RGSP_DIVERTER_MODEL,"The model name of the diverter fitted to the rig, if it has one."
+756,RIG_SPECIFICATION,RGSP_DRAWWORKS_MANUFACTURER,The manufacturer of the drilling rig drawworks.
+757,RIG_SPECIFICATION,RGSP_DRAWWORKS_MODEL,The model name of the drilling rig drawworks.
+758,RIG_SPECIFICATION,RGSP_DRAWWORKS_POWER_RATING,The power rating of the drilling rig drawworks
+759,RIG_SPECIFICATION,RGSP_DRILLING_RIG_CONTRACTOR,Name of drilling rig contractor
+760,RIG_SPECIFICATION,RGSP_HOISTING_EQUIP_WEIGHT,The Martin-Decker weight as displayed when there is nothing suspended from the hoisting equipment itself.
+761,RIG_SPECIFICATION,RGSP_KELLY_HOSE_ID,Inner diameter of the rigs kelly hose.
+762,RIG_SPECIFICATION,RGSP_KELLY_HOSE_LENGTH,The length of the kelly hose fitted on the rig.
+763,RIG_SPECIFICATION,RGSP_KELLY_HOSE_PRESS_RATING,The pressure rating of the rigs kelly hose.
+764,RIG_SPECIFICATION,RGSP_KELLY_INTERNAL_DIAMETER,The innner diameter of the kelly.
+765,RIG_SPECIFICATION,RGSP_KELLY_LENGTH,The length of the kelly.
+766,RIG_SPECIFICATION,RGSP_KELLY_MANUFACTURER,the name of the manufacturer of the kelly
+767,RIG_SPECIFICATION,RGSP_KELLY_TYPE,"The type of kelly on the drilling rig e.g. SQUARE, HEXAGONAL"
+768,RIG_SPECIFICATION,RGSP_KELLY_WEIGHT,The weight of the kelly.
+769,RIG_SPECIFICATION,RGSP_KILL_LINE_ID,Inner diameter of the kill line.
+770,RIG_SPECIFICATION,RGSP_KILL_LINE_PRESS_RATING,pressure rating of the drilling rig's kill line.
+771,RIG_SPECIFICATION,RGSP_MAX_DECK_LOAD,The maximum deck load that the rig is designed to carry.
+772,RIG_SPECIFICATION,RGSP_MAX_DL_AT_OPER_DRAFT,The maximum deck load at the operating draft of the drilling rig.
+773,RIG_SPECIFICATION,RGSP_MAX_DL_AT_SURVIV_DRAFT,The maximum deck load at the survival draft of the drilling rig.
+774,RIG_SPECIFICATION,RGSP_MAX_DL_AT_TRANSIT_DRAFT,the maximum deck load at the transit draft of the drilling rig.
+775,RIG_SPECIFICATION,RGSP_MAX_WATER_DEPTH_RATING,For mobile offshore rigs the maximum water depth that the rig is allowed to work in.
+776,RIG_SPECIFICATION,RGSP_NO_OF_ANCHORS,The number of anchors on the rig.
+777,RIG_SPECIFICATION,RGSP_NO_OF_GLINE_TENSIONERS,the number of guideline tensioners on the rig.
+778,RIG_SPECIFICATION,RGSP_NO_OF_RISER_TENSIONERS,Number of riser tensioners fitted to the rig.
+779,RIG_SPECIFICATION,RGSP_NOMINAL_ACTIVE_PIT_VOL,The nominal volume of fluid that can be held in the rigs 'active' i.e. main drilling fluid mud pit.
+780,RIG_SPECIFICATION,RGSP_NOMINAL_RESERVE_PIT_VOL,The nominal volume of fluid that can be held in the rigs 'reserve' i.e. spare capacity drilling fluid mud pit.
+781,RIG_SPECIFICATION,RGSP_NUMBER_OF_THRUSTERS,"Total number of thrusters on the drilling rig, if any."
+782,RIG_SPECIFICATION,RGSP_OPERATING_DRAFT,The operating draft of the drilling rig i.e. when in normal conditions the amount of the rig which is beneath water level.
+783,RIG_SPECIFICATION,RGSP_ROT_TABLE_POWER_RATING,The rotary tables's power rating
+784,RIG_SPECIFICATION,RGSP_ROT_TABLE_TORQE_RATING,The rotary tables's torque rating
+785,RIG_SPECIFICATION,RGSP_ROTARY_TABLE_MANUF,The name of the manufacturer of the rotary table used on the rig.
+786,RIG_SPECIFICATION,RGSP_ROTARY_TABLE_MODEL,The model name of the rig rotary table.
+787,RIG_SPECIFICATION,RGSP_SRFC_PIPE_1_ID,The inner diameter of the first set of line connecting the mud pump(s) to the stand pipe.
+788,RIG_SPECIFICATION,RGSP_SRFC_PIPE_1_LENGTH,The total length of the first set of piping between the rig pumps and the stand pipe.
+789,RIG_SPECIFICATION,RGSP_SRFC_PIPE_1_PRES_RATING,The pressure rating of the first set of pipe between rig pumps and the stand pipe.
+790,RIG_SPECIFICATION,RGSP_SRFC_PIPE_2_ID,The inner diameter of the second set of line connecting the mud pump(s) to the stand pipe.
+791,RIG_SPECIFICATION,RGSP_SRFC_PIPE_2_LENGTH,The total length of the second set of piping between the rig pumps and the stand pipe.
+792,RIG_SPECIFICATION,RGSP_SRFC_PIPE_2_PRES_RATING,The pressure rating of the second set of pipe between rig pumps and the stand pipe.
+793,RIG_SPECIFICATION,RGSP_STAND_PIPE_ID,The inner diameter of the stand pipe currently being used on the rig.
+794,RIG_SPECIFICATION,RGSP_STAND_PIPE_LENGTH,The length of the stand pipe currently being used on the rig.
+795,RIG_SPECIFICATION,RGSP_STAND_PIPE_PRESS_RATING,The maximum pressure which the rigs stand pipe can withstand.
+796,RIG_SPECIFICATION,RGSP_SURVIVAL_DRAFT,Survival draft of the drilling rig i.e. when in severe weather conditions the amount of the rig which is beneath water level
+797,RIG_SPECIFICATION,RGSP_TOP_DRIVE_MANUFACTURER,The manufacturer of the drilling rig top drive.
+798,RIG_SPECIFICATION,RGSP_TOP_DRIVE_MODEL,The model name of the drilling rig top drive.
+799,RIG_SPECIFICATION,RGSP_TOP_DRIVE_POWER_RATING,The power rating of the drilling rig top drive.
+800,RIG_SPECIFICATION,RGSP_TOP_DRIVE_TORQUE_RATING,The torque rating of the drilling rig top drive.
+801,RIG_SPECIFICATION,RGSP_TOP_DRIVE_WEIGHT,The weight of the drilling rig top drive
+802,RIG_SPECIFICATION,RGSP_TOTAL_RIG_THRUST_POWER,"The total amount of power which can be generated by the rigs thrusters, if it has any."
+803,RIG_SPECIFICATION,RGSP_TRANSIT_DRAFT,transit draft of the dilling rig i.e. when moving between locations the amount of the rig which is benaeath the water level.
+804,SLOT,SLOT_DD_AZIMUTH,azimuth at slot drill datum
+805,SLOT,SLOT_DD_EASTING,drill datum to WRP offset in grid east units
+806,SLOT,SLOT_DD_GYRO_FORESIGHT_BEAR,DD Gyro at foresight bearing
+807,SLOT,SLOT_DD_INCLINATION,inclination at slot drill datum
+808,SLOT,SLOT_DD_NORTHING,drill datum to WRP offset in grid units
+809,SLOT,SLOT_NUMBER,Desiganted name or number of the slot within a slot bay
+810,SLOT,SLOT_ORIGIN_U_DISTANCE,slot offset in U axis at WRP
+811,SLOT,SLOT_ORIGIN_V_DISTANCE,slot offset in V axis at WRP
+812,SLOT,SLOT_U_DIST_AT_DRL_DATUM,slot offset in U axis at drill datum
+813,SLOT,SLOT_UPDATE_DATE,Date/time slot details updated
+814,SLOT,SLOT_UPDATED_BY,Name of user who updated slot details
+815,SLOT,SLOT_V_DIST_AT_DRL_DATUM,slot offset in V axis at drill datum
+816,SLOT,SLOT_WRP_AZIMUTH,azimuth wrt facility reference north at slot WRP
+817,SLOT,SLOT_WRP_EASTING,grid easting at slot WRP
+818,SLOT,SLOT_WRP_INCLINATION,inclination at slot WRP
+819,SLOT,SLOT_WRP_LATITUDE,latitude at slot WRP
+820,SLOT,SLOT_WRP_LONGITUDE,longitude at slot WRP
+821,SLOT,SLOT_WRP_NORTHING,grid northing at slot WRP
+822,STABILIZER,STAB_BLADE_LENGTH,Stabilizer Blade Length
+823,STABILIZER,STAB_BLADE_OD,Stabilizer Shaft Diameter (OD)
+824,STABILIZER,STAB_BLADE_TYPE,Type of stabilizer
+825,STABILIZER,STAB_BLADE_WIDTH,Stabilizer Blade Width
+826,STABILIZER,STAB_FLOW_AREA,Stabilizer Flow Area
+827,STABILIZER,STAB_FLOW_RATE,Standalone stabilizer flow rate
+828,STABILIZER,STAB_FLOW_RATE2,Standalone stabilizer flow rate 2
+829,STABILIZER,STAB_FLOW_RATE3,Standalone stabilizer flow rate 3
+830,STABILIZER,STAB_GAUGE_IN,Gauge In
+831,STABILIZER,STAB_GAUGE_MAX,Maximum gauge size
+832,STABILIZER,STAB_GAUGE_MIN,Minimum gauge size
+833,STABILIZER,STAB_GAUGE_OUT,Gauge Out
+834,STABILIZER,STAB_LENGTH_BELOW_BLADE,Stabilizer placement offset
+835,STABILIZER,STAB_MAX_FLOW_RATE,standalone stabilizer maximum flow rate
+836,STABILIZER,STAB_MIN_FLOW_RATE,standalone stabilizer minimum flow rate
+837,STABILIZER,STAB_NUMBER_OF_BLADES,Number of blades on the stabilizer.
+838,STABILIZER,STAB_PRS_LOSS,Standalone stabilizer pressure loss
+839,STABILIZER,STAB_PRS_LOSS2,Standalone stabilizer pressure loss 2
+840,STABILIZER,STAB_PRS_LOSS3,Standalone stabilizer pressure loss 3
+841,STABILIZER,STAB_REF_MUD_WEIGHT,standalone stabilizer mud weight
+842,STABILIZER,STAB_SPIRAL_TYPE,Stabilizer Spiral Type
+843,STABILIZER,STAB_TYPE,standalone stabilizer type (description)
+844,UNIT_DESCRIPTION,UTDP_LANGUAGE,Language used in the textual attributes of the units.
+845,UNIT_DESCRIPTION,UTDP_MEASUREMENT_UNIT_NAME,The name of a valid measurement unit
+846,VALID_UNIT,VDUT_MEASUREMENT_UNIT_SHORT,Short name for the measurement unit.
+847,WELL_TAB,WELL_ACT_ONLOC_OFF,Actual start cost->onloc offset
+848,WELL_TAB,WELL_ACT_SPUD_OFF,Actual start cost->spud offset
+849,WELL_TAB,WELL_API_NUMBER,API Number
+850,WELL_TAB,WELL_COMPL_STATUS,Completion status
+851,WELL_TAB,WELL_COMPL_TIME,Completion date/time
+852,WELL_TAB,WELL_CURR_STATUS,Current well status
+853,WELL_TAB,WELL_DATE_SPUDDED,Date spudded
+854,WELL_TAB,WELL_DECL,Well declination
+855,WELL_TAB,WELL_DECL_TIME,Date/time stamp for this declination
+856,WELL_TAB,WELL_DECL_USED,declination use flag
+857,WELL_TAB,WELL_DOE_REGISTRATION_NUMBER,Department of Energy Registration
+858,WELL_TAB,WELL_DRILL_DEPTH_ZERO,drill depth zero
+859,WELL_TAB,WELL_FLAG,Current well status flag
+860,WELL_TAB,WELL_GASNORM_DIAM,Hole diam for gas normalization
+861,WELL_TAB,WELL_GASNORM_FLOW,Flow rate for gas normalization
+862,WELL_TAB,WELL_GASNORM_ROP,Drill rate for gas normalization
+863,WELL_TAB,WELL_GMT_OFFSET,hours offset from GMT
+864,WELL_TAB,WELL_GT,total gravity field strength
+865,WELL_TAB,WELL_HT,total magnetic field strength
+866,WELL_TAB,WELL_HX,the X component of the magnetic field
+867,WELL_TAB,WELL_HY,the Y component of the magnetic field
+868,WELL_TAB,WELL_HZ,the Z component of the magnetic field
+869,WELL_TAB,WELL_LATITUDE,Well latitude
+870,WELL_TAB,WELL_LEASE,Lease name
+871,WELL_TAB,WELL_LONGITUDE,Well longitude
+872,WELL_TAB,WELL_MAG_DIP,Magnetic dip angle
+873,WELL_TAB,WELL_MEAN_FTG,Mean formation temperature gradient
+874,WELL_TAB,WELL_MEAN_SURFTEMP,Mean surface temperature
+875,WELL_TAB,WELL_MERCATOR,Univ. Tran. (Mercator)
+876,WELL_TAB,WELL_NAME,Well name
+877,WELL_TAB,WELL_NORTH,True North or Grid North
+878,WELL_TAB,WELL_PERMISSIONS,Current read/write permissions
+879,WELL_TAB,WELL_PL_ONLOC_OFF,Planned start cost->onloc offset
+880,WELL_TAB,WELL_PL_SPUD_OFF,Planned start cost->spud offset
+881,WELL_TAB,WELL_RANGE,Range Entry
+882,WELL_TAB,WELL_REALITY,(R)eal or (C)onceptual well
+883,WELL_TAB,WELL_SECTION,Section Number
+884,WELL_TAB,WELL_SHORT_WELL_NAME,Short name for well
+885,WELL_TAB,WELL_SVY_CALCTYPE,Survey calculation type
+886,WELL_TAB,WELL_TIGHT_HOLE_YN,Tight hole (Y/N)
+887,WELL_TAB,WELL_TOWNSHIP,Township entry
+888,WELL_TAB,WELL_UPDATE_DATE,Date/time well details updated
+889,WELL_TAB,WELL_UPDATED_BY,Name of user who updated well details
+890,WELL_TAB,WELL_UTM_REF_POINT_EASTING,UTM Eastings
+891,WELL_TAB,WELL_UTM_REF_POINT_NORTHING,UTM Northings
+892,WELL_TAB,WELL_UTM_ZONE,UTM Zone and designator
+893,WELL_TAB,WELL_VERT_OFFSET,Vertical offset from the facility ref point
+894,WELL_TAB,WELL_VSECT_AZI,vsect azi from vsect origin
+895,WELL_TAB,WELL_VSECT_ORG_EW,vsect EW offset from the wellhead
+896,WELL_TAB,WELL_VSECT_ORG_NS,vsect NS offset from the wellhead
+897,WELL_TAB,WELL_WATER_DEPTH,Water depth
+898,WELLBORE,SRSC_IDENTIFIER,Current survey section
+899,WELLBORE,WLBR_AZIM,Start azimuth
+900,WELLBORE,WLBR_AZIM_CORR,Start azimuth corrected
+901,WELLBORE,WLBR_DOGLEG,Dogleg severity
+902,WELLBORE,WLBR_END_MDEPTH,End measured depth
+903,WELLBORE,WLBR_END_TIME,Wellbore end date/time
+904,WELLBORE,WLBR_END_VDEPTH,End vertical depth
+905,WELLBORE,WLBR_EW,Start easting
+906,WELLBORE,WLBR_HOLE_TYPE,Hole type raw averaged etc
+907,WELLBORE,WLBR_INCL,Start inclination
+908,WELLBORE,WLBR_MDEPTH,Start measured depth
+909,WELLBORE,WLBR_NAME,Wellbore name
+910,WELLBORE,WLBR_NS,Start northing
+911,WELLBORE,WLBR_SEQ_ID,Sequence number for wellbore
+912,WELLBORE,WLBR_SHORT_NAME,Short name for wellbore
+913,WELLBORE,WLBR_ST_TIME,Wellbore start date/time
+914,WELLBORE,WLBR_SVY_TYPE,Survey type
+915,WELLBORE,WLBR_UPDATE_BY,Name of user who amended wellbore details
+916,WELLBORE,WLBR_UPDATE_DATE,Date/time wellbore details updated
+917,WELLBORE,WLBR_VDEPTH,Start vertical depth
+918,WELLBORE,WLBR_VSECT,Vertical section
