@@ -34,7 +34,7 @@ print 'R^2:', linearRegressionOutput[3]
 # 2. output of filtering
 print "\nFirst feature:"
 print filteringOutput[0]
-print "\nFiltered second feature:"
+print "\nFiltered first feature:"
 print filteringOutput[1]
 
 

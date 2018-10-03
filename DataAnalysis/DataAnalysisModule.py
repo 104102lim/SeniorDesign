@@ -166,62 +166,67 @@ class DataAnalysis():
             print "threshold should be int, float, or str type\n"
             return -2
     
+        # f1.size & f2.size should be same
         # get data from feature2
+        f1 = self.dataset[feature1]
         f2 = self.dataset[feature2]
-        new_f2 = []
+        new_f1 = []
     
         # do filtering for feature2
         # ex) (type(f2[i]) == int or type(f2[i]) == long) and (type(threshold) == int or type(threshold) == float)
         if logic == '>':
-            for i in range(0, len(f2)):
+            for i in range(0, len(f1)):
                 if (f2[i] > threshold):
-                    new_f2.append(f2[i])
+                    new_f1.append(f1[i])
         elif logic == '<':
-            for i in range(0, len(f2)):
+            for i in range(0, len(f1)):
                 if (f2[i] < threshold):
-                    new_f2.append(f2[i])
+                    new_f1.append(f1[i])
         elif logic == '>=':
-            for i in range(0, len(f2)):
+            for i in range(0, len(f1)):
                 if (f2[i] >= threshold):
-                    new_f2.append(f2[i])
+                    new_f1.append(f1[i])
         elif logic == '<=':
-            for i in range(0, len(f2)):
+            for i in range(0, len(f1)):
                 if (f2[i] <= threshold):
-                    new_f2.append(f2[i])
+                    new_f1.append(f1[i])
         elif logic == '==':
-            for i in range(0, len(f2)):
+            for i in range(0, len(f1)):
                 if (type(f2[i]) == str and type(threshold) == str and f2[i] == threshold):
-                    new_f2.append(f2[i])
+                    new_f1.append(f1[i])
                 elif (f2[i] == threshold):
-                    new_f2.append(f2[i])
+                    new_f1.append(f1[i])
         elif logic == '!=':
-            for i in range(0, len(f2)):
+            for i in range(0, len(f1)):
                 if (type(f2[i]) == str and type(threshold) == str and f2[i] != threshold):
-                    new_f2.append(f2[i])
+                    new_f1.append(f1[i])
                 elif (f2[i] != threshold):
-                    new_f2.append(f2[i])
+                    new_f1.append(f1[i])
         elif logic == 'contains':
-            for i in range(0, len(f2)):
+            for i in range(0, len(f1)):
                 if (type(f2[i]) == str and type(threshold) == str):
                     if (threshold in f2[i]):
-                        new_f2.append(f2[i])
+                        new_f1.append(f1[i])
         elif logic == '!contains':
-            for i in range(0, len(f2)):
+            for i in range(0, len(f1)):
                 if (type(f2[i]) == str and type(threshold) == str):
                     if (threshold not in f2[i]):
-                        new_f2.append(f2[i])
+                        new_f1.append(f1[i])
    
         # create new dataframe for output
         f1 = pd.DataFrame(data={feature1 : self.dataset[feature1]})
-        new_f2 = {feature2 : new_f2}
-        new_f2 = pd.DataFrame(data=new_f2)
+        new_f1 = {feature1 : new_f1}
+        new_f1 = pd.DataFrame(data=new_f1)
         
         # output the package for GUI Module
         # output[0] = feature1 pandas dataset
         # output[1] = filtered feature2 pandas dataset
-        output = [f1, new_f2]
+        output = [f1, new_f1]
         
-        print "Filtered second feature:"
+        
+        print "First feature:"
+        print output[0]
+        print "Filtered first feature:"
         print output[1]
         print "------------------ Filtering Done ------------------\n"
         return output
