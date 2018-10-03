@@ -83,5 +83,42 @@ class Tree:
             lessPaths[p] = lessPath.copy()
         return lessPaths
 
-    def writeSQL(self, ti):
-        return
+    def onkeysSQL(self, ti, left, right):
+        PK = ti[1][right]
+        SQL = "("
+        for k in range(len(PK)):
+            if k == 0:
+                SQL += (left + "." + PK[k] + "=" + right + "." + PK[k])
+            else:
+                SQL += (" AND " + left + "." + PK[k] + "=" + right + "." + PK[k])
+        SQL += ") "
+        return SQL
+
+    def getNodeHelper(self, table, node):
+        if str(node) == table:
+            return node
+        elif node.children is None:
+            return None
+        else:
+            for c in node.children:
+                ret = self.getNodeHelper(table, c)
+                if ret is not None:
+                    return ret
+            return None
+
+    def getNode(self, table):
+        return self.getNodeHelper(table, self.root)
+
+    def writeSQL(self, ti, tables):
+        nodes = []
+        for t in tables:
+            nodes.append(self.getNode(t))
+        paths = self.getPathsToAncestor(nodes)
+        SQL = "SELECT * FROM "
+        SQL += str(paths[nodes[0]][len(paths[nodes[0]]) - 1])
+        SQL += " "
+        for p in paths:
+            for n in reversed(range(len(paths[p]) - 1)):
+                SQL += ("LEFT JOIN " + str(paths[p][n]) + " ON ")
+                SQL += self.onkeysSQL(ti, str(paths[p][n].parent), str(paths[p][n]))
+        return SQL

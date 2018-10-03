@@ -3,15 +3,17 @@ from time import time
 from Init import Init
 import DatabasePreprocessing as dp
 
-server = "MYPC\SQLEXPRESS"
-dbName = "BHBackupRestore"
-UID = "SQLDummy"
-PWD = "bushdid9/11"
+LAPTOP = True
 
-server = "HEATHPC\SQLEXPRESS"
-dbName = "newBackupTest"
-UID = "SQLDummy"
-PWD = "bushdid9/11"
+serverL = "MYPC\SQLEXPRESS"
+dbNameL = "BHBackupRestore"
+UIDL = "SQLDummy"
+PWDL = "bushdid9/11"
+
+serverP = "HEATHPC\SQLEXPRESS"
+dbNameP = "newBackupTest"
+UIDP = "SQLDummy"
+PWDP = "bushdid9/11"
 
 def printTable(name, ti):
     print("Name: " + name + " PK: " + str(ti[1][name]) + " FKs: " +
@@ -20,14 +22,16 @@ def printTable(name, ti):
 ########## main ##########
 if __name__ == "__main__":
     start = time()
-    Init.init(server, dbName, UID, PWD)
+    if LAPTOP:
+        Init.init(serverL, dbNameL, UIDL, PWDL)
+    else:
+        Init.init(serverP, dbNameP, UIDP, PWDP)
     end = time()
     print(end - start)
 
-    Init.validDescriptionsRaw.to_csv('valid_features.csv')
-
-    # features = []
-    # features.append(Init.validDescriptions[3])
-    # features.append(Init.validDescriptions[6])
-    # data = dp.getData(features)
+    features = []
+    features.append(Init.validDescriptions[866])
+    features.append(Init.validDescriptions[668])
+    data = dp.getData(features)
+    print(data)
 

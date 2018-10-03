@@ -75,4 +75,5 @@ class Init:
         cls.trees = []
         for r in roots:
             cls.trees.append(Tree(r, cls.ti))
+        return
 

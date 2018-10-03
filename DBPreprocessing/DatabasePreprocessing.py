@@ -10,11 +10,22 @@ from Init import Init
 def getData(features):
     # assign features to tables
     tables = []
+    feat_names = []
     for f in features:
         set = Init.validDescriptionsRaw["table_name"].where(
             Init.validDescriptionsRaw["feat_description"] == f)
         set = set.dropna()
         tables.append(set.iloc[0])
+        set = Init.validDescriptionsRaw["feature_name"].where(
+            Init.validDescriptionsRaw["feat_description"] == f)
+        set = set.dropna()
+        feat_names.append(set.iloc[0])
+
+    indexedtables = tables.copy()
+    tables = []
+    for t in indexedtables:
+        if t not in tables:
+            tables.append(t)
 
     # find if all tables belong in a single tree, if not return error
     tree = None
@@ -30,14 +41,21 @@ def getData(features):
         return "ERROR NO COMMON PARENT INDEX"
 
     # generate SQL to retrieve features from database
-    SQL = tree.writeSQL(Init.ti)
+    SQL = tree.writeSQL(Init.ti, tables)
     Init.cursor.execute(SQL)
     data = Init.cursor.fetchall()
-    cols = [column[0] for column in Init.cursor.description]
 
     # format result into dataframe
-
-    return
+    cols = [column[0] for column in Init.cursor.description]
+    dict = {}
+    for c in range(len(cols)):
+        if cols[c] not in dict:
+            dict[cols[c]] = []
+            for row in data:
+                dict[cols[c]].append(row[c])
+    df = pd.DataFrame(dict)
+    df = df[feat_names]
+    return df
 
 # Call this to get a list valid feature descriptions
 def getDescriptions():
