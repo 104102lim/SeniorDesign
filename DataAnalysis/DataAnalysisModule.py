@@ -15,6 +15,9 @@ import pandas as pd
 import numpy as np
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
+import sys
+sys.path.insert(0, '../DBPreprocessing/')
+from DatabasePreprocessing import getData, getDescriptions
 
 
 #-----------------------------------------------------------------------------------------------
@@ -32,15 +35,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 #-----------------------------------------------------------------------------------------------
 class DataAnalysis():
     #-----------------------------------------------------------------------------------------------
-    # Function: __init__
-    # Private function for constructor of DataAnalysis object
-    #-----------------------------------------------------------------------------------------------
-    def __init__(self):
-        self.dataset = pd.DataFrame() # raw dataset
-        print "Data Analysis Module Initialized"
-    
-    
-    #-----------------------------------------------------------------------------------------------
     # Function: __testInialization__
     # Private function for testing public methods
     #-----------------------------------------------------------------------------------------------
@@ -49,32 +43,8 @@ class DataAnalysis():
         cols = ["Feature1","Feature2","Feature3","Feature4","Feature5"]
 
         ds = pd.DataFrame(data, columns=cols, dtype=float)  # test dataframe
-        self.dataset = ds
-        print "Test Dataset Initialized"
-    
-    
-    #-----------------------------------------------------------------------------------------------
-    # Function: __printDataset__
-    # Private function for printing out dataset
-    #-----------------------------------------------------------------------------------------------
-    def __printDataset__(self):
-        print "Current Dataset: \n"
-        print self.dataset, '\n'
-    
-    
-    #-----------------------------------------------------------------------------------------------
-    # Function: dataprocessingConnect
-    # Public function to connect Data Processing Module and get raw dataset
-    # (*** NOT UPDATED - NEEDS TO BE CHANGED)
-    #-----------------------------------------------------------------------------------------------
-    def dataprocessingConnect(self):
-        print "------------------ Connecting Data Processing Module ------------------"
-        # data processing module connection
-        # dataset initialization
-        # + anything that requires
-        
-        print "------------------ Connection Done ------------------"
-    
+        dataset = ds
+        print("Test Dataset Initialized")
     
     #-----------------------------------------------------------------------------------------------
     # Function: linearRegression
@@ -84,18 +54,20 @@ class DataAnalysis():
     #           y-intercept, r^2
     #-----------------------------------------------------------------------------------------------
     def linearRegression(self, feature1, feature2):
-        print "------------------ Linear Regression ------------------"
-    
+        print("------------------ Linear Regression ------------------")
+
+        dataset = getData([feature1, feature2])
+
         # input type checking
         if (type(feature1) != str or type(feature2) != str):
-            print "feature(s) should be str type\n"
+            print("feature(s) should be str type\n")
             return 0
 
-        print "\n" + feature1 + " vs. " + feature2
+        print("\n" + feature1 + " vs. " + feature2)
        
         # 1. linear regression
-        train_x = self.dataset[feature1].reshape(-1, 1)
-        train_y = self.dataset[feature2]
+        train_x = dataset[feature1].reshape(-1, 1)
+        train_y = dataset[feature2]
 
         linearRegression = linear_model.LinearRegression()
         linearRegression.fit(train_x, train_y)
@@ -113,7 +85,7 @@ class DataAnalysis():
 
         # 2. output indicators
         # Features
-        rawDataSet = {feature1 : self.dataset[feature1], feature2 : self.dataset[feature2]}
+        rawDataSet = {feature1 : dataset[feature1], feature2 : dataset[feature2]}
         rawDataFrame = pd.DataFrame(data=rawDataSet)
     
         # output the package for GUI Module
@@ -124,12 +96,12 @@ class DataAnalysis():
         output = [rawDataFrame, linearRegression.coef_, 
                          linearRegression.intercept_, r2_score(train_y, pred_y)]
     
-        print '\nRaw features:'
-        print output[0]
-        print '\nCoefficients:', output[1]
-        print 'Y-intecept:', output[2]
-        print 'R^2:', output[3]
-        print "\n------------------ Linear Regression Done ------------------\n"
+        print('\nRaw features:')
+        print(output[0])
+        print('\nCoefficients:', output[1])
+        print('Y-intecept:', output[2])
+        print('R^2:', output[3])
+        print("\n------------------ Linear Regression Done ------------------\n")
         return output
     
     
@@ -152,24 +124,26 @@ class DataAnalysis():
     #           - return -2: threshold type error
     #-----------------------------------------------------------------------------------------------
     def filtering(self, feature1, feature2, logic, threshold):
-        print "------------------ Filtering ------------------"
-    
+        print("------------------ Filtering ------------------")
+
+        dataset = getData([feature1, feature2])
+
         # input type checking
         if (type(feature1) != str or type(feature2) != str):
-            print "feature(s) should be str type\n"
+            print("feature(s) should be str type\n")
             return 0
         if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
             logic != "==" and logic != "!=" and logic != "contains" and logic != "!contains"):
-            print "logic value error\n"
+            print("logic value error\n")
             return -1
         if (type(threshold) != int and type(threshold) != float and type(threshold) != str):
-            print "threshold should be int, float, or str type\n"
+            print("threshold should be int, float, or str type\n")
             return -2
     
         # f1.size & f2.size should be same
         # get data from feature2
-        f1 = self.dataset[feature1]
-        f2 = self.dataset[feature2]
+        f1 = dataset[feature1]
+        f2 = dataset[feature2]
         new_f1 = []
     
         # do filtering for feature2
@@ -214,7 +188,7 @@ class DataAnalysis():
                         new_f1.append(f1[i])
    
         # create new dataframe for output
-        f1 = pd.DataFrame(data={feature1 : self.dataset[feature1]})
+        f1 = pd.DataFrame(data={feature1 : dataset[feature1]})
         new_f1 = {feature1 : new_f1}
         new_f1 = pd.DataFrame(data=new_f1)
         
@@ -224,11 +198,11 @@ class DataAnalysis():
         output = [f1, new_f1]
         
         
-        print "First feature:"
-        print output[0]
-        print "Filtered first feature:"
-        print output[1]
-        print "------------------ Filtering Done ------------------\n"
+        print("First feature:")
+        print(output[0])
+        print("Filtered first feature:")
+        print(output[1])
+        print("------------------ Filtering Done ------------------\n")
         return output
     
     
@@ -242,9 +216,3 @@ class DataAnalysis():
     def polynomialRegression(self, feature1, feature2):  
         # Implementation goes here
         return 0
-
-
-
-
-
-
