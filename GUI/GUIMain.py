@@ -16,6 +16,13 @@ matplotlib.use('Qt5Agg')
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
 
+sys.path.insert(0, '../DBPreprocessing/')
+from DatabasePreprocessing import initgetData, getDescriptions
+from Init import Init
+
+sys.path.insert(0, '../DataAnalysis/')
+from DataAnalysisModule import linearRegression, filtering
+
 from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
@@ -97,7 +104,7 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         slopeCheck.move(600, 100) 
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
-        #plotButton.clicked.connect(self.on_click)
+        plotButton.clicked.connect(self.plotLinearRegression)
         plotButton.move(700,100)
         plotButton.resize(50,50)
 
@@ -145,7 +152,7 @@ class filterDialog(QtWidgets.QMainWindow):
         self.threshold.resize(100,25)
         filterButton = QPushButton('Filter', self) 
         filterButton.setToolTip('Use button to filter the feature based on the chosen logic')
-        #filterButton.clicked.connect(self.display_input)
+        filterButton.clicked.connect(self.filterData)
         filterButton.move(700,100)
         filterButton.resize(50,50)
 
@@ -177,7 +184,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         # PLOT MENU
         self.plot_menu = QtWidgets.QMenu('&Plot', self)
-        self.plot_menu.addAction('&Linear Regression', self.linearRegression)
+        self.plot_menu.addAction('&Linear Regression', self.linearRegressionPrompt)
         self.menuBar().addSeparator()
         self.menuBar().addMenu(self.plot_menu)
 
@@ -245,13 +252,24 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialogs.append(dialog)
         dialog.show()
         
+    # feautre 1 & feature 2 are strings
+    # logical operation
+    # threshold is an integer/float/string, i.e. continuous value
+    def filterData(self):
+        #filtering()
+        
     def dataPrompt(self):
         print("data")
         
-    def linearRegression(self):
+    def linearRegressionPrompt(self):
         dialog = linearRegressionDialog(self)
         self.dialogs.append(dialog)
         dialog.show()
+    
+    # feature 1 & feature 2 are strings
+    # return is an array of various data types, i.e. objects
+    def plotLinearRegression(self):
+        linearRegression(feature1, feature2)
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
@@ -261,6 +279,11 @@ if __name__ == '__main__':
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
+    serverL = "MYPC\SQLEXPRESS"
+    dbNameL = "BHBackupRestore"
+    UIDL = "SQLDummy"
+    PWDL = "bushdid9/11"
+    Init.init(serverL, dbNameL, UIDL, PWDL)
     aw.setWindowTitle("Analysis Toolkit Prototype")
     aw.show()
     sys.exit(qApp.exec_())
