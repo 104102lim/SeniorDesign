@@ -1,282 +1,218 @@
 # -*- coding: utf-8 -*-
 """
-    -----------------------------------------------------------------------
-    DataAnalysisModule.py
-    : Data Analysis Module for BH Oil Characterization Software Applcation
-    Author: Sungho Lim, Joey Gallardo
-    09/19/2018
-    -----------------------------------------------------------------------
-    """
+-----------------------------------------------------------------------
+  DataAnalysisModule.py
+  
+  Data Analysis Module for BH Oil Characterization Software Applcation
+  
+  Author: Sungho Lim, Joey Gallardo
+  Last Updated Date: 09/28/2018
+-----------------------------------------------------------------------
+"""
 
-
-#-----------------------------------------------------------------------
-# 0. NECESSARY LIBRARY
-#-----------------------------------------------------------------------
 
 import pandas as pd
 import numpy as np
-import pyodbc
-import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
-import struct
-
-
-#-----------------------------------------------------------------------
-# 1. (I) DATA PROCESSING MODULE CONNECTION
-#    (II) GUI MODULE CONNECTION
-# Needs to connect local or remote SQL Database here
-# Also, needs to GUI Module Connection here
-# (**NOT UPDATED - NEEDS TO BE CHANGED)
-#-----------------------------------------------------------------------
-
-def data_analysis_module_init():
-    print "------------------ initializing data analysis module... ------------------"
-    # data processing module connection
-    # dataset initialization
-    # + anything that requires
-    print "------------------ initializing done ------------------"
-
-
-
-
-#**** FOR TEST DATA ANALYSIS MODULE - LATER DELETED
-data = [[1,2,3,4,5], [23,7,8,9,10], [5,7,13,14,15], [8,-5,18,19,20], [21,9,23,24,25]]
-cols = ["Feature1","Feature2","Feature3","Feature4","Feature5"]
-
-dataset = pd.DataFrame(data, columns=cols, dtype=float)  # original dataset
-
-COLUMN = dataset.columns # column list for "dataset"
-NUM_COLUMN = COLUMN.size # number of columns in "COLUMN"
-
-print "Orginial Dataset: \n"
-print dataset, '\n'
-
-
+import sys
+sys.path.insert(0, '../DBPreprocessing/')
+from DatabasePreprocessing import getData, getDescriptions
 
 
 #-----------------------------------------------------------------------------------------------
-#-----------------------------------------------------------------------
-# 2. DATA ANALYSIS MODULE
-# Backend part of the software application
-#-----------------------------------------------------------------------
-#-----------------------------------------------------------------------
+#                       DATA ANALYSIS MODULE
+#
+# Backend parts of the software application for GUI Module
+#
 # INPUTS FROM GUI:
-# 1) Feature Selection (2 or 3)
-# 2) Regression Type - Linear Regression, Ridge Regression, Lasso Regression, Gradient Boosting, Neural Network if time permits
-# 3) Threshold - property, logic operator, text values
-# 4) Excel (.csv) Option
+# 1) Analysis Type - Linear Regression, Polynomial Regression, or Filtering
+# 2) Feature Names (2 or 3)
+# 3) Threshold - logic operator, threshold
 #
-# (**NEEDS TO THINK ABOUT HOW TO GET INPUTS FROM GUI MODULE)
-# (**NOT UPDATED - NEEDS TO BE CHANGED)
-#-----------------------------------------------------------------------
-#-----------------------------------------------------------------------
 # OUTPUTS TO GUI:
-# 1) Visualization (2D or 3D)
-# 2) Indicators - R^2, y-intercept, MSE, Cross Validation (CV)
-# 3) Optional .csv
-#
-# (**NEEDS TO THINK ABOUT HOW TO SEND OUTPUTS TO GUI MODULE)
-# (**NOT UPDATED - NEEDS TO BE CHANGED)
-#-----------------------------------------------------------------------
+# 1) Indicators - (filtered or raw) Datasets, Coefficents, R^2, y-intercept
+#-----------------------------------------------------------------------------------------------
+class DataAnalysis():
+    #-----------------------------------------------------------------------------------------------
+    # Function: __testInialization__
+    # Private function for testing public methods
+    #-----------------------------------------------------------------------------------------------
+    def __testInialization__(self):
+        data = [[3,2,0,5,4], [23,7,8,9,10], [2,3,6,7,1], [0,9,2,5,-2], [5,7,13,14,15], [0,5,4,3,5], [8,-5,18,19,20], [-2,2,-3,-8,9], [21,9,23,24,25], [-9,-7,-13,-14,-15]]
+        cols = ["Feature1","Feature2","Feature3","Feature4","Feature5"]
 
-def data_analysis_module_linear_regression(feature1, feature2):
-    print "------------------ Linear Regression ------------------"
-    # make sure:
-    # feature1 - string
-    # feature2 - string
-    # y_intercept - boolean
-    # rsquared - boolearn
-    if (type(feature1) != str or type(feature2) != str):
-        print "feature(s) should be str type\n"
-        return 0
-
-    print "\n" + feature1 + " vs. " + feature2
-
-    # 1. get filtered two features (needs to provide more threshold options)
-    #mean_x = np.mean(dataset[feature1])
-    #mean_y = np.mean(dataset[feature2])
-    # first feature
-    #for k in range(0, len(dataset[feature1])):
-    #    if dataset[feature1][k] < threshold:
-    #        dataset[feature1][k] = mean_x
-    # second feature
-    #for k in range(0, len(dataset[feature2])):
-    #    if dataset[feature2][k] < threshold:
-    #        dataset[feature2][k] = mean_y
-
-
-    # 2. linear regression
-    train_x = dataset[feature1].reshape(-1, 1)
-    train_y = dataset[feature2]
-
-    linearRegression = linear_model.LinearRegression()
-    linearRegression.fit(train_x, train_y)
-
-    pred_y = linearRegression.predict(train_x)
-
-    # 3. output visualization
-    #title = feature1 + " vs. " + feature2
-    #plt.title(title)
-    #plt.xlabel(feature1)
-    #plt.ylabel(feature2)
-    #plt.scatter(train_x, train_y,  color='blue')
-    #plt.plot(train_x, pred_y, color='orange', linewidth=3)
-    #plt.show()
-
-    # 4. output indicators
-    # Features
-    rawDataSet = {feature1 : dataset[feature1], feature2 : dataset[feature2]}
-    rawDataFrame = pd.DataFrame(data=rawDataSet)
-
-    # output the package for GUI Module
-    # output[0] = rawDataFrame
-    # output[1] = coefficient of linear model
-    # output[2] = Y_intercept
-    # output[3] = R^2
-    output = [rawDataFrame, linearRegression.coef_,
-              linearRegression.intercept_, r2_score(train_y, pred_y)]
-        
-    print '\nRaw features:'
-    print output[0]
-    print '\nCoefficients:', output[1]
-    print 'Y-intecept:', output[2]
-    print 'R^2:', output[3]
-    print "\n------------------ Linear Regression done ------------------\n"
-    return output
-
-
-
-
-def data_analysis_module_filtering(feature1, feature2, logic, threshold):
-    # code goes here
-    # error checking required
-    # feature 1 & feature 2 should string type
-    # logic should be one of the followings: >, <, >=, <=, ==. !=, contains, !contains
-    # threshold should be one of the types: int, string
-    if (type(feature1) != str or type(feature2) != str):
-        print "feature(s) should be str type\n"
-        return 0
-    if (type(logic) != str):
-        print "logic should be str type\n"
-        return 0
-    if (logic != ">" or logic != "<" or logic != ">=" or logic != "<=" or
-        logic != "==" or logic != "!=" or logic != "contains" or logic != "!contains"):
-        print "logic value error\n"
-        return 0
-        if (type(threshold) != int or type(threshold) != float or type(threshold) != str):
-        print "threshold should be int, float, or str type\n"
-        return 0
-        
-        
-    feat1 = dataset[feature1]
-    feat2 = dataset[feature2]
-        
-        
-        
-    if logic == '>':  # 1. ">"
-    return 0
-    elif logic == '<': # 2. "<"
-    return 0
-        
-        # 2. <
-        # 3. >=
-        # 4. <=
-        # 5. ==
-        # 6. !=
-        # 7. contains
-        # 8. !contains
-        
-    return 0
-
-
-
-def data_analysis_module_polynomial_regression(feature1, feature2, logic, theshold):
-    # implement...
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-
-M=3
-poly_features=PolynomialFeatures(degree=M, include_bias=False)
-X_poly=poly_features.fit_transform(X) # contain original X and its new features
-model=LinearRegression()
-model.fit(X_poly,y) # Fit the model
-
-# Plot
-X_plot=np.linspace(0,1,100).reshape(-1,1)
-X_plot_poly=poly_features.fit_transform(X_plot)
-plt.plot(X,y,"b.")
-i=0
-plt.plot(X_plot_poly[:,i],model.predict(X_plot_poly),'-r')
-plt.show()
-    return 0
-
-
-
-#---------------------------------------------------TEST METHOD
-def data_analysis_module_linear_regression_all():
-    # do Linear Regression for each column
-    print "------------------ All Linear Regression ------------------"
-    threshold = 0 # threshold
-    count = 1     # number of total analysis
+        ds = pd.DataFrame(data, columns=cols, dtype=float)  # test dataframe
+        dataset = ds
+        print("Test Dataset Initialized")
     
-    for i in range(0, NUM_COLUMN-1):
-        for j in range(i+1, NUM_COLUMN):
-            print str(count) + ". " + COLUMN[i] + " vs. " + COLUMN[j]
-            count += 1
-            
-            # 0. set threshold
-            threshold = 0
-            
-            # 1. get filtered two features
-            mean_x = np.mean(dataset[COLUMN[i]])
-            mean_y = np.mean(dataset[COLUMN[j]])
-            # first feature
-            for k in range(0, len(dataset[COLUMN[i]])):
-                if dataset[COLUMN[i]][k] < threshold:
-                    dataset[COLUMN[i]][k] = mean_x
-        # second feature
-        for k in range(0, len(dataset[COLUMN[j]])):
-            if dataset[COLUMN[j]][k] < threshold:
-                dataset[COLUMN[j]][k] = mean_y
-    
-        # 2. do linear regression
-        train_x = dataset[COLUMN[i]].reshape(-1, 1)
-        train_y = dataset[COLUMN[j]]
-        
+    #-----------------------------------------------------------------------------------------------
+    # Function: linearRegression
+    # Public function to do linear regression given existing two feature string inputs
+    # Inputs:   string names of two feature
+    # Outputs:  raw datasets, coefficients of linear regression,
+    #           y-intercept, r^2
+    #-----------------------------------------------------------------------------------------------
+    def linearRegression(self, feature1, feature2):
+        print("------------------ Linear Regression ------------------")
+
+        dataset = getData([feature1, feature2])
+
+        # input type checking
+        if (type(feature1) != str or type(feature2) != str):
+            print("feature(s) should be str type\n")
+            return 0
+
+        print("\n" + feature1 + " vs. " + feature2)
+       
+        # 1. linear regression
+        train_x = dataset[feature1].reshape(-1, 1)
+        train_y = dataset[feature2]
+
         linearRegression = linear_model.LinearRegression()
         linearRegression.fit(train_x, train_y)
-        
+
         pred_y = linearRegression.predict(train_x)
+
+        # visualization - for test only
+        #title = feature1 + " vs. " + feature2
+        #plt.title(title)
+        #plt.xlabel(feature1)
+        #plt.ylabel(feature2)
+        #plt.scatter(train_x, train_y,  color='blue')
+        #plt.plot(train_x, pred_y, color='orange', linewidth=3)
+        #plt.show()
+
+        # 2. output indicators
+        # Features
+        rawDataSet = {feature1 : dataset[feature1], feature2 : dataset[feature2]}
+        rawDataFrame = pd.DataFrame(data=rawDataSet)
+    
+        # output the package for GUI Module
+        # output[0] = rawDataFrame
+        # output[1] = coefficient of linear model
+        # output[2] = Y_intercept
+        # output[3] = R^2
+        output = [rawDataFrame, linearRegression.coef_, 
+                         linearRegression.intercept_, r2_score(train_y, pred_y)]
+    
+        print('\nRaw features:')
+        print(output[0])
+        print('\nCoefficients:', output[1])
+        print('Y-intecept:', output[2])
+        print('R^2:', output[3])
+        print("\n------------------ Linear Regression Done ------------------\n")
+        return output
+    
+    
+    #-----------------------------------------------------------------------------------------------
+    # Function: filtering
+    # Public function to do filtering the second feature given existing two feature string inputs
+    # Inputs:   string names of two feature, logic, and threshold
+    #           - feature 1 & feature 2 should str type
+    #           - logic should be one of the followings: 
+    #               * >, <, >=, <=, ==. !=, contains, !contains
+    #               * where >, <, >=, <=, ==, !=: int, float threshold (and data type)
+    #               * where ==. !=, contains, !contains: str threshold (and data type)
+    #           - threshold should be one of the types: 
+    #               * int, float, string
+    # Outputs:  filtered dataset
+    #           - a Panda dataframe with original feature1 & filtered feature2
+    #           Error codes for non-matching data types
+    #           - return 0: feature type error
+    #           - return -1: logic type error
+    #           - return -2: threshold type error
+    #-----------------------------------------------------------------------------------------------
+    def filtering(self, feature1, feature2, logic, threshold):
+        print("------------------ Filtering ------------------")
+
+        dataset = getData([feature1, feature2])
+
+        # input type checking
+        if (type(feature1) != str or type(feature2) != str):
+            print("feature(s) should be str type\n")
+            return 0
+        if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
+            logic != "==" and logic != "!=" and logic != "contains" and logic != "!contains"):
+            print("logic value error\n")
+            return -1
+        if (type(threshold) != int and type(threshold) != float and type(threshold) != str):
+            print("threshold should be int, float, or str type\n")
+            return -2
+    
+        # f1.size & f2.size should be same
+        # get data from feature2
+        f1 = dataset[feature1]
+        f2 = dataset[feature2]
+        new_f1 = []
+    
+        # do filtering for feature2
+        # ex) (type(f2[i]) == int or type(f2[i]) == long) and (type(threshold) == int or type(threshold) == float)
+        if logic == '>':
+            for i in range(0, len(f1)):
+                if (f2[i] > threshold):
+                    new_f1.append(f1[i])
+        elif logic == '<':
+            for i in range(0, len(f1)):
+                if (f2[i] < threshold):
+                    new_f1.append(f1[i])
+        elif logic == '>=':
+            for i in range(0, len(f1)):
+                if (f2[i] >= threshold):
+                    new_f1.append(f1[i])
+        elif logic == '<=':
+            for i in range(0, len(f1)):
+                if (f2[i] <= threshold):
+                    new_f1.append(f1[i])
+        elif logic == '==':
+            for i in range(0, len(f1)):
+                if (type(f2[i]) == str and type(threshold) == str and f2[i] == threshold):
+                    new_f1.append(f1[i])
+                elif (f2[i] == threshold):
+                    new_f1.append(f1[i])
+        elif logic == '!=':
+            for i in range(0, len(f1)):
+                if (type(f2[i]) == str and type(threshold) == str and f2[i] != threshold):
+                    new_f1.append(f1[i])
+                elif (f2[i] != threshold):
+                    new_f1.append(f1[i])
+        elif logic == 'contains':
+            for i in range(0, len(f1)):
+                if (type(f2[i]) == str and type(threshold) == str):
+                    if (threshold in f2[i]):
+                        new_f1.append(f1[i])
+        elif logic == '!contains':
+            for i in range(0, len(f1)):
+                if (type(f2[i]) == str and type(threshold) == str):
+                    if (threshold not in f2[i]):
+                        new_f1.append(f1[i])
+   
+        # create new dataframe for output
+        f1 = pd.DataFrame(data={feature1 : dataset[feature1]})
+        new_f1 = {feature1 : new_f1}
+        new_f1 = pd.DataFrame(data=new_f1)
         
-        # 3. plot the result
-        title = COLUMN[i] + " vs. " + COLUMN[j]
-        plt.title(title)
-        plt.xlabel(COLUMN[i])
-        plt.ylabel(COLUMN[j])
-        plt.scatter(train_x, train_y,  color='blue')
-        plt.plot(train_x, pred_y, color='orange', linewidth=3)
-        plt.show()
+        # output the package for GUI Module
+        # output[0] = feature1 pandas dataset
+        # output[1] = filtered feature2 pandas dataset
+        output = [f1, new_f1]
         
-        # 4. show indicators
-        # Model coefficient(s)
-        print '\nCoefficients:', linearRegression.coef_
-        # Mean squared error
-        print 'MSE:', mean_squared_error(train_y, pred_y)
-        # Variance score: 1 is perfect prediction
-        print 'R^2:', r2_score(train_y, pred_y)
-    print '\n\n'
-
-
-
-
-
-#-----------------------------------------
-#                TEST
-#-----------------------------------------
-#data_analysis_module_linear_regression_all()
-data_analysis_module_linear_regression(cols[0], cols[1])
-
-
+        
+        print("First feature:")
+        print(output[0])
+        print("Filtered first feature:")
+        print(output[1])
+        print("------------------ Filtering Done ------------------\n")
+        return output
+    
+    
+    #-----------------------------------------------------------------------------------------------
+    # Function: polynomialRegression
+    # Public function to do polynomial regression given existing two feature string inputs
+    # Inputs:   string names of two feature
+    # Outputs:  raw datasets, coefficients of ploynomial regression,
+    #           y-intercept, r^2 (?)
+    #-----------------------------------------------------------------------------------------------
+    def polynomialRegression(self, feature1, feature2):  
+        # Implementation goes here
+        return 0
