@@ -33,7 +33,7 @@ from DatabasePreprocessing import getData, getDescriptions
 # OUTPUTS TO GUI:
 # 1) Indicators - (filtered or raw) Datasets, Coefficents, R^2, y-intercept
 #-----------------------------------------------------------------------------------------------
-class DataAnalysis():
+class DataAnalysis:
     #-----------------------------------------------------------------------------------------------
     # Function: __testInialization__
     # Private function for testing public methods
@@ -213,6 +213,12 @@ class DataAnalysis():
     # Outputs:  raw datasets, coefficients of ploynomial regression,
     #           y-intercept, r^2 (?)
     #-----------------------------------------------------------------------------------------------
-    def polynomialRegression(self, feature1, feature2):  
-        # Implementation goes here
-        return 0
+    def polynomialRegression(self, feature1, feature2, order):
+        dataset = getData([feature1, feature2])
+        X = np.array(dataset[feature1].values).reshape(-1, 1)
+        y = np.array(dataset[feature2].values).reshape(-1, 1)
+        from sklearn.preprocessing import PolynomialFeatures
+        poly = PolynomialFeatures(degree=order)
+        poly_features = poly.fit_transform(X)
+        poly_regression = linear_model.LinearRegression()
+        return poly_regression.fit(poly_features, y).coef_
