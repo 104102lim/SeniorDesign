@@ -28,10 +28,13 @@ if __name__ == "__main__":
         Init.init(serverP, dbNameP, UIDP, PWDP)
     end = time()
     print(end - start)
-
     features = []
-    features.append(Init.validDescriptions[866])
-    features.append(Init.validDescriptions[668])
+    features.append(Init.validDescriptions[866]) # WELL_HX
+    features.append(Init.validDescriptions[668]) # AREA_NAME
+    start = time()
     data = dp.getData(features)
+    end = time()
+    print(end - start)
     print(data)
+
 
