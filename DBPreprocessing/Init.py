@@ -36,7 +36,7 @@ class Init:
 
     @classmethod
     def __getTableNames(cls):
-        tbNamesDf = pd.read_csv('FilteredDictionary.csv')
+        tbNamesDf = pd.read_csv('../DBPreprocessing/FilteredDictionary.csv')
         tableNames = []
         for index, row in tbNamesDf.iterrows():
             tableNames.append(row[0])

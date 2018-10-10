@@ -17,11 +17,11 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
 
 sys.path.insert(0, '../DBPreprocessing/')
-from DatabasePreprocessing import initgetData, getDescriptions
+from DatabasePreprocessing import getDescriptions
 from Init import Init
 
 sys.path.insert(0, '../DataAnalysis/')
-from DataAnalysisModule import linearRegression, filtering
+from DataAnalysisModule import DataAnalysis as da
 
 from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -256,7 +256,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     # logical operation
     # threshold is an integer/float/string, i.e. continuous value
     def filterData(self):
-        #filtering()
+        pass
+        #da.filtering()
         
     def dataPrompt(self):
         print("data")
@@ -269,7 +270,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     # feature 1 & feature 2 are strings
     # return is an array of various data types, i.e. objects
     def plotLinearRegression(self):
-        linearRegression(feature1, feature2)
+        da.linearRegression(feature1, feature2)
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
