@@ -5,6 +5,7 @@ sys.path.insert(0, '../DataAnalysis/')
 import os
 import random
 import matplotlib
+import numpy as np
 
 from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -42,13 +43,20 @@ class MyMplCanvas(FigureCanvas):
         self.axes.set_xlabel(xlabel="XXX")
         self.axes.set_ylabel(ylabel="YYY")
 
-    def update_figure(self, dataX, dataY, Xlabel, Ylabel):
+    def update_figure(self, data, Xlabel, Ylabel):
         # Build a list of 4 random integers between 0 and 10 (both inclusive)
-        l = random.randint(0, 10)
-        dataX = dataX * l
-        dataY = dataY * l
+        # l = random.randint(0, 10)
+        # dataX = dataX * l
+        # dataY = dataY * l
+
+        slope = data[1]
+        yint = data[2]
+
+        X = np.arange(0., 5., 0.2)
+        Y = slope * X + yint
+
         self.axes.cla()
-        self.axes.plot(dataX, dataY)
+        self.axes.plot(X, Y)
         self.axes.set_xlabel(xlabel=Xlabel)
         self.axes.set_ylabel(ylabel=Ylabel)
         self.draw()
@@ -92,6 +100,7 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
         plotButton.clicked.connect(aw.plotLinearRegression)
+        # plotButton.clicked.connect(lambda: sc.update_figure("XXX", "YYY"))
         plotButton.move(700,100)
         plotButton.resize(50,50)
 
@@ -196,15 +205,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.main_widget = QtWidgets.QWidget(self)
 
         # Canvas Setup
-        layout = QtWidgets.QVBoxLayout(self.main_widget)
-        sc = MyMplCanvas(self.main_widget, width=5, height=4, dpi=100)
+        self.layout = QtWidgets.QVBoxLayout(self.main_widget)
+        self.sc = MyMplCanvas(self.main_widget, width=5, height=4, dpi=100)
         # Plot Button
         #pbutton = QtWidgets.QPushButton('Plot')
         #pbutton.clicked.connect(lambda: sc.update_figure(t, s, "XXX", "YYY"))
         # Toolbar Setup
         #toolBar = NavigationToolbar(sc, self)
 
-        layout.addWidget(sc)
+        self.layout.addWidget(self.sc)
         #layout.addWidget(toolBar)
         #layout.addWidget(pbutton)
 
@@ -228,6 +237,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def fileQuit(self):
         self.close()
+
+    def closeEvent(self, ce):
+        self.fileQuit()
         
     def storeXValue(self, index):
         self.xFeature = lrd.featureX.itemText(index)
@@ -239,7 +251,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         dialog = filterDialog(self)
         self.dialogs.append(dialog)
         dialog.show()
-
+        
     def filterData(self):
         print('filter')
         #a.filtering()
@@ -255,8 +267,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def plotLinearRegression(self):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
-        print(coefs)
-        #close linear regression window dialog
+        self.sc.update_figure(coefs, "XXX", "YYY")
+	#close linear regression window dialog
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
