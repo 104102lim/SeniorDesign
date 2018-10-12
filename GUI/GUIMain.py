@@ -245,7 +245,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         #a.filtering()
         
     def dataPrompt(self):
-        print("data")
+        print(self.data)
         
     def linearRegressionPrompt(self):
         dialog = linearRegressionDialog(self)
@@ -256,6 +256,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
         print(coefs)
+        #close linear regression window dialog
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
