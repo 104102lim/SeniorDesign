@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
 
 from Init import Init
 from DatabasePreprocessing import getDescriptions
-from DataAnalysisModule import DataAnalysis as da
+import DataAnalysisModule as da
 
 matplotlib.use('Qt5Agg')
 
@@ -69,15 +69,18 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         label.resize(250,50)
         self.featureX = QComboBox(self)
         self.featureX.setToolTip('Select feature for X axis')
-        self.featureX.addItem("Option 1")
-        self.featureX.addItem("Option 2")
         #featureX.completer().setCompletionMode(QWidget.QCompleter.PopupCompletion)
         self.featureX.move(150, 100)
         self.featureX.activated.connect(aw.storeXValue)
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
-        self.featureY.addItem("Option 1")
-        self.featureY.addItem("Option 2")
+        #populate combo boxes
+        descriptions = getDescriptions()
+        descriptions.sort()
+        for d in descriptions:
+            if(d != "bottom depth" and d != "top depth"): continue
+            self.featureY.addItem(d)
+            self.featureX.addItem(d)
         self.featureY.move(300, 100)
         self.featureY.activated.connect(aw.storeYValue)
         yIntercept = QCheckBox("Y-Intercept",self)
@@ -258,8 +261,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     # feature 1 & feature 2 are strings
     # return is an array of various data types, i.e. objects
     def plotLinearRegression(self):
-        print(self.xFeature + ' and ' + self.yFeature)
-        #da.linearRegression(feature1, feature2)
+        coefs = da.linearRegression(self.xFeature, self.yFeature)
+
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
@@ -269,7 +272,7 @@ if __name__ == '__main__':
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
-    #Init.init(serverL, dbNameL, UIDL, PWDL)
+    Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()

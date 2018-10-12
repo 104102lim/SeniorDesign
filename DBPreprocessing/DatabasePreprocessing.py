@@ -10,7 +10,7 @@ from Init import Init
 def getData(features):
     # assign features to tables
     tables = []
-    feat_names = []
+    feat_names = {}
     for f in features:
         set = Init.validDescriptionsRaw["table_name"].where(
             Init.validDescriptionsRaw["feat_description"] == f)
@@ -19,7 +19,7 @@ def getData(features):
         set = Init.validDescriptionsRaw["feature_name"].where(
             Init.validDescriptionsRaw["feat_description"] == f)
         set = set.dropna()
-        feat_names.append(set.iloc[0])
+        feat_names[set.iloc[0]] = f
 
     indexedtables = tables.copy()
     tables = []
@@ -54,7 +54,11 @@ def getData(features):
             for row in data:
                 dict[cols[c]].append(row[c])
     df = pd.DataFrame(dict)
-    df = df[feat_names]
+    df = df[list(feat_names.keys())]
+    goodColumns = []
+    for c in df.columns:
+        goodColumns.append(feat_names[c])
+    df.columns = goodColumns
     return df
 
 # Call this to get a list valid feature descriptions
