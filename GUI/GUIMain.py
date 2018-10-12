@@ -1,50 +1,35 @@
-# -*- coding: utf-8 -*-
-"""
----------------------------------------------------------------
-frame_test
----------------------------------------------------------------
-"""
-
 from __future__ import unicode_literals
 import sys
+sys.path.insert(0, '../DBPreprocessing/')
+sys.path.insert(0, '../DataAnalysis/')
 import os
 import random
 import matplotlib
-# Make sure that we are using QT5
-matplotlib.use('Qt5Agg')
-# Uncomment this line before running, it breaks sphinx-gallery builds
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
-
-sys.path.insert(0, '../DBPreprocessing/')
-from DatabasePreprocessing import getDescriptions
-from Init import Init
-
-sys.path.insert(0, '../DataAnalysis/')
-from DataAnalysisModule import DataAnalysis as da
 
 from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
+
+from Init import Init
+from DatabasePreprocessing import getDescriptions
+from DataAnalysisModule import DataAnalysis as da
+
+matplotlib.use('Qt5Agg')
+
 progname = os.path.basename(sys.argv[0])
 progversion = "0.1"
 
-
 class MyMplCanvas(FigureCanvas):
-    """
-    Canvas Module
-    """
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
-
         self.compute_initial_figure()
-
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
-
         FigureCanvas.setSizePolicy(self,
                                    QtWidgets.QSizePolicy.Expanding,
                                    QtWidgets.QSizePolicy.Expanding)
@@ -60,10 +45,8 @@ class MyMplCanvas(FigureCanvas):
     def update_figure(self, dataX, dataY, Xlabel, Ylabel):
         # Build a list of 4 random integers between 0 and 10 (both inclusive)
         l = random.randint(0, 10)
-
         dataX = dataX * l
         dataY = dataY * l
-
         self.axes.cla()
         self.axes.plot(dataX, dataY)
         self.axes.set_xlabel(xlabel=Xlabel)
@@ -81,7 +64,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
-        
         label = QLabel('Linear Regression', self)
         label.move(20,90)
         label.resize(250,50)
@@ -228,9 +210,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         self.statusBar().showMessage("Testing", 2000)
 
-    """
-    Define All Action Below
-    """
+    #Define All Actions Below
     def fileOpen(self):
         self.close()
 
@@ -265,7 +245,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     # threshold is an integer/float/string, i.e. continuous value
     def filterData(self):
         print('filter')
-        #pass
         #a.filtering()
         
     def dataPrompt(self):
@@ -281,24 +260,20 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def plotLinearRegression(self):
         print(self.xFeature + ' and ' + self.yFeature)
         #da.linearRegression(feature1, feature2)
-        #pass
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
 
-
 if __name__ == '__main__':
-    qapp = 0
-    qApp = QtWidgets.QApplication(sys.argv)
-    aw = ApplicationWindow()
-    lrd = linearRegressionDialog()
-    '''
     serverL = "MYPC\SQLEXPRESS"
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
-    Init.init(serverL, dbNameL, UIDL, PWDL)
-    '''
+    #Init.init(serverL, dbNameL, UIDL, PWDL)
+    qapp = 0
+    qApp = QtWidgets.QApplication(sys.argv)
+    aw = ApplicationWindow()
+    lrd = linearRegressionDialog()
     aw.setWindowTitle("Analysis Toolkit Prototype")
     aw.show()
     sys.exit(qApp.exec_())
