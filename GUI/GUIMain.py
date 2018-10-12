@@ -56,9 +56,10 @@ class MyMplCanvas(FigureCanvas):
         Y = slope * X + yint
 
         sData = data[0]
-
+        sX = sData[Xlabel].tolist()
+        sY = sData[Ylabel].tolist()
         self.axes.cla()
-        self.axes.scatter(sData)
+        self.axes.scatter(sX, sY)
         self.axes.plot(X, Y)
         self.axes.set_xlabel(xlabel=Xlabel)
         self.axes.set_ylabel(ylabel=Ylabel)
@@ -86,14 +87,12 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
         #populate combo boxes
-        '''
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
-        '''
         self.featureY.move(300, 100)
         self.featureY.activated.connect(aw.storeYValue)
         yIntercept = QCheckBox("Y-Intercept",self)
@@ -122,8 +121,6 @@ class filterDialog(QtWidgets.QMainWindow):
         self.setFixedSize(self.size())
         self.feature1 = QComboBox(self)
         self.feature1.setToolTip('Select feature 1')
-        self.feature1.addItem("Option 1")
-        self.feature1.addItem("Option 2")
         self.feature1.move(50, 100)
         self.feature1.activated.connect(aw.storeFirstValue)
         whereLabel = QLabel('WHERE', self)
@@ -131,8 +128,12 @@ class filterDialog(QtWidgets.QMainWindow):
         whereLabel.resize(250,50)
         self.feature2 = QComboBox(self)
         self.feature2.setToolTip('Select feature 2')
-        self.feature2.addItem("Option 1")
-        self.feature2.addItem("Option 2")
+        descriptions = getDescriptions()
+        descriptions.sort()
+        for d in descriptions:
+            if(d != "bottom depth" and d != "top depth"): continue
+            self.feature1.addItem(d)
+            self.feature2.addItem(d)
         self.feature2.move(200, 100)
         self.feature2.activated.connect(aw.storeSecondValue)
         isLabel = QLabel('IS', self)
@@ -270,7 +271,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         
     def filterData(self):
        threshold = fd.threshold.text()
-       filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
+       print(threshold)
+       #filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
        
         
     def dataPrompt(self):
@@ -284,8 +286,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def plotLinearRegression(self):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
-        self.sc.update_figure(coefs, "XXX", "YYY")
-	#close linear regression window dialog
+        self.sc.update_figure(coefs, self.xFeature, self.yFeature)
+	    #close linear regression window dialog
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
@@ -295,7 +297,7 @@ if __name__ == '__main__':
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
-    #Init.init(serverL, dbNameL, UIDL, PWDL)
+    Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
