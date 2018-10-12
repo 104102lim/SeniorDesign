@@ -55,7 +55,10 @@ class MyMplCanvas(FigureCanvas):
         X = np.arange(0., 5., 0.2)
         Y = slope * X + yint
 
+        sData = data[0]
+
         self.axes.cla()
+        self.axes.scatter(sData)
         self.axes.plot(X, Y)
         self.axes.set_xlabel(xlabel=Xlabel)
         self.axes.set_ylabel(ylabel=Ylabel)
