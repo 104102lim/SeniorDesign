@@ -85,17 +85,19 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         label = QLabel('Linear Regression', self)
         label.move(20,90)
         label.resize(250,50)
-        featureX = QComboBox(self)
-        featureX.setToolTip('Select feature for X axis')
-        featureX.addItem("Option 1")
-        featureX.addItem("Option 2")
+        self.featureX = QComboBox(self)
+        self.featureX.setToolTip('Select feature for X axis')
+        self.featureX.addItem("Option 1")
+        self.featureX.addItem("Option 2")
         #featureX.completer().setCompletionMode(QWidget.QCompleter.PopupCompletion)
-        featureX.move(150, 100)
-        featureY = QComboBox(self)
-        featureY.setToolTip('Select feature for Y axis')
-        featureY.addItem("Option 1")
-        featureY.addItem("Option 2")
-        featureY.move(300, 100)
+        self.featureX.move(150, 100)
+        self.featureX.activated.connect(aw.storeXValue)
+        self.featureY = QComboBox(self)
+        self.featureY.setToolTip('Select feature for Y axis')
+        self.featureY.addItem("Option 1")
+        self.featureY.addItem("Option 2")
+        self.featureY.move(300, 100)
+        self.featureY.activated.connect(aw.storeYValue)
         yIntercept = QCheckBox("Y-Intercept",self)
         yIntercept.move(450, 100)
         rSquared = QCheckBox("R^2",self)
@@ -104,7 +106,7 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         slopeCheck.move(600, 100) 
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
-        plotButton.clicked.connect(self.plotLinearRegression)
+        plotButton.clicked.connect(aw.plotLinearRegression)
         plotButton.move(700,100)
         plotButton.resize(50,50)
 
@@ -152,7 +154,7 @@ class filterDialog(QtWidgets.QMainWindow):
         self.threshold.resize(100,25)
         filterButton = QPushButton('Filter', self) 
         filterButton.setToolTip('Use button to filter the feature based on the chosen logic')
-        filterButton.clicked.connect(self.filterData)
+        filterButton.clicked.connect(aw.filterData)
         filterButton.move(700,100)
         filterButton.resize(50,50)
 
@@ -247,6 +249,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def closeEvent(self, ce):
         self.fileQuit()
         
+    def storeXValue(self, index):
+        self.xFeature = lrd.featureX.itemText(index)
+        
+    def storeYValue(self, index):
+        self.yFeature = lrd.featureY.itemText(index)
+        
     def filterPrompt(self):
         dialog = filterDialog(self)
         self.dialogs.append(dialog)
@@ -256,8 +264,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     # logical operation
     # threshold is an integer/float/string, i.e. continuous value
     def filterData(self):
-        pass
-        #da.filtering()
+        print('filter')
+        #pass
+        #a.filtering()
         
     def dataPrompt(self):
         print("data")
@@ -270,7 +279,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     # feature 1 & feature 2 are strings
     # return is an array of various data types, i.e. objects
     def plotLinearRegression(self):
-        da.linearRegression(feature1, feature2)
+        print(self.xFeature + ' and ' + self.yFeature)
+        #da.linearRegression(feature1, feature2)
+        #pass
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
@@ -280,11 +291,14 @@ if __name__ == '__main__':
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
+    lrd = linearRegressionDialog()
+    '''
     serverL = "MYPC\SQLEXPRESS"
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
     Init.init(serverL, dbNameL, UIDL, PWDL)
+    '''
     aw.setWindowTitle("Analysis Toolkit Prototype")
     aw.show()
     sys.exit(qApp.exec_())
