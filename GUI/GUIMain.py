@@ -75,12 +75,14 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
         #populate combo boxes
+        '''
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
+        '''
         self.featureY.move(300, 100)
         self.featureY.activated.connect(aw.storeYValue)
         yIntercept = QCheckBox("Y-Intercept",self)
@@ -106,33 +108,35 @@ class filterDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
-        
-        feature1 = QComboBox(self)
-        feature1.setToolTip('Select feature 1')
-        feature1.addItem("Option 1")
-        feature1.addItem("Option 2")
-        feature1.move(50, 100)
+        self.feature1 = QComboBox(self)
+        self.feature1.setToolTip('Select feature 1')
+        self.feature1.addItem("Option 1")
+        self.feature1.addItem("Option 2")
+        self.feature1.move(50, 100)
+        self.feature1.activated.connect(aw.storeFirstValue)
         whereLabel = QLabel('WHERE', self)
         whereLabel.move(152,90)
         whereLabel.resize(250,50)
-        feature2 = QComboBox(self)
-        feature2.setToolTip('Select feature 2')
-        feature2.addItem("Option 1")
-        feature2.addItem("Option 2")
-        feature2.move(200, 100)
+        self.feature2 = QComboBox(self)
+        self.feature2.setToolTip('Select feature 2')
+        self.feature2.addItem("Option 1")
+        self.feature2.addItem("Option 2")
+        self.feature2.move(200, 100)
+        self.feature2.activated.connect(aw.storeSecondValue)
         isLabel = QLabel('IS', self)
         isLabel.move(350,90)
         isLabel.resize(250,50)
-        logic = QComboBox(self)
-        logic.setToolTip('Select logic')
-        logic.addItem("=")
-        logic.addItem("!=")
-        logic.addItem("<")
-        logic.addItem(">")
-        logic.addItem("<=")
-        logic.addItem(">=")
-        logic.move(400, 100)
-        logic.resize(50,25)
+        self.logic = QComboBox(self)
+        self.logic.setToolTip('Select logic')
+        self.logic.addItem("=")
+        self.logic.addItem("!=")
+        self.logic.addItem("<")
+        self.logic.addItem(">")
+        self.logic.addItem("<=")
+        self.logic.addItem(">=")
+        self.logic.move(400, 100)
+        self.logic.resize(50,25)
+        self.logic.activated.connect(aw.storeLogic)
         self.threshold = QLineEdit(self)
         self.threshold.setToolTip('Input numeric value')
         self.threshold.move(500,100)
@@ -235,14 +239,24 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def storeYValue(self, index):
         self.yFeature = lrd.featureY.itemText(index)
         
+    def storeFirstValue(self, index):
+        self.oneFeature = fd.feature1.itemText(index)  
+        
+    def storeSecondValue(self, index):
+        self.twoFeature = fd.feature2.itemText(index)
+        
+    def storeLogic(self, index):
+        self.filterLogic = fd.logic.itemText(index)
+        
     def filterPrompt(self):
         dialog = filterDialog(self)
         self.dialogs.append(dialog)
         dialog.show()
 
     def filterData(self):
-        print('filter')
-        #a.filtering()
+       threshold = fd.threshold.text()
+       filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
+       
         
     def dataPrompt(self):
         print("data")
@@ -265,11 +279,12 @@ if __name__ == '__main__':
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
-    Init.init(serverL, dbNameL, UIDL, PWDL)
+    #Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
     lrd = linearRegressionDialog()
+    fd = filterDialog()
     aw.setWindowTitle("Analysis Toolkit Prototype")
     aw.show()
     sys.exit(qApp.exec_())
