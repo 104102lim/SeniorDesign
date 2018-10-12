@@ -228,9 +228,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def fileQuit(self):
         self.close()
-
-    def closeEvent(self, ce):
-        self.fileQuit()
         
     def storeXValue(self, index):
         self.xFeature = lrd.featureX.itemText(index)
@@ -242,7 +239,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         dialog = filterDialog(self)
         self.dialogs.append(dialog)
         dialog.show()
-        
+
     def filterData(self):
         print('filter')
         #a.filtering()
@@ -257,6 +254,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def plotLinearRegression(self):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
+        self.data = coefs[0]
+        print(coefs)
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
