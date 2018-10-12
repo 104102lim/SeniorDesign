@@ -199,14 +199,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         layout = QtWidgets.QVBoxLayout(self.main_widget)
         sc = MyMplCanvas(self.main_widget, width=5, height=4, dpi=100)
         # Plot Button
-        pbutton = QtWidgets.QPushButton('Plot')
-        pbutton.clicked.connect(lambda: sc.update_figure(t, s, "XXX", "YYY"))
+        #pbutton = QtWidgets.QPushButton('Plot')
+        #pbutton.clicked.connect(lambda: sc.update_figure(t, s, "XXX", "YYY"))
         # Toolbar Setup
-        toolBar = NavigationToolbar(sc, self)
+        #toolBar = NavigationToolbar(sc, self)
 
         layout.addWidget(sc)
-        layout.addWidget(toolBar)
-        layout.addWidget(pbutton)
+        #layout.addWidget(toolBar)
+        #layout.addWidget(pbutton)
 
         self.main_widget.setFocus()
         self.setCentralWidget(self.main_widget)
@@ -243,9 +243,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialogs.append(dialog)
         dialog.show()
         
-    # feautre 1 & feature 2 are strings
-    # logical operation
-    # threshold is an integer/float/string, i.e. continuous value
     def filterData(self):
         print('filter')
         #a.filtering()
@@ -257,12 +254,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         dialog = linearRegressionDialog(self)
         self.dialogs.append(dialog)
         dialog.show()
-    
-    # feature 1 & feature 2 are strings
-    # return is an array of various data types, i.e. objects
+
     def plotLinearRegression(self):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
-
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
