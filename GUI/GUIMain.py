@@ -90,7 +90,6 @@ class dataDialog(QtWidgets.QMainWindow):
         #df.to_csv('./EricTestData.csv')
         self.table.setColumnCount(len(df.columns))
         self.table.setRowCount(len(df.index))
-        #self.table.setHorizontalHeaderItem(self, 0, QTableWidgetItem(df.columns[0]))
         self.table.setHorizontalHeaderLabels(df.columns)
         for i in range(len(df.index)):
             for j in range(len(df.columns)):
@@ -314,7 +313,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def plotLinearRegression(self):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
-        self.sc.update_figure(coefs, self.xFeature, self.yFeature)
+        self.sc.update_figure(coefs, self.xFeature, self.yFeature, False, False, False)
         self.dialog.close()
         self.dialogs.pop()
 
