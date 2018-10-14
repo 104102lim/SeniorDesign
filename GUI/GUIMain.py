@@ -29,7 +29,6 @@ class MyMplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
-        #self.compute_initial_figure()
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
         FigureCanvas.setSizePolicy(self,
@@ -37,25 +36,11 @@ class MyMplCanvas(FigureCanvas):
                                    QtWidgets.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
-    def compute_initial_figure(self):
-        t = arange(0.0, 3.0, 0.01)
-        s = sin(2 * pi * t)
-        self.axes.plot(t, s)
-        self.axes.set_xlabel(xlabel="XXX")
-        self.axes.set_ylabel(ylabel="YYY")
-
     def update_figure(self, data, Xlabel, Ylabel):
-        # Build a list of 4 random integers between 0 and 10 (both inclusive)
-        # l = random.randint(0, 10)
-        # dataX = dataX * l
-        # dataY = dataY * l
-
         slope = data[1]
         yint = data[2]
-
         X = np.arange(0., 5., 0.2)
         Y = slope * X + yint
-
         sData = data[0]
         sX = sData[Xlabel].tolist()
         sY = sData[Ylabel].tolist()
@@ -87,9 +72,12 @@ class dataDialog(QtWidgets.QMainWindow):
         #self.table.move(550,50)
         self.table.resize(300,400)
         # Our data frame goes below, current df is dummy data for testing
-        df = pd.DataFrame({"a" : [4 ,5, 6],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        #df = pd.DataFrame({"a" : [4 ,5, 6],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        df = aw.data
         self.table.setColumnCount(len(df.columns))
         self.table.setRowCount(len(df.index))
+        #self.table.setHorizontalHeaderItem(self, 0, QTableWidgetItem(df.columns[0]))
+        self.table.setHorizontalHeaderLabels(df.columns)
         for i in range(len(df.index)):
             for j in range(len(df.columns)):
                 self.table.setItem(i,j,QTableWidgetItem(str(df.iloc[i, j])))
@@ -112,7 +100,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         label.resize(250,50)
         self.featureX = QComboBox(self)
         self.featureX.setToolTip('Select feature for X axis')
-        #featureX.completer().setCompletionMode(QWidget.QCompleter.PopupCompletion)
         self.featureX.move(150, 100)
         self.featureX.addItem("Option 1")
         self.featureX.activated.connect(aw.storeXValue)
@@ -120,7 +107,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureY.setToolTip('Select feature for Y axis')
         self.featureY.move(300, 100)
         self.featureY.activated.connect(aw.storeYValue)
-        '''
         #populate combo boxes
         descriptions = getDescriptions()
         descriptions.sort()
@@ -128,7 +114,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
             if(d != "bottom depth" and d != "top depth"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
-        '''
         yIntercept = QCheckBox("Y-Intercept",self)
         yIntercept.move(450, 100)
         rSquared = QCheckBox("R^2",self)
@@ -138,7 +123,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
         plotButton.clicked.connect(aw.plotLinearRegression)
-        # plotButton.clicked.connect(lambda: sc.update_figure("XXX", "YYY"))
         plotButton.move(700,100)
         plotButton.resize(50,50)
         
@@ -166,14 +150,12 @@ class filterDialog(QtWidgets.QMainWindow):
         self.feature2.setToolTip('Select feature 2')
         self.feature2.move(200, 100)
         self.feature2.activated.connect(aw.storeSecondValue)
-        '''
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth"): continue
             self.feature1.addItem(d)
             self.feature2.addItem(d)
-        '''
         isLabel = QLabel('IS', self)
         isLabel.move(350,90)
         isLabel.resize(250,50)
@@ -198,12 +180,15 @@ class filterDialog(QtWidgets.QMainWindow):
         filterButton.move(700,100)
         filterButton.resize(50,50)
 
+    def getThreshold(self):
+        return self.threshold.text()
+
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        
+
         #self.dialog = filterDialog(self)
         self.dialogs = list()
-        
+
     # Main Window Init
         QtWidgets.QMainWindow.__init__(self)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
@@ -251,19 +236,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # Canvas Setup
         self.layout = QtWidgets.QVBoxLayout(self.main_widget)
         self.sc = MyMplCanvas(self.main_widget, width=5, height=4, dpi=100)
-        # Plot Button
-        #pbutton = QtWidgets.QPushButton('Plot')
-        #pbutton.clicked.connect(lambda: sc.update_figure(t, s, "XXX", "YYY"))
-        # Toolbar Setup
-        #toolBar = NavigationToolbar(sc, self)
-
         self.layout.addWidget(self.sc)
-        #layout.addWidget(toolBar)
-        #layout.addWidget(pbutton)
-
         self.main_widget.setFocus()
         self.setCentralWidget(self.main_widget)
-
         self.statusBar().showMessage("Testing", 2000)
 
     #Define All Actions Below
@@ -284,53 +259,50 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def closeEvent(self, ce):
         self.fileQuit()
-        
+
     def storeXValue(self, index):
         self.xFeature = lrd.featureX.itemText(index)
-        
+
     def storeYValue(self, index):
         self.yFeature = lrd.featureY.itemText(index)
-        
+
     def storeFirstValue(self, index):
-        self.oneFeature = fd.feature1.itemText(index)  
-        
+        self.oneFeature = fd.feature1.itemText(index)
+
     def storeSecondValue(self, index):
         self.twoFeature = fd.feature2.itemText(index)
-        
+
     def storeLogic(self, index):
         self.filterLogic = fd.logic.itemText(index)
-        
+
     def filterPrompt(self):
         self.dialog = filterDialog(self)
         self.dialogs.append(self.dialog)
         self.dialog.show()
-        
+
     def filterData(self):
-       threshold = fd.threshold.text()
+       threshold = float(self.dialog.getThreshold())
+       filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
+       self.data = filterResult[1]
        self.dialog.close()
        self.dialogs.pop()
-       print(threshold)
-       #filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
-        
+
     def dataPrompt(self):
         self.dialog = dataDialog(self)
         self.dialogs.append(self.dialog)
         self.dialog.show()
-        
-        
+
     def linearRegressionPrompt(self):
         self.dialog = linearRegressionDialog(self)
         self.dialogs.append(self.dialog)
         self.dialog.show()
 
     def plotLinearRegression(self):
-        print(self.xFeature)
+        coefs = da.linearRegression(self.xFeature, self.yFeature)
+        self.data = coefs[0]
+        self.sc.update_figure(coefs, self.xFeature, self.yFeature)
         self.dialog.close()
         self.dialogs.pop()
-        #coefs = da.linearRegression(self.xFeature, self.yFeature)
-        #self.data = coefs[0]
-        #self.sc.update_figure(coefs, self.xFeature, self.yFeature)
-	    #close linear regression window dialog
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
@@ -340,7 +312,7 @@ if __name__ == '__main__':
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
-    #Init.init(serverL, dbNameL, UIDL, PWDL)
+    Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
