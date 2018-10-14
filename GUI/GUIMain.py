@@ -130,8 +130,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
             if(d != "bottom depth" and d != "top depth"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
-<<<<<<< HEAD
-        '''
         self.yIntercept = QCheckBox("Y-Intercept",self)
         self.yIntercept.move(450, 100)
         self.yIntercept.stateChanged.connect(aw.clickYIntercept)
@@ -141,14 +139,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.slopeCheck = QCheckBox("Slope",self)
         self.slopeCheck.move(600, 100) 
         self.slopeCheck.stateChanged.connect(aw.clickSlope)
-=======
-        yIntercept = QCheckBox("Y-Intercept",self)
-        yIntercept.move(450, 100)
-        rSquared = QCheckBox("R^2",self)
-        rSquared.move(550, 100)
-        slopeCheck = QCheckBox("Slope",self)
-        slopeCheck.move(600, 100) 
->>>>>>> b60318297824c4d5e660e3d668c987d8e659bc46
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
         plotButton.clicked.connect(aw.plotLinearRegression)
@@ -327,13 +317,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def plotLinearRegression(self):
-<<<<<<< HEAD
-        print(self.yChecked)
-=======
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
-        self.sc.update_figure(coefs, self.xFeature, self.yFeature, False, False, False)
->>>>>>> b60318297824c4d5e660e3d668c987d8e659bc46
+        self.sc.update_figure(coefs, self.xFeature, self.yFeature,
+                              self.yChecked, self.slopeChecked, self.rChecked)
         self.dialog.close()
         self.dialogs.pop()
 
@@ -342,26 +329,20 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         
     def clickYIntercept(self,state):
         if state == QtCore.Qt.Checked:
-            print('Checked1')
             self.yChecked = True
         else:
-            print('Unchecked1')
             self.yChecked = False
             
     def clickRSquared(self,state):
         if state == QtCore.Qt.Checked:
-            print('Checked2')
             self.rChecked = True
         else:
-            print('Unchecked2')
             self.rChecked = False
             
     def clickSlope(self,state):
         if state == QtCore.Qt.Checked:
-            print('Checked3')
             self.sChecked = True
         else:
-            print('Unchecked3')
             self.sChecked = False
 
 if __name__ == '__main__':
