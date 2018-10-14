@@ -28,7 +28,7 @@ class MyMplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
-        self.compute_initial_figure()
+        #self.compute_initial_figure()
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
         FigureCanvas.setSizePolicy(self,
@@ -68,6 +68,7 @@ class MyMplCanvas(FigureCanvas):
 class linearRegressionDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(linearRegressionDialog, self).__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.title = 'Linear Regression'
         self.left = 500
         self.top = 100
@@ -76,6 +77,7 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
+
         label = QLabel('Linear Regression', self)
         label.move(20,90)
         label.resize(250,50)
@@ -83,9 +85,13 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureX.setToolTip('Select feature for X axis')
         #featureX.completer().setCompletionMode(QWidget.QCompleter.PopupCompletion)
         self.featureX.move(150, 100)
+        self.featureX.addItem("Option 1")
         self.featureX.activated.connect(aw.storeXValue)
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
+        self.featureY.move(300, 100)
+        self.featureY.activated.connect(aw.storeYValue)
+        '''
         #populate combo boxes
         descriptions = getDescriptions()
         descriptions.sort()
@@ -93,8 +99,7 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
             if(d != "bottom depth" and d != "top depth"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
-        self.featureY.move(300, 100)
-        self.featureY.activated.connect(aw.storeYValue)
+        '''
         yIntercept = QCheckBox("Y-Intercept",self)
         yIntercept.move(450, 100)
         rSquared = QCheckBox("R^2",self)
@@ -107,6 +112,7 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         # plotButton.clicked.connect(lambda: sc.update_figure("XXX", "YYY"))
         plotButton.move(700,100)
         plotButton.resize(50,50)
+        
 
 class filterDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -128,14 +134,16 @@ class filterDialog(QtWidgets.QMainWindow):
         whereLabel.resize(250,50)
         self.feature2 = QComboBox(self)
         self.feature2.setToolTip('Select feature 2')
+        self.feature2.move(200, 100)
+        self.feature2.activated.connect(aw.storeSecondValue)
+        '''
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth"): continue
             self.feature1.addItem(d)
             self.feature2.addItem(d)
-        self.feature2.move(200, 100)
-        self.feature2.activated.connect(aw.storeSecondValue)
+        '''
         isLabel = QLabel('IS', self)
         isLabel.move(350,90)
         isLabel.resize(250,50)
@@ -162,15 +170,13 @@ class filterDialog(QtWidgets.QMainWindow):
 
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        t = arange(0.0, 3.0, 0.01)
-        s = sin(2 * pi * t)
+        
         #self.dialog = filterDialog(self)
         self.dialogs = list()
         
     # Main Window Init
         QtWidgets.QMainWindow.__init__(self)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.setWindowTitle("application main window")
 
     # Drop-down Menu Bar Setup
         # FILE MENU
@@ -232,7 +238,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     #Define All Actions Below
     def fileOpen(self):
-        self.close()
+        lrd.close()
 
     def fileSave(self):
         self.close()
@@ -265,28 +271,32 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.filterLogic = fd.logic.itemText(index)
         
     def filterPrompt(self):
-        dialog = filterDialog(self)
-        self.dialogs.append(dialog)
-        dialog.show()
+        self.dialog = filterDialog(self)
+        self.dialogs.append(self.dialog)
+        self.dialog.show()
         
     def filterData(self):
        threshold = fd.threshold.text()
+       self.dialog.close()
+       self.dialogs.pop()
        print(threshold)
        #filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
-       
         
     def dataPrompt(self):
         print(self.data)
         
     def linearRegressionPrompt(self):
-        dialog = linearRegressionDialog(self)
-        self.dialogs.append(dialog)
-        dialog.show()
+        self.dialog = linearRegressionDialog(self)
+        self.dialogs.append(self.dialog)
+        self.dialog.show()
 
     def plotLinearRegression(self):
-        coefs = da.linearRegression(self.xFeature, self.yFeature)
-        self.data = coefs[0]
-        self.sc.update_figure(coefs, self.xFeature, self.yFeature)
+        print(self.xFeature)
+        self.dialog.close()
+        self.dialogs.pop()
+        #coefs = da.linearRegression(self.xFeature, self.yFeature)
+        #self.data = coefs[0]
+        #self.sc.update_figure(coefs, self.xFeature, self.yFeature)
 	    #close linear regression window dialog
 
     def about(self):
@@ -297,7 +307,7 @@ if __name__ == '__main__':
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
-    Init.init(serverL, dbNameL, UIDL, PWDL)
+    #Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
