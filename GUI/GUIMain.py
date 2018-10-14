@@ -6,6 +6,7 @@ import os
 import random
 import matplotlib
 import numpy as np
+import pandas as pd
 
 from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -14,7 +15,7 @@ from matplotlib.figure import Figure
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
-
+from PyQt5.QtWidgets import QScrollArea, QTableWidget,QVBoxLayout, QTableWidgetItem, QWidget
 from Init import Init
 from DatabasePreprocessing import getDescriptions
 import DataAnalysisModule as da
@@ -64,6 +65,34 @@ class MyMplCanvas(FigureCanvas):
         self.axes.set_xlabel(xlabel=Xlabel)
         self.axes.set_ylabel(ylabel=Ylabel)
         self.draw()
+
+class dataDialog(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        super(dataDialog, self).__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.title = 'Data'
+        self.left = 500
+        self.top = 100
+        self.width = 400
+        self.height = 800
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setFixedSize(self.size())
+        # COMMENTED LINES CAN ADD FUNCTIONALITY LATER
+        #self.scroll = QScrollArea(self)
+        #self.layout = QVBoxLayout(self)
+        self.table = QTableWidget(self)
+        #self.scroll.setWidget(self.table)
+        #self.layout.addWidget(self.table)  
+        #self.table.move(550,50)
+        self.table.resize(300,400)
+        # Our data frame goes below, current df is dummy data for testing
+        df = pd.DataFrame({"a" : [4 ,5, 6],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        self.table.setColumnCount(len(df.columns))
+        self.table.setRowCount(len(df.index))
+        for i in range(len(df.index)):
+            for j in range(len(df.columns)):
+                self.table.setItem(i,j,QTableWidgetItem(str(df.iloc[i, j])))
 
 class linearRegressionDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -117,6 +146,7 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
 class filterDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(filterDialog, self).__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.title = 'Filter Data'
         self.left = 500
         self.top = 100
@@ -283,7 +313,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
        #filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
         
     def dataPrompt(self):
-        print(self.data)
+        self.dialog = dataDialog(self)
+        self.dialogs.append(self.dialog)
+        self.dialog.show()
+        
         
     def linearRegressionPrompt(self):
         self.dialog = linearRegressionDialog(self)
