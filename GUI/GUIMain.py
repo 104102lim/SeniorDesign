@@ -61,18 +61,18 @@ class MyMplCanvas(FigureCanvas):
         Y = slope_hat * X + yint_hat
 
         yintTxt = "Y-int: "
-        slopTxt = "slop: "
+        slopTxt = "Slope: "
         rsquareTxt = "R^2: "
         txt = ""
 
         if(yint):
-            txt = txt + yintTxt + data[2]
+            txt = txt + yintTxt + str(data[2])
 
         if(slope):
-            txt = txt + "\n" + slopTxt + data[1]
+            txt = txt + "\n" + slopTxt + str(data[1])
 
         if(rsquare):
-            txt = txt + "\n" + rsquareTxt + data[3]
+            txt = txt + "\n" + rsquareTxt + str(data[3])
 
 
         self.axes.cla()
@@ -145,7 +145,7 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
-            if(d != "bottom depth" and d != "top depth"): continue
+            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
         self.yIntercept = QCheckBox("Y-Intercept",self)
@@ -190,7 +190,7 @@ class filterDialog(QtWidgets.QMainWindow):
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
-            if(d != "bottom depth" and d != "top depth"): continue
+            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
             self.feature1.addItem(d)
             self.feature2.addItem(d)
         isLabel = QLabel('IS', self)
@@ -318,11 +318,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def filterData(self):
-       threshold = float(self.dialog.getThreshold())
-       filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
-       self.data = filterResult[1]
-       self.dialog.close()
-       self.dialogs.pop()
+        try:
+            threshold = float(self.dialog.getThreshold())
+        except:
+            threshold = self.dialog.getThreshold()
+        filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
+        self.data = filterResult[1]
+        self.dialog.close()
+        self.dialogs.pop()
 
     def dataPrompt(self):
         self.dialog = dataDialog(self)
