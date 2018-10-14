@@ -320,8 +320,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def plotLinearRegression(self):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
-        self.sc.update_figure(coefs, self.xFeature, self.yFeature,
-                              self.yChecked, self.slopeChecked, self.rChecked)
+        self.sc.update_figure(coefs, self.xFeature, self.yFeature, self.yChecked, self.sChecked, self.rChecked)
         self.dialog.close()
         self.dialogs.pop()
 
