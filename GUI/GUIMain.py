@@ -73,7 +73,9 @@ class dataDialog(QtWidgets.QMainWindow):
         self.table.resize(300,400)
         # Our data frame goes below, current df is dummy data for testing
         #df = pd.DataFrame({"a" : [4 ,5, 6],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        #df = DataFrame.read_csv("./EricTestData")
         df = aw.data
+        #df.to_csv('./EricTestData.csv')
         self.table.setColumnCount(len(df.columns))
         self.table.setRowCount(len(df.index))
         #self.table.setHorizontalHeaderItem(self, 0, QTableWidgetItem(df.columns[0]))
