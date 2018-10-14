@@ -36,14 +36,26 @@ class MyMplCanvas(FigureCanvas):
                                    QtWidgets.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
-    def update_figure(self, data, Xlabel, Ylabel):
-        slope = data[1]
-        yint = data[2]
-        X = np.arange(0., 5., 0.2)
-        Y = slope * X + yint
+    def update_figure(self, data, Xlabel, Ylabel, yint, slope, rsquare):
+        # Tasks to do:
+        # change color
+        # add legend for R2, yint, slope
+        # Add title
+        # Extend line
+
         sData = data[0]
         sX = sData[Xlabel].tolist()
         sY = sData[Ylabel].tolist()
+
+        xmin = min(sX)
+        xmax = max(sX)
+        interval = (xmax - xmin) / 1000
+
+        slope_hat = data[1]
+        yint_hat = data[2]
+        X = np.arange(xmin, xmax, interval)
+        Y = slope_hat * X + yint_hat
+
         self.axes.cla()
         self.axes.scatter(sX, sY)
         self.axes.plot(X, Y)
