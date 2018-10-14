@@ -60,12 +60,29 @@ class MyMplCanvas(FigureCanvas):
         X = np.arange(xmin, xmax, interval)
         Y = slope_hat * X + yint_hat
 
+        yintTxt = "Y-int: "
+        slopTxt = "slop: "
+        rsquareTxt = "R^2: "
+        txt = ""
+
+        if(yint):
+            txt = txt + yintTxt + data[2]
+
+        if(slope):
+            txt = txt + "\n" + slopTxt + data[1]
+
+        if(rsquare):
+            txt = txt + "\n" + rsquareTxt + data[3]
+
+
         self.axes.cla()
         self.axes.scatter(sX, sY, color='green')
         self.axes.plot(X, Y, color='red')
         self.axes.set_xlabel(xlabel=Xlabel)
         self.axes.set_ylabel(ylabel=Ylabel)
         self.axes.set_title("Linear Regression: " + Ylabel + " vs. " + Xlabel)
+        self.axes.legend(loc='best', title=txt)
+
         self.draw()
 
 class dataDialog(QtWidgets.QMainWindow):
