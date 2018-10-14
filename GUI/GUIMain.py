@@ -65,7 +65,7 @@ class MyMplCanvas(FigureCanvas):
         self.axes.plot(X, Y, color='red')
         self.axes.set_xlabel(xlabel=Xlabel)
         self.axes.set_ylabel(ylabel=Ylabel)
-        self.axes.set_title("Linear Regression: " + Xlabel + " vs. " + Ylabel)
+        self.axes.set_title("Linear Regression: " + Ylabel + " vs. " + Xlabel)
         self.draw()
 
 class dataDialog(QtWidgets.QMainWindow):
