@@ -49,6 +49,10 @@ class MyMplCanvas(FigureCanvas):
 
         xmin = min(sX)
         xmax = max(sX)
+        length = xmax - xmin
+        plus = length / 10
+        xmin = xmin - plus
+        xmax = xmax + plus
         interval = (xmax - xmin) / 1000
 
         slope_hat = data[1]
@@ -57,8 +61,8 @@ class MyMplCanvas(FigureCanvas):
         Y = slope_hat * X + yint_hat
 
         self.axes.cla()
-        self.axes.scatter(sX, sY)
-        self.axes.plot(X, Y)
+        self.axes.scatter(sX, sY, color='green')
+        self.axes.plot(X, Y, color='red')
         self.axes.set_xlabel(xlabel=Xlabel)
         self.axes.set_ylabel(ylabel=Ylabel)
         self.draw()
