@@ -129,12 +129,15 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
             self.featureY.addItem(d)
             self.featureX.addItem(d)
         '''
-        yIntercept = QCheckBox("Y-Intercept",self)
-        yIntercept.move(450, 100)
-        rSquared = QCheckBox("R^2",self)
-        rSquared.move(550, 100)
-        slopeCheck = QCheckBox("Slope",self)
-        slopeCheck.move(600, 100) 
+        self.yIntercept = QCheckBox("Y-Intercept",self)
+        self.yIntercept.move(450, 100)
+        self.yIntercept.stateChanged.connect(aw.clickYIntercept)
+        self.rSquared = QCheckBox("R^2",self)
+        self.rSquared.move(550, 100)
+        self.rSquared.stateChanged.connect(aw.clickRSquared)
+        self.slopeCheck = QCheckBox("Slope",self)
+        self.slopeCheck.move(600, 100) 
+        self.slopeCheck.stateChanged.connect(aw.clickSlope)
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
         plotButton.clicked.connect(aw.plotLinearRegression)
@@ -324,7 +327,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def plotLinearRegression(self):
-        print(self.xFeature)
+        print(self.yChecked)
         self.dialog.close()
         self.dialogs.pop()
         #coefs = da.linearRegression(self.xFeature, self.yFeature)
@@ -334,6 +337,30 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
+        
+    def clickYIntercept(self,state):
+        if state == QtCore.Qt.Checked:
+            print('Checked1')
+            self.yChecked = True
+        else:
+            print('Unchecked1')
+            self.yChecked = False
+            
+    def clickRSquared(self,state):
+        if state == QtCore.Qt.Checked:
+            print('Checked2')
+            self.rChecked = True
+        else:
+            print('Unchecked2')
+            self.rChecked = False
+            
+    def clickSlope(self,state):
+        if state == QtCore.Qt.Checked:
+            print('Checked3')
+            self.sChecked = True
+        else:
+            print('Unchecked3')
+            self.sChecked = False
 
 if __name__ == '__main__':
     serverL = "MYPC\SQLEXPRESS"
