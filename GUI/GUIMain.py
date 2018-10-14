@@ -114,7 +114,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureX = QComboBox(self)
         self.featureX.setToolTip('Select feature for X axis')
         self.featureX.move(150, 100)
-        self.featureX.addItem("Option 1")
         self.featureX.activated.connect(aw.storeXValue)
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
