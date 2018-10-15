@@ -136,11 +136,9 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureX = QComboBox(self)
         self.featureX.setToolTip('Select feature for X axis')
         self.featureX.move(150, 100)
-        self.featureX.activated.connect(aw.storeXValue)
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
         self.featureY.move(300, 100)
-        self.featureY.activated.connect(aw.storeYValue)
         #populate combo boxes
         descriptions = getDescriptions()
         descriptions.sort()
@@ -150,13 +148,10 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
             self.featureX.addItem(d)
         self.yIntercept = QCheckBox("Y-Intercept",self)
         self.yIntercept.move(450, 100)
-        self.yIntercept.stateChanged.connect(aw.clickYIntercept)
         self.rSquared = QCheckBox("R^2",self)
         self.rSquared.move(550, 100)
-        self.rSquared.stateChanged.connect(aw.clickRSquared)
         self.slopeCheck = QCheckBox("Slope",self)
         self.slopeCheck.move(600, 100) 
-        self.slopeCheck.stateChanged.connect(aw.clickSlope)
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
         plotButton.clicked.connect(aw.plotLinearRegression)
@@ -220,14 +215,12 @@ class filterDialog(QtWidgets.QMainWindow):
         self.feature1 = QComboBox(self)
         self.feature1.setToolTip('Select feature 1')
         self.feature1.move(50, 100)
-        self.feature1.activated.connect(aw.storeFirstValue)
         whereLabel = QLabel('WHERE', self)
         whereLabel.move(152,90)
         whereLabel.resize(250,50)
         self.feature2 = QComboBox(self)
         self.feature2.setToolTip('Select feature 2')
         self.feature2.move(200, 100)
-        self.feature2.activated.connect(aw.storeSecondValue)
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
@@ -247,7 +240,6 @@ class filterDialog(QtWidgets.QMainWindow):
         self.logic.addItem(">=")
         self.logic.move(400, 100)
         self.logic.resize(50,25)
-        self.logic.activated.connect(aw.storeLogic)
         self.threshold = QLineEdit(self)
         self.threshold.setToolTip('Input numeric value')
         self.threshold.move(500,100)
@@ -258,13 +250,8 @@ class filterDialog(QtWidgets.QMainWindow):
         filterButton.move(700,100)
         filterButton.resize(50,50)
 
-    def getThreshold(self):
-        return self.threshold.text()
-
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
-
-        #self.dialog = filterDialog(self)
         self.dialogs = list()
 
     # Main Window Init
@@ -322,7 +309,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     #Define All Actions Below
     def fileOpen(self):
-        lrd.close()
+        self.close()
 
     def fileSave(self):
         self.close()
@@ -339,21 +326,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def closeEvent(self, ce):
         self.fileQuit()
 
-    def storeXValue(self, index):
-        self.xFeature = lrd.featureX.itemText(index)
-
-    def storeYValue(self, index):
-        self.yFeature = lrd.featureY.itemText(index)
-
-    def storeFirstValue(self, index):
-        self.oneFeature = fd.feature1.itemText(index)
-
-    def storeSecondValue(self, index):
-        self.twoFeature = fd.feature2.itemText(index)
-
-    def storeLogic(self, index):
-        self.filterLogic = fd.logic.itemText(index)
-
     def filterPrompt(self):
         self.dialog = filterDialog(self)
         self.dialogs.append(self.dialog)
@@ -361,10 +333,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def filterData(self):
         try:
-            threshold = float(self.dialog.getThreshold())
+            threshold = float(str(self.dialog.threshold.text()))
         except:
-            threshold = self.dialog.getThreshold()
-        filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
+            threshold = str(self.dialog.threshold.text())
+        f1 = str(self.dialog.feature1.currentText())
+        f2 = str(self.dialog.feature2.currentText())
+        logic = str(self.dialog.logic.currentText())
+        filterResult = da.filtering(f1, f2, logic, threshold)
         self.data = filterResult[1]
         self.dialog.close()
         self.dialogs.pop()
@@ -380,9 +355,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def plotLinearRegression(self):
-        coefs = da.linearRegression(self.xFeature, self.yFeature)
+        x = str(self.dialog.featureX.currentText())
+        y = str(self.dialog.featureY.currentText())
+        coefs = da.linearRegression(x, y)
         self.data = coefs[0]
-        self.sc.update_figure(coefs, self.xFeature, self.yFeature, self.yChecked, self.sChecked, self.rChecked)
+        self.sc.update_figure(coefs, x, y,
+                              self.dialog.yIntercept.isChecked(),
+                              self.dialog.slopeCheck.isChecked(),
+                              self.dialog.rSquared.isChecked())
         self.dialog.close()
         self.dialogs.pop()
 
@@ -396,34 +376,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         y = str(self.dialog.featureY.currentText())
         order = int(self.dialog.order.currentText())
         data = da.polynomialRegression(x, y, order)
-        #dataset = data[0]
-        #coefs = data[1]
-        self.sc.update_figure(data, x, y,
-                              False, False, False)
+        self.data = data[0]
+        self.sc.update_figure(data, x, y, False, False, False)
         self.dialog.close()
         self.dialogs.pop()
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
         
-    def clickYIntercept(self,state):
-        if state == QtCore.Qt.Checked:
-            self.yChecked = True
-        else:
-            self.yChecked = False
-            
-    def clickRSquared(self,state):
-        if state == QtCore.Qt.Checked:
-            self.rChecked = True
-        else:
-            self.rChecked = False
-            
-    def clickSlope(self,state):
-        if state == QtCore.Qt.Checked:
-            self.sChecked = True
-        else:
-            self.sChecked = False
-
 if __name__ == '__main__':
     serverL = "MYPC\SQLEXPRESS"
     dbNameL = "BHBackupRestore"
@@ -433,8 +393,6 @@ if __name__ == '__main__':
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
-    lrd = linearRegressionDialog()
-    fd = filterDialog()
     aw.setWindowTitle("Analysis Toolkit Prototype")
     aw.show()
     sys.exit(qApp.exec_())
