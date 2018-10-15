@@ -25,6 +25,9 @@ matplotlib.use('Qt5Agg')
 progname = os.path.basename(sys.argv[0])
 progversion = "0.1"
 
+
+
+
 class MyMplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
@@ -36,13 +39,7 @@ class MyMplCanvas(FigureCanvas):
                                    QtWidgets.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
-    def update_figure(self, data, Xlabel, Ylabel, yint, slope, rsquare):
-        # Tasks to do:
-        # change color
-        # add legend for R2, yint, slope
-        # Add title
-        # Extend line
-
+    def update_figure(self, data, Xlabel, Ylabel, Linear=False, Poly=False, yint=False, slope=False, rsquare=False):
         sData = data[0]
         sX = sData[Xlabel].tolist()
         sY = sData[Ylabel].tolist()
@@ -54,36 +51,62 @@ class MyMplCanvas(FigureCanvas):
         xmin = xmin - plus
         xmax = xmax + plus
         interval = (xmax - xmin) / 1000
-
-        slope_hat = data[1]
-        yint_hat = data[2]
         X = np.arange(xmin, xmax, interval)
-        Y = slope_hat * X + yint_hat
 
-        yintTxt = "Y-int: "
-        slopTxt = "Slope: "
-        rsquareTxt = "R^2: "
-        txt = ""
+        if(Linear):
+            slope_hat = data[1]
+            yint_hat = data[2]
+            Y = slope_hat * X + yint_hat
 
-        if(yint):
-            txt = txt + yintTxt + str(data[2])
+            yintTxt = "Y-int: "
+            slopTxt = "Slope: "
+            rsquareTxt = "R^2: "
+            txt = ""
 
-        if(slope):
-            txt = txt + "\n" + slopTxt + str(data[1])
+            if (yint):
+                txt = txt + yintTxt + str(data[2])
 
-        if(rsquare):
-            txt = txt + "\n" + rsquareTxt + str(data[3])
+            if (slope):
+                txt = txt + "\n" + slopTxt + str(data[1])
 
+            if (rsquare):
+                txt = txt + "\n" + rsquareTxt + str(data[3])
 
-        self.axes.cla()
-        self.axes.scatter(sX, sY, color='green')
-        self.axes.plot(X, Y, color='red')
-        self.axes.set_xlabel(xlabel=Xlabel)
-        self.axes.set_ylabel(ylabel=Ylabel)
-        self.axes.set_title("Linear Regression: " + Ylabel + " vs. " + Xlabel)
-        self.axes.legend(loc='best', title=txt)
+            self.axes.cla()
+            self.axes.scatter(sX, sY, color='green')
+            self.axes.plot(X, Y, color='red')
+            self.axes.set_xlabel(xlabel=Xlabel)
+            self.axes.set_ylabel(ylabel=Ylabel)
+            self.axes.set_title("Linear Regression: " + Ylabel + " vs. " + Xlabel)
+            self.axes.legend(loc='best', title=txt)
+
+        if(Poly):
+            Y = []
+            for i in range(len(X)):
+                Y.append(self.PolyCoefficients(X[i], data[1]))
+
+            txt = "Testing"
+            self.axes.cla()
+            self.axes.scatter(sX, sY, color='green')
+            self.axes.plot(X, Y, color='red')
+            self.axes.set_xlabel(xlabel=Xlabel)
+            self.axes.set_ylabel(ylabel=Ylabel)
+            self.axes.set_title("Polynomial Regression: " + Ylabel + " vs. " + Xlabel)
+            self.axes.legend(loc='best', title=txt)
 
         self.draw()
+
+    def PolyCoefficients(self, x, coeffs):
+        """ Returns a polynomial for ``x`` values for the ``coeffs`` provided.
+
+        The coefficients must be in ascending order (``x**0`` to ``x**o``).
+        """
+        o = len(coeffs[0])
+        # print('# This is a polynomial of order {ord}.')
+        y = 0
+        for i in range(o):
+            y += coeffs[0][i] * (x ** i)
+        return y
 
 class dataDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -359,10 +382,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         y = str(self.dialog.featureY.currentText())
         coefs = da.linearRegression(x, y)
         self.data = coefs[0]
-        self.sc.update_figure(coefs, x, y,
-                              self.dialog.yIntercept.isChecked(),
-                              self.dialog.slopeCheck.isChecked(),
-                              self.dialog.rSquared.isChecked())
+        self.sc.update_figure(coefs, x, y, Linear=True,
+                              yint=self.dialog.yIntercept.isChecked(),
+                              slope=self.dialog.slopeCheck.isChecked(),
+                              rsqure=self.dialog.rSquared.isChecked())
         self.dialog.close()
         self.dialogs.pop()
 
@@ -375,9 +398,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
         order = int(self.dialog.order.currentText())
-        data = da.polynomialRegression(x, y, order)
-        self.data = data[0]
-        self.sc.update_figure(data, x, y, False, False, False)
+        coefs = da.polynomialRegression(x, y, order)
+        self.data = coefs[0]
+        self.sc.update_figure(coefs, x, y, Poly=True)
         self.dialog.close()
         self.dialogs.pop()
 
