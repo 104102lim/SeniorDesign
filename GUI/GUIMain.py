@@ -162,6 +162,53 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         plotButton.clicked.connect(aw.plotLinearRegression)
         plotButton.move(700,100)
         plotButton.resize(50,50)
+
+
+
+class polyRegressionDialog(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        super(polyRegressionDialog, self).__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.title = 'Poly Regression'
+        self.left = 500
+        self.top = 100
+        self.width = 800
+        self.height = 200
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setFixedSize(self.size())
+
+        label = QLabel('Poly Regression', self)
+        label.move(20,90)
+        label.resize(250,50)
+        self.featureX = QComboBox(self)
+        self.featureX.setToolTip('Select feature for X axis')
+        self.featureX.move(150, 100)
+        self.featureX.activated.connect(aw.storeXValue)
+        self.featureY = QComboBox(self)
+        self.featureY.setToolTip('Select feature for Y axis')
+        self.featureY.move(300, 100)
+        self.featureY.activated.connect(aw.storeYValue)
+        descriptions = getDescriptions()
+        descriptions.sort()
+        for d in descriptions:
+            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
+            self.featureY.addItem(d)
+            self.featureX.addItem(d)
+        self.yIntercept = QCheckBox("Y-Intercept",self)
+        self.yIntercept.move(450, 100)
+        self.yIntercept.stateChanged.connect(aw.clickYIntercept)
+        self.rSquared = QCheckBox("R^2",self)
+        self.rSquared.move(550, 100)
+        self.rSquared.stateChanged.connect(aw.clickRSquared)
+        self.slopeCheck = QCheckBox("Slope",self)
+        self.slopeCheck.move(600, 100)
+        self.slopeCheck.stateChanged.connect(aw.clickSlope)
+        plotButton = QPushButton('Plot', self)
+        plotButton.setToolTip('Use button to plot poly regression')
+        plotButton.clicked.connect(aw.plotPolyRegression)
+        plotButton.move(700,100)
+        plotButton.resize(50,50)
         
 
 class filterDialog(QtWidgets.QMainWindow):
@@ -247,6 +294,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # PLOT MENU
         self.plot_menu = QtWidgets.QMenu('&Plot', self)
         self.plot_menu.addAction('&Linear Regression', self.linearRegressionPrompt)
+        self.plot_menu.addAction('&Poly Regression', self.polyRegressPrompt)
         self.menuBar().addSeparator()
         self.menuBar().addMenu(self.plot_menu)
 
@@ -337,7 +385,19 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialogs.append(self.dialog)
         self.dialog.show()
 
+    def polyRegressPrompt(self):
+        self.dialog = polyRegressionDialog(self)
+        self.dialogs.append(self.dialog)
+        self.dialog.show()
+
     def plotLinearRegression(self):
+        coefs = da.linearRegression(self.xFeature, self.yFeature)
+        self.data = coefs[0]
+        self.sc.update_figure(coefs, self.xFeature, self.yFeature, self.yChecked, self.sChecked, self.rChecked)
+        self.dialog.close()
+        self.dialogs.pop()
+
+    def plotPolyRegression(self):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
         self.sc.update_figure(coefs, self.xFeature, self.yFeature, self.yChecked, self.sChecked, self.rChecked)
