@@ -184,26 +184,20 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         self.featureX = QComboBox(self)
         self.featureX.setToolTip('Select feature for X axis')
         self.featureX.move(150, 100)
-        self.featureX.activated.connect(aw.storeXValue)
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
         self.featureY.move(300, 100)
-        self.featureY.activated.connect(aw.storeYValue)
+        self.order = QComboBox(self)
+        self.order.setToolTip('Select order of polynomial fit')
+        self.order.move(450, 100)
+        for i in range(1, 10):
+            self.order.addItem(str(i))
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
-        self.yIntercept = QCheckBox("Y-Intercept",self)
-        self.yIntercept.move(450, 100)
-        self.yIntercept.stateChanged.connect(aw.clickYIntercept)
-        self.rSquared = QCheckBox("R^2",self)
-        self.rSquared.move(550, 100)
-        self.rSquared.stateChanged.connect(aw.clickRSquared)
-        self.slopeCheck = QCheckBox("Slope",self)
-        self.slopeCheck.move(600, 100)
-        self.slopeCheck.stateChanged.connect(aw.clickSlope)
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot poly regression')
         plotButton.clicked.connect(aw.plotPolyRegression)
@@ -385,11 +379,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialogs.append(self.dialog)
         self.dialog.show()
 
-    def polyRegressPrompt(self):
-        self.dialog = polyRegressionDialog(self)
-        self.dialogs.append(self.dialog)
-        self.dialog.show()
-
     def plotLinearRegression(self):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
@@ -397,10 +386,20 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.close()
         self.dialogs.pop()
 
+    def polyRegressPrompt(self):
+        self.dialog = polyRegressionDialog(self)
+        self.dialogs.append(self.dialog)
+        self.dialog.show()
+
     def plotPolyRegression(self):
-        coefs = da.linearRegression(self.xFeature, self.yFeature)
-        self.data = coefs[0]
-        self.sc.update_figure(coefs, self.xFeature, self.yFeature, self.yChecked, self.sChecked, self.rChecked)
+        x = str(self.dialog.featureX.currentText())
+        y = str(self.dialog.featureY.currentText())
+        order = int(self.dialog.order.currentText())
+        data = da.polynomialRegression(x, y, order)
+        #dataset = data[0]
+        #coefs = data[1]
+        self.sc.update_figure(data, x, y,
+                              False, False, False)
         self.dialog.close()
         self.dialogs.pop()
 

@@ -201,4 +201,5 @@ def polynomialRegression(feature1, feature2, order):
     poly = PolynomialFeatures(degree=order)
     poly_features = poly.fit_transform(X)
     poly_regression = linear_model.LinearRegression()
-    return poly_regression.fit(poly_features, y).coef_
+    poly_fit = poly_regression.fit(poly_features, y)
+    return [dataset, poly_fit.coef_]
