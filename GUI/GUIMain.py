@@ -84,38 +84,7 @@ class MyMplCanvas(FigureCanvas):
         self.axes.legend(loc='best', title=txt)
 
         self.draw()
-
-class dataDialog(QtWidgets.QMainWindow):
-    def __init__(self, parent=None):
-        super(dataDialog, self).__init__(parent)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.title = 'Data'
-        self.left = 500
-        self.top = 100
-        self.width = 400
-        self.height = 800
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        self.setFixedSize(self.size())
-        # COMMENTED LINES CAN ADD FUNCTIONALITY LATER
-        #self.scroll = QScrollArea(self)
-        #self.layout = QVBoxLayout(self)
-        self.table = QTableWidget(self)
-        #self.scroll.setWidget(self.table)
-        #self.layout.addWidget(self.table)  
-        #self.table.move(550,50)
-        self.table.resize(300,400)
-        # Our data frame goes below, current df is dummy data for testing
-        #df = pd.DataFrame({"a" : [4 ,5, 6],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
-        #df = DataFrame.read_csv("./EricTestData")
-        df = aw.data
-        #df.to_csv('./EricTestData.csv')
-        self.table.setColumnCount(len(df.columns))
-        self.table.setRowCount(len(df.index))
-        self.table.setHorizontalHeaderLabels(df.columns)
-        for i in range(len(df.index)):
-            for j in range(len(df.columns)):
-                self.table.setItem(i,j,QTableWidgetItem(str(df.iloc[i, j])))
+        
 
 class linearRegressionDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -142,12 +111,14 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureY.move(300, 100)
         self.featureY.activated.connect(aw.storeYValue)
         #populate combo boxes
+        ''''
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
+        '''
         self.yIntercept = QCheckBox("Y-Intercept",self)
         self.yIntercept.move(450, 100)
         self.yIntercept.stateChanged.connect(aw.clickYIntercept)
@@ -187,12 +158,14 @@ class filterDialog(QtWidgets.QMainWindow):
         self.feature2.setToolTip('Select feature 2')
         self.feature2.move(200, 100)
         self.feature2.activated.connect(aw.storeSecondValue)
+        '''
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
             self.feature1.addItem(d)
             self.feature2.addItem(d)
+        '''
         isLabel = QLabel('IS', self)
         isLabel.move(350,90)
         isLabel.resize(250,50)
@@ -258,7 +231,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         # VIEW MENU
         self.view_menu = QtWidgets.QMenu('&View', self)
-        self.view_menu.addAction('&Data', self.dataPrompt)
+        #self.view_menu.addAction('&Data', self.dataPrompt)
         self.menuBar().addSeparator()
         self.menuBar().addMenu(self.view_menu)
 
@@ -268,12 +241,34 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.menuBar().addSeparator()
         self.menuBar().addMenu(self.help_menu)
 
+        # DATA DISPLAY WIDGET
+        self.table = QTableWidget(self)
+        #self.scroll.setWidget(self.table)
+        #self.layout.addWidget(self.table)  
+        #self.table.move(550,50)
+        self.table.resize(100,100)
+        # Our data frame goes below, current df is dummy data for testing
+        self.df = pd.DataFrame({"a" : [4 ,5, 6],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        #df = DataFrame.read_csv("./EricTestData")
+        #df = aw.data
+        #df.to_csv('./EricTestData.csv')
+        self.table.setColumnCount(len(self.df.columns))
+        self.table.setRowCount(len(self.df.index))
+        self.table.setHorizontalHeaderLabels(self.df.columns)
+        for i in range(len(self.df.index)):
+            for j in range(len(self.df.columns)):
+                self.table.setItem(i,j,QTableWidgetItem(str(self.df.iloc[i, j])))
+
         self.main_widget = QtWidgets.QWidget(self)
 
+        self.errorLabel = QLabel('NO ERROR', self)
+        
         # Canvas Setup
         self.layout = QtWidgets.QVBoxLayout(self.main_widget)
         self.sc = MyMplCanvas(self.main_widget, width=5, height=4, dpi=100)
         self.layout.addWidget(self.sc)
+        self.layout.addWidget(self.table)
+        self.layout.addWidget(self.errorLabel)
         self.main_widget.setFocus()
         self.setCentralWidget(self.main_widget)
         self.statusBar().showMessage("Testing", 2000)
@@ -318,19 +313,29 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def filterData(self):
+        '''
         try:
             threshold = float(self.dialog.getThreshold())
         except:
             threshold = self.dialog.getThreshold()
         filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
         self.data = filterResult[1]
+        '''
+        self.df = pd.DataFrame({"a" : [0 ,0, 0],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        #df = DataFrame.read_csv("./EricTestData")
+        #df = aw.data
+        #df.to_csv('./EricTestData.csv')
+        self.table.setColumnCount(len(self.df.columns))
+        self.table.setRowCount(len(self.df.index))
+        self.table.setHorizontalHeaderLabels(self.df.columns)
+        for i in range(len(self.df.index)):
+            for j in range(len(self.df.columns)):
+                self.table.setItem(i,j,QTableWidgetItem(str(self.df.iloc[i, j])))
+        self.errorLabel.setText("ERROR")
         self.dialog.close()
         self.dialogs.pop()
-
-    def dataPrompt(self):
-        self.dialog = dataDialog(self)
-        self.dialogs.append(self.dialog)
-        self.dialog.show()
+        self.dialog.close()
+        self.dialogs.pop()
 
     def linearRegressionPrompt(self):
         self.dialog = linearRegressionDialog(self)
@@ -341,8 +346,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         coefs = da.linearRegression(self.xFeature, self.yFeature)
         self.data = coefs[0]
         self.sc.update_figure(coefs, self.xFeature, self.yFeature, self.yChecked, self.sChecked, self.rChecked)
-        self.dialog.close()
-        self.dialogs.pop()
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
@@ -370,7 +373,7 @@ if __name__ == '__main__':
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
-    Init.init(serverL, dbNameL, UIDL, PWDL)
+    #Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
