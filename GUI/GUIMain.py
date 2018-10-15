@@ -16,6 +16,8 @@ from matplotlib.figure import Figure
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
 from PyQt5.QtWidgets import QScrollArea, QTableWidget,QVBoxLayout, QTableWidgetItem, QWidget
+from PyQt5.QtWidgets import QFileDialog
+
 from Init import Init
 from DatabasePreprocessing import getDescriptions
 import DataAnalysisModule as da
@@ -24,9 +26,6 @@ matplotlib.use('Qt5Agg')
 
 progname = os.path.basename(sys.argv[0])
 progversion = "0.1"
-
-
-
 
 class MyMplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -85,7 +84,7 @@ class MyMplCanvas(FigureCanvas):
             for i in range(len(X)):
                 Y.append(self.PolyCoefficients(X[i], data[1][0]))
 
-            txt = "Order :" + str(data[1] - 1)
+            txt = "Order: " + str(len(data[1][0]) - 1)
             self.axes.cla()
             self.axes.scatter(sX, sY, color='green')
             self.axes.plot(X, Y, color='red')
@@ -288,9 +287,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_O)
         self.file_menu.addAction('&Save', self.fileSave,
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_S)
-        self.file_menu.addAction('&Save As', self.fileSaveAs)
-        self.file_menu.addAction('&Export', self.fileExport,
-                                 QtCore.Qt.CTRL + QtCore.Qt.Key_E)
         self.file_menu.addAction('&Quit', self.fileQuit,
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_Q)
         self.menuBar().addMenu(self.file_menu)
@@ -332,22 +328,19 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     #Define All Actions Below
     def fileOpen(self):
-        self.close()
+        fileName, _ = QFileDialog.getSaveFileName(self,
+                        "Open Dataset",
+                        "", "CSV Files (*.csv)")
 
     def fileSave(self):
-        self.close()
-
-    def fileSaveAs(self):
-        self.close()
-
-    def fileExport(self):
-        self.close()
+        if self.data is None:
+           return #return error code bc no data to save
+        fileName, _ = QFileDialog.getSaveFileName(self,
+                        "Save Dataset",
+                        "", "CSV Files (*.csv)")
 
     def fileQuit(self):
         self.close()
-
-    def closeEvent(self, ce):
-        self.fileQuit()
 
     def filterPrompt(self):
         self.dialog = filterDialog(self)
