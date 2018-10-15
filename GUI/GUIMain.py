@@ -83,9 +83,9 @@ class MyMplCanvas(FigureCanvas):
         if(Poly):
             Y = []
             for i in range(len(X)):
-                Y.append(self.PolyCoefficients(X[i], data[1]))
+                Y.append(self.PolyCoefficients(X[i], data[1][0]))
 
-            txt = "Testing"
+            txt = "Order :" + str(data[1] - 1)
             self.axes.cla()
             self.axes.scatter(sX, sY, color='green')
             self.axes.plot(X, Y, color='red')
@@ -101,11 +101,11 @@ class MyMplCanvas(FigureCanvas):
 
         The coefficients must be in ascending order (``x**0`` to ``x**o``).
         """
-        o = len(coeffs[0])
+        o = len(coeffs)
         # print('# This is a polynomial of order {ord}.')
         y = 0
         for i in range(o):
-            y += coeffs[0][i] * (x ** i)
+            y += coeffs[i] * (x ** i)
         return y
 
 class dataDialog(QtWidgets.QMainWindow):
