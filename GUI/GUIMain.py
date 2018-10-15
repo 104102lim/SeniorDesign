@@ -385,7 +385,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.sc.update_figure(coefs, x, y, Linear=True,
                               yint=self.dialog.yIntercept.isChecked(),
                               slope=self.dialog.slopeCheck.isChecked(),
-                              rsqure=self.dialog.rSquared.isChecked())
+                              rsquare=self.dialog.rSquared.isChecked())
         self.dialog.close()
         self.dialogs.pop()
 

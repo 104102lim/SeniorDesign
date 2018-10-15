@@ -15,6 +15,7 @@ import pandas as pd
 import numpy as np
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import PolynomialFeatures
 import sys
 sys.path.insert(0, '../DBPreprocessing/')
 from DatabasePreprocessing import getData, getDescriptions
@@ -197,7 +198,6 @@ def polynomialRegression(feature1, feature2, order):
     dataset = getData([feature1, feature2])
     X = np.array(dataset[feature1].values).reshape(-1, 1)
     y = np.array(dataset[feature2].values).reshape(-1, 1)
-    from sklearn.preprocessing import PolynomialFeatures
     poly = PolynomialFeatures(degree=order)
     poly_features = poly.fit_transform(X)
     poly_regression = linear_model.LinearRegression()
