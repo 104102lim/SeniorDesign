@@ -252,6 +252,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.file_menu = QtWidgets.QMenu('&File', self)
         self.file_menu.addAction('&Open', self.fileOpen,
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_O)
+        self.file_menu.addAction('&Load', self.fileLoad,
+                                 QtCore.Qt.CTRL + QtCore.Qt.Key_L)
+        self.file_menu.addAction('&Export', self.fileExport,
+                                 QtCore.Qt.CTRL + QtCore.Qt.Key_E)
         self.file_menu.addAction('&Save', self.fileSave,
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_S)
         self.file_menu.addAction('&Quit', self.fileQuit,
@@ -320,6 +324,18 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         fileName, _ = QFileDialog.getSaveFileName(self,
                         "Open Dataset",
                         "", "CSV Files (*.csv)")
+
+    # Temporary Method, would be merged later
+    def fileLoad(self):
+        fileName, _ = QFileDialog.getSaveFileName(self,
+                        "Load File",
+                        "", "BH Files (*.bh)")
+
+    # Temporary Method, would be merged later
+    def fileExport(self):
+        fileName, _ = QFileDialog.getSaveFileName(self,
+                        "Export File",
+                        "", "BH Files (*.bh)")
 
     def fileSave(self):
         if self.data is None:
