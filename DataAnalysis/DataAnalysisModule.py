@@ -223,7 +223,7 @@ def polynomialRegression(feature1, feature2, order):
 # data should be numerical values for regressions
 # feature1 & feature2
 def __featureErrorCheckingForRegression(dataset):
-    if dataset.columns[0] == dataset.columns[1]:
+    if len(dataset.columns) == 1:
         return ("Same feature(s) cannot be modeled.\n")
     f1 = dataset[dataset.columns[0]].values
     f2 = dataset[dataset.columns[1]].values

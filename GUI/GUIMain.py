@@ -133,7 +133,10 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
-            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
+            if(d != "bottom depth"
+                    and d != "top depth"
+                    and d != "Cost per unit"
+                    and d != "Name of mud engineer"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
         self.yIntercept = QCheckBox("Y-Intercept",self)
@@ -179,7 +182,10 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
-            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit" and d != "Name of mud engineer"): continue
+            if(d != "bottom depth"
+                    and d != "top depth"
+                    and d != "Cost per unit"
+                    and d != "Name of mud engineer"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
         plotButton = QPushButton('Plot', self)
@@ -213,7 +219,10 @@ class filterDialog(QtWidgets.QMainWindow):
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
-            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit" and d != "Name of mud engineer"): continue
+            if(d != "bottom depth"
+                    and d != "top depth"
+                    and d != "Cost per unit"
+                    and d != "Name of mud engineer"): continue
             self.feature1.addItem(d)
             self.feature2.addItem(d)
         isLabel = QLabel('IS', self)
@@ -277,12 +286,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.menuBar().addSeparator()
         self.menuBar().addMenu(self.filter_menu)
 
-        # VIEW MENU
-        self.view_menu = QtWidgets.QMenu('&View', self)
-        #self.view_menu.addAction('&Data', self.dataPrompt)
-        self.menuBar().addSeparator()
-        self.menuBar().addMenu(self.view_menu)
-
         # HELP MENU
         self.help_menu = QtWidgets.QMenu('&Help', self)
         self.help_menu.addAction('&About', self.about)
@@ -323,14 +326,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def updateDataDisplay(self):
         #self.df = pd.DataFrame({"a" : [0 ,0, 0],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
         #df = DataFrame.read_csv("./EricTestData")
-        df = aw.data
+        df = self.data
         #df.to_csv('./EricTestData.csv')
-        self.table.setColumnCount(len(self.df.columns))
-        self.table.setRowCount(len(self.df.index))
-        self.table.setHorizontalHeaderLabels(self.df.columns)
-        for i in range(len(self.df.index)):
-            for j in range(len(self.df.columns)):
-                self.table.setItem(i,j,QTableWidgetItem(str(self.df.iloc[i, j])))
+        self.table.setColumnCount(len(df.columns))
+        self.table.setRowCount(len(df.index))
+        self.table.setHorizontalHeaderLabels(df.columns)
+        for i in range(len(df.index)):
+            for j in range(len(df.columns)):
+                self.table.setItem(i, j ,QTableWidgetItem(str(df.iloc[i, j])))
         
         
     def fileOpen(self):
@@ -366,7 +369,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def filterData(self):
-        
         try:
             threshold = float(str(self.dialog.threshold.text()))
         except:
@@ -377,7 +379,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         filterResult = da.filtering(f1, f2, logic, threshold)
         if (type(filterResult) == str):
             self.errorLabel.setText(filterResult)
+            self.dialog.close()
+            self.dialogs.pop()
         else:
+            self.errorLabel.setText("")
             self.data = filterResult[1]
             self.updateDataDisplay()
             self.dialog.close()
@@ -394,8 +399,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         coefs = da.linearRegression(x, y)
         if (type(coefs) == str):
             self.errorLabel.setText(coefs)
+            self.dialog.close()
+            self.dialogs.pop()
         else:
             self.data = coefs[0]
+            self.errorLabel.setText("")
             self.sc.update_figure(coefs, x, y, Linear=True,
                               yint=self.dialog.yIntercept.isChecked(),
                               slope=self.dialog.slopeCheck.isChecked(),
@@ -416,8 +424,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         coefs = da.polynomialRegression(x, y, order)
         if (type(coefs) == str):
             self.errorLabel.setText(coefs)
+            self.dialog.close()
+            self.dialogs.pop()
         else:
             self.data = coefs[0]
+            self.errorLabel.setText("")
             self.sc.update_figure(coefs, x, y, Poly=True)
             self.updateDataDisplay()
             self.dialog.close()
@@ -425,13 +436,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
-        
+
 if __name__ == '__main__':
     serverL = "MYPC\SQLEXPRESS"
     dbNameL = "BHBackupRestore"
     UIDL = "SQLDummy"
     PWDL = "bushdid9/11"
-    #Init.init(serverL, dbNameL, UIDL, PWDL)
+    Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
