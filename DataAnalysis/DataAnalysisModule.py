@@ -206,7 +206,17 @@ def filtering(feature1, feature2, logic, threshold):
 #           y-intercept, r^2 (?)
 #-----------------------------------------------------------------------------------------------
 def polynomialRegression(feature1, feature2, order):
+    
+    if (type(feature1) != str or type(feature2) != str):
+        print("feature(s) should be str type\n")
+        return 0
+    print("\n" + feature1 + " vs. " + feature2)
+
     dataset = getData([feature1, feature2])
+    checkError = __featureErrorCheckingForRegression(dataset)
+    if checkError != None: # error occuring
+        return checkError  # output string information
+    
     X = np.array(dataset[feature1].values).reshape(-1, 1)
     y = np.array(dataset[feature2].values).reshape(-1, 1)
     poly = PolynomialFeatures(degree=order)
