@@ -103,3 +103,5 @@ ENV/
 # .idea
 .idea/
 
+#Joey's ignores
+.DS_Store
