@@ -212,7 +212,7 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
-            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
+            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit" and d != "Name of mud engineer"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
         plotButton = QPushButton('Plot', self)
@@ -246,7 +246,7 @@ class filterDialog(QtWidgets.QMainWindow):
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
-            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
+            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit" and d != "Name of mud engineer"): continue
             self.feature1.addItem(d)
             self.feature2.addItem(d)
         isLabel = QLabel('IS', self)
