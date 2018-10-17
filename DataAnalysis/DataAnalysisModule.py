@@ -39,9 +39,9 @@ from DatabasePreprocessing import getData, getDescriptions
 # Private function for testing public methods
 #-----------------------------------------------------------------------------------------------
 def __testInialization__(self):
-    data = [[3,2,0,5,4], [23,7,8,9,10], [2,3,6,7,1], [0,9,2,5,-2],
-            [5,7,13,14,15], [0,5,4,3,5], [8,-5,18,19,20], [-2,2,-3,-8,9],
-            [21,9,23,24,25], [-9,-7,-13,-14,-15]]
+    data = [[3,'ha',0,5,4], [23,'he',8,9,10], [2,'hi',6,7,1], [0,'ho',2,5,-2],
+            [5,'hu',13,14,15], [0,'ohio',4,3,5], [8,'hello',18,19,20], [-2,'hike',-3,-8,9],
+            [21,'hamony',23,24,25], [-9,'hihihio',-13,-14,-15]]
     cols = ["Feature1","Feature2","Feature3","Feature4","Feature5"]
 
     ds = pd.DataFrame(data, columns=cols, dtype=float)  # test dataframe
@@ -54,7 +54,7 @@ def __testInialization__(self):
 # Inputs:   string names of two feature
 # Outputs:  raw datasets, coefficients of linear regression,
 #           y-intercept, r^2
-#           *** If output format is "str" it explains what type of errors sending to GUI
+#           *** If output format is "str" it explains what type of error sending to GUI
 #-----------------------------------------------------------------------------------------------
 def linearRegression(feature1, feature2):
     print("------------------ Linear Regression ------------------")
@@ -104,18 +104,14 @@ def linearRegression(feature1, feature2):
 # Inputs:   string names of two feature, logic, and threshold
 #           - feature 1 & feature 2 should str type
 #           - logic should be one of the followings:
-#               * >, <, >=, <=, ==. !=, contains, !contains
-#               * where >, <, >=, <=, ==, !=: int, float threshold (and data type)
-#               * where ==. !=, contains, !contains: str threshold (and data type)
+#               * >, <, >=, <=, =. !=, contains, does not contain
+#               * where >, <, >=, <=, =, !=: int, float threshold (and data type)
+#               * where =. !=, contains, does not contain: str threshold (and data type)
 #           - threshold should be one of the types:
 #               * int, float, string
 # Outputs:  filtered dataset
-#           - a Panda dataframe with original feature1 & filtered feature2
-#           Error codes for non-matching data types
-#           - return 0: feature type error
-#           - return -1: logic type error
-#           - return -2: threshold type error
-#           *** If output format is "str" it explains what type of errors sending to GUI
+#           - Panda dataframes with original feature1 & filtered feature1
+#           *** If output format is "str" it explains what type of error sending to GUI
 #-----------------------------------------------------------------------------------------------
 def filtering(feature1, feature2, logic, threshold):
     print("------------------ Filtering ------------------")
@@ -124,7 +120,7 @@ def filtering(feature1, feature2, logic, threshold):
         print("feature(s) should be str type\n")
         return 0
     if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
-        logic != "=" and logic != "!=" and logic != "contains" and logic != "!contains"):
+        logic != "=" and logic != "!=" and logic != "contains" and logic != "does not contain"):
         print("logic value error\n")
         return -1
     if (type(threshold) != int and type(threshold) != float and type(threshold) != complex and type(threshold) != str):
@@ -180,7 +176,7 @@ def filtering(feature1, feature2, logic, threshold):
             if (type(f2[i]) == str and type(threshold) == str):
                 if (threshold in f2[i]):
                     new_f1.append(f1[i])
-    elif logic == '!contains':
+    elif logic == 'does not contain':
         for i in range(0, len(f1)):
             if (type(f2[i]) == str and type(threshold) == str):
                 if (threshold not in f2[i]):
@@ -228,7 +224,6 @@ def polynomialRegression(feature1, feature2, order):
 
 
 
-
 # check whether features compatible
 # data should be numerical values for regressions
 # feature1 & feature2
@@ -266,4 +261,3 @@ def __thresholdAndFeatureErrorCheckingForFiltering(dataset, threshold):
             if type(f2[i].item()) != int and type(f2[i].item()) != float and type(f2[i].item()) != complex:
                 return ("Threshold is numeric, but some of data in " + dataset.columns[idx] + " are not numeric.\n")
     return None
-
