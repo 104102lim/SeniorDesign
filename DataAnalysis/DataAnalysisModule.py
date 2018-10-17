@@ -124,7 +124,7 @@ def filtering(feature1, feature2, logic, threshold):
         print("feature(s) should be str type\n")
         return 0
     if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
-        logic != "==" and logic != "!=" and logic != "contains" and logic != "!contains"):
+        logic != "=" and logic != "!=" and logic != "contains" and logic != "!contains"):
         print("logic value error\n")
         return -1
     if (type(threshold) != int and type(threshold) != float and type(threshold) != complex and type(threshold) != str):
@@ -163,7 +163,7 @@ def filtering(feature1, feature2, logic, threshold):
         for i in range(0, len(f1)):
             if (f2[i] <= threshold):
                 new_f1.append(f1[i])
-    elif logic == '==':
+    elif logic == '=':
         for i in range(0, len(f1)):
             if (type(f2[i]) == str and type(threshold) == str and f2[i] == threshold):
                 new_f1.append(f1[i])
@@ -243,14 +243,17 @@ def __featureErrorCheckingForRegression(dataset):
 # second feature and threshold should have same data type
 # for example, str & str, int & int, float & float, complex & complex
 def __thresholdAndFeatureErrorCheckingForFiltering(dataset, threshold):
-    f2 = dataset[dataset.columns[1]].values
+    idx = 1
+    if len(dataset.columns) == 1:
+        idx = 0
+    f2 = dataset[dataset.columns[idx]].values
     if type(threshold) == str: # str compatible check
         for i in range(0, len(f2)):
             if type(f2[i]) != str:
-                return ("Threshold is string, but some of data in " + dataset.columns[1] + " are not string.\n")
+                return ("Threshold is string, but some of data in " + dataset.columns[idx] + " are not string.\n")
     else: # numeric compatible check
         for i in range(0, len(f2)):
             if type(f2[i].item()) != int and type(f2[i].item()) != float and type(f2[i].item()) != complex:
-                return ("Threshold is numeric, but some of data in " + dataset.columns[1] + " are not numeric.\n")
+                return ("Threshold is numeric, but some of data in " + dataset.columns[idx] + " are not numeric.\n")
     return None
 
