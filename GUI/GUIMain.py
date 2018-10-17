@@ -343,22 +343,37 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     # Temporary Method, would be merged later
     def fileLoad(self):
-        fileName, _ = QFileDialog.getSaveFileName(self,
-                        "Load File",
-                        "", "BH Files (*.bh)")
+        fileName, _ = QFileDialog.getOpenFileName(self,
+                                                  "Load File",
+                                                  "", "BH Files (*.bh)")
+        loadFile = pd.read_csv(fileName)
 
     # Temporary Method, would be merged later
     def fileExport(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
-                        "Export File",
-                        "", "BH Files (*.bh)")
+                                                  "Export File",
+                                                  "", "CSV Files (*.csv)")
+        if (self.dataUpdate):
+            self.data.to_csv(fileName)
+        else:
+            print("Error: self.data has not been initialized")
 
     def fileSave(self):
         if self.data is None:
-           return #return error code bc no data to save
+            return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
-                        "Save Dataset",
-                        "", "CSV Files (*.csv)")
+                                                  "Save File",
+                                                  "", "CSV Files (*.bh)")
+        if (self.dataUpdate):
+            if(self.mode_linear):
+                output = pd.DataFrame({"data": self.data, "slope": self.coefs[1], "yint": self.coefs[2]},
+                                      index=[0, 1, 2])
+            if(self.mode_poly):
+                output = pd.DataFrame({"data": self.data, "coefs": self.coefs[1][0]},
+                                      index=[0, 1])
+            output.to_csv(fileName)
+        else:
+            print("Error: self.data has not been initialized")
 
     def fileQuit(self):
         self.close()
@@ -369,6 +384,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def filterData(self):
+        
         try:
             threshold = float(str(self.dialog.threshold.text()))
         except:
@@ -394,23 +410,29 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def plotLinearRegression(self):
+        self.mode_linear = True
+        self.mode_poly = False
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
-        coefs = da.linearRegression(x, y)
-        if (type(coefs) == str):
+        self.coefs = da.linearRegression(x, y)
+        if (type(self.coefs) == str):
+            self.errorLabel.setText(self.coefs)
+        self.coefs = da.linearRegression(x, y)
+        if (type(self.coefs) == str):
             self.errorLabel.setText(coefs)
             self.dialog.close()
             self.dialogs.pop()
         else:
-            self.data = coefs[0]
+            self.data = self.coefs[0]
             self.errorLabel.setText("")
-            self.sc.update_figure(coefs, x, y, Linear=True,
+            self.sc.update_figure(self.coefs, x, y, Linear=True,
                               yint=self.dialog.yIntercept.isChecked(),
                               slope=self.dialog.slopeCheck.isChecked(),
                               rsquare=self.dialog.rSquared.isChecked())
             self.updateDataDisplay()
             self.dialog.close()
             self.dialogs.pop()
+        self.dataUpdate = True
 
     def polyRegressPrompt(self):
         self.dialog = polyRegressionDialog(self)
@@ -418,21 +440,24 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def plotPolyRegression(self):
+        self.mode_linear = False
+        self.mode_poly = True
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
         order = int(self.dialog.order.currentText())
-        coefs = da.polynomialRegression(x, y, order)
-        if (type(coefs) == str):
-            self.errorLabel.setText(coefs)
+        self.coefs = da.polynomialRegression(x, y, order)
+        if (type(self.coefs) == str):
+            self.errorLabel.setText(self.coefs)
             self.dialog.close()
             self.dialogs.pop()
         else:
-            self.data = coefs[0]
+            self.data = self.coefs[0]
             self.errorLabel.setText("")
-            self.sc.update_figure(coefs, x, y, Poly=True)
+            self.sc.update_figure(self.coefs, x, y, Poly=True)
             self.updateDataDisplay()
             self.dialog.close()
             self.dialogs.pop()
+        self.dataUpdate = True
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")

@@ -101,6 +101,8 @@ class MyMplCanvas(FigureCanvas):
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         self.dialogs = list()
+        self.data = pd.DataFrame({"a": [4, 5, 6], "b": [7, 8, 9], "c": [10, 11, 12]}, index=[1, 2, 3])
+        self.dataUpdate = True
 
         # Main Window Init
         QtWidgets.QMainWindow.__init__(self)
@@ -179,22 +181,37 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     # Temporary Method, would be merged later
     def fileLoad(self):
-        fileName, _ = QFileDialog.getSaveFileName(self,
+        fileName, _ = QFileDialog.getOpenFileName(self,
                                                   "Load File",
                                                   "", "BH Files (*.bh)")
+        loadFile = pd.read_csv(fileName)
 
     # Temporary Method, would be merged later
     def fileExport(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Export File",
-                                                  "", "BH Files (*.bh)")
+                                                  "", "CSV Files (*.csv)")
+        if(self.dataUpdate):
+            self.data.to_csv(fileName)
+        else:
+            print("Error: self.data has not been initialized")
 
     def fileSave(self):
         if self.data is None:
             return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
-                                                  "Save Dataset",
-                                                  "", "CSV Files (*.csv)")
+                                                  "Save File",
+                                                  "", "CSV Files (*.bh)")
+        if (self.dataUpdate):
+            if(self.mode_linear):
+                output = pd.DataFrame({"data": self.data, "slope": self.coefs[1], "yint": self.coefs[2]},
+                                      index=[0, 1, 2])
+            if(self.mode_poly):
+                output = pd.DataFrame({"data": self.data, "coefs": self.coefs[1][0]},
+                                      index=[0, 1])
+            output.to_csv(fileName)
+        else:
+            print("Error: self.data has not been initialized")
 
     def fileQuit(self):
         self.close()
