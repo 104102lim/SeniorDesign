@@ -97,6 +97,7 @@ class MyMplCanvas(FigureCanvas):
 
     def PolyCoefficients(self, x, coeffs):
         """ Returns a polynomial for ``x`` values for the ``coeffs`` provided.
+        
         The coefficients must be in ascending order (``x**0`` to ``x**o``).
         """
         o = len(coeffs)
@@ -146,7 +147,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         plotButton.clicked.connect(aw.plotLinearRegression)
         plotButton.move(700,100)
         plotButton.resize(50,50)
-
 
 
 class polyRegressionDialog(QtWidgets.QMainWindow):
@@ -227,6 +227,8 @@ class filterDialog(QtWidgets.QMainWindow):
         self.logic.addItem(">")
         self.logic.addItem("<=")
         self.logic.addItem(">=")
+        self.logic.addItem("contains")
+        self.logic.addItem("does not contain")
         self.logic.move(400, 100)
         self.logic.resize(50,25)
         self.threshold = QLineEdit(self)
@@ -289,12 +291,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         # DATA DISPLAY WIDGET
         self.table = QTableWidget(self)
-        #self.scroll.setWidget(self.table)
-        #self.layout.addWidget(self.table)  
-        #self.table.move(550,50)
         self.table.resize(100,100)
         # Our data frame goes below, current df is dummy data for testing
-        self.df = pd.DataFrame({"a" : [4 ,5, 6],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        self.df = pd.DataFrame({"a" : [0 ,0, 0],"b" : [0, 0, 0],"c" : [0, 0, 0]},index = [1, 2, 3])
         #df = DataFrame.read_csv("./EricTestData")
         #df = aw.data
         #df.to_csv('./EricTestData.csv')
@@ -320,6 +319,20 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.statusBar().showMessage("Testing", 2000)
 
     #Define All Actions Below
+    
+    def updateDataDisplay(self):
+        #self.df = pd.DataFrame({"a" : [0 ,0, 0],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        #df = DataFrame.read_csv("./EricTestData")
+        df = aw.data
+        #df.to_csv('./EricTestData.csv')
+        self.table.setColumnCount(len(self.df.columns))
+        self.table.setRowCount(len(self.df.index))
+        self.table.setHorizontalHeaderLabels(self.df.columns)
+        for i in range(len(self.df.index)):
+            for j in range(len(self.df.columns)):
+                self.table.setItem(i,j,QTableWidgetItem(str(self.df.iloc[i, j])))
+        
+        
     def fileOpen(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
                         "Open Dataset",
@@ -353,7 +366,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def filterData(self):
-        '''
+        
         try:
             threshold = float(str(self.dialog.threshold.text()))
         except:
@@ -362,23 +375,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         f2 = str(self.dialog.feature2.currentText())
         logic = str(self.dialog.logic.currentText())
         filterResult = da.filtering(f1, f2, logic, threshold)
-        self.data = filterResult[1]
-        '''
-        self.df = pd.DataFrame({"a" : [0 ,0, 0],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
-        #df = DataFrame.read_csv("./EricTestData")
-        #df = aw.data
-        #df.to_csv('./EricTestData.csv')
-        self.table.setColumnCount(len(self.df.columns))
-        self.table.setRowCount(len(self.df.index))
-        self.table.setHorizontalHeaderLabels(self.df.columns)
-        for i in range(len(self.df.index)):
-            for j in range(len(self.df.columns)):
-                self.table.setItem(i,j,QTableWidgetItem(str(self.df.iloc[i, j])))
-        self.errorLabel.setText("ERROR")
-        self.dialog.close()
-        self.dialogs.pop()
-        self.dialog.close()
-        self.dialogs.pop()
+        if (type(filterResult) == str):
+            self.errorLabel.setText(filterResult)
+        else:
+            self.data = filterResult[1]
+            self.updateDataDisplay()
+            self.dialog.close()
+            self.dialogs.pop()
 
     def linearRegressionPrompt(self):
         self.dialog = linearRegressionDialog(self)
@@ -389,13 +392,17 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
         coefs = da.linearRegression(x, y)
-        self.data = coefs[0]
-        self.sc.update_figure(coefs, x, y, Linear=True,
+        if (type(coefs) == str):
+            self.errorLabel.setText(coefs)
+        else:
+            self.data = coefs[0]
+            self.sc.update_figure(coefs, x, y, Linear=True,
                               yint=self.dialog.yIntercept.isChecked(),
                               slope=self.dialog.slopeCheck.isChecked(),
                               rsquare=self.dialog.rSquared.isChecked())
-        self.dialog.close()
-        self.dialogs.pop()
+            self.updateDataDisplay()
+            self.dialog.close()
+            self.dialogs.pop()
 
     def polyRegressPrompt(self):
         self.dialog = polyRegressionDialog(self)
@@ -407,11 +414,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         y = str(self.dialog.featureY.currentText())
         order = int(self.dialog.order.currentText())
         coefs = da.polynomialRegression(x, y, order)
-        self.data = coefs[0]
-
-        self.sc.update_figure(coefs, x, y, Poly=True)
-        self.dialog.close()
-        self.dialogs.pop()
+        if (type(coefs) == str):
+            self.errorLabel.setText(coefs)
+        else:
+            self.data = coefs[0]
+            self.sc.update_figure(coefs, x, y, Poly=True)
+            self.updateDataDisplay()
+            self.dialog.close()
+            self.dialogs.pop()
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
