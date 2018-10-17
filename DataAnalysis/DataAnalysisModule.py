@@ -60,8 +60,7 @@ def linearRegression(feature1, feature2):
     print("------------------ Linear Regression ------------------")
     # input type checking
     if (type(feature1) != str or type(feature2) != str):
-        print("feature(s) should be str type\n")
-        return 0
+        return ("feature(s) should be str type\n")
     print("\n" + feature1 + " vs. " + feature2)
 
     # retrieve dataset
@@ -117,16 +116,13 @@ def filtering(feature1, feature2, logic, threshold):
     print("------------------ Filtering ------------------")
     # input type checking
     if (type(feature1) != str or type(feature2) != str):
-        print("feature(s) should be str type\n")
-        return 0
+        return ("feature(s) should be str type\n")
     if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
         logic != "=" and logic != "!=" and logic != "contains" and logic != "does not contain"):
-        print("logic value error\n")
-        return -1
+        return ("logic value error\n")
     if (type(threshold) != int and type(threshold) != float and type(threshold) != complex and type(threshold) != str):
-        print("threshold should be int, float, or str type\n")
-        return -2
-
+        return ("threshold should be int, float, or str type\n")
+        
     # retrieve dataset
     dataset = getData([feature1, feature2])
     
@@ -204,8 +200,7 @@ def filtering(feature1, feature2, logic, threshold):
 def polynomialRegression(feature1, feature2, order):
     
     if (type(feature1) != str or type(feature2) != str):
-        print("feature(s) should be str type\n")
-        return 0
+        return ("feature(s) should be str type\n")
     print("\n" + feature1 + " vs. " + feature2)
 
     dataset = getData([feature1, feature2])
