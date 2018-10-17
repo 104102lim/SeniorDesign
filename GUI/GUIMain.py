@@ -16,6 +16,8 @@ from matplotlib.figure import Figure
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
 from PyQt5.QtWidgets import QScrollArea, QTableWidget,QVBoxLayout, QTableWidgetItem, QWidget
+from PyQt5.QtWidgets import QFileDialog
+
 from Init import Init
 from DatabasePreprocessing import getDescriptions
 import DataAnalysisModule as da
@@ -36,13 +38,7 @@ class MyMplCanvas(FigureCanvas):
                                    QtWidgets.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
-    def update_figure(self, data, Xlabel, Ylabel, yint, slope, rsquare):
-        # Tasks to do:
-        # change color
-        # add legend for R2, yint, slope
-        # Add title
-        # Extend line
-
+    def update_figure(self, data, Xlabel, Ylabel, Linear=False, Poly=False, yint=False, slope=False, rsquare=False):
         sData = data[0]
         sX = sData[Xlabel].tolist()
         sY = sData[Ylabel].tolist()
@@ -54,37 +50,61 @@ class MyMplCanvas(FigureCanvas):
         xmin = xmin - plus
         xmax = xmax + plus
         interval = (xmax - xmin) / 1000
-
-        slope_hat = data[1]
-        yint_hat = data[2]
         X = np.arange(xmin, xmax, interval)
-        Y = slope_hat * X + yint_hat
 
-        yintTxt = "Y-int: "
-        slopTxt = "Slope: "
-        rsquareTxt = "R^2: "
-        txt = ""
+        if(Linear):
+            slope_hat = data[1]
+            yint_hat = data[2]
+            Y = slope_hat * X + yint_hat
 
-        if(yint):
-            txt = txt + yintTxt + str(data[2])
+            yintTxt = "Y-int: "
+            slopTxt = "Slope: "
+            rsquareTxt = "R^2: "
+            txt = ""
 
-        if(slope):
-            txt = txt + "\n" + slopTxt + str(data[1])
+            if (yint):
+                txt = txt + yintTxt + str(data[2])
 
-        if(rsquare):
-            txt = txt + "\n" + rsquareTxt + str(data[3])
+            if (slope):
+                txt = txt + "\n" + slopTxt + str(data[1])
 
+            if (rsquare):
+                txt = txt + "\n" + rsquareTxt + str(data[3])
 
-        self.axes.cla()
-        self.axes.scatter(sX, sY, color='green')
-        self.axes.plot(X, Y, color='red')
-        self.axes.set_xlabel(xlabel=Xlabel)
-        self.axes.set_ylabel(ylabel=Ylabel)
-        self.axes.set_title("Linear Regression: " + Ylabel + " vs. " + Xlabel)
-        self.axes.legend(loc='best', title=txt)
+            self.axes.cla()
+            self.axes.scatter(sX, sY, color='green')
+            self.axes.plot(X, Y, color='red')
+            self.axes.set_xlabel(xlabel=Xlabel)
+            self.axes.set_ylabel(ylabel=Ylabel)
+            self.axes.set_title("Linear Regression: " + Ylabel + " vs. " + Xlabel)
+            self.axes.legend(loc='best', title=txt)
+
+        if(Poly):
+            Y = []
+            for i in range(len(X)):
+                Y.append(self.PolyCoefficients(X[i], data[1][0]))
+
+            txt = "Order: " + str(len(data[1][0]) - 1)
+            self.axes.cla()
+            self.axes.scatter(sX, sY, color='green')
+            self.axes.plot(X, Y, color='red')
+            self.axes.set_xlabel(xlabel=Xlabel)
+            self.axes.set_ylabel(ylabel=Ylabel)
+            self.axes.set_title("Polynomial Regression: " + Ylabel + " vs. " + Xlabel)
+            self.axes.legend(loc='best', title=txt)
 
         self.draw()
-        
+
+    def PolyCoefficients(self, x, coeffs):
+        """ Returns a polynomial for ``x`` values for the ``coeffs`` provided.
+        The coefficients must be in ascending order (``x**0`` to ``x**o``).
+        """
+        o = len(coeffs)
+        # print('# This is a polynomial of order {ord}.')
+        y = 0
+        for i in range(o):
+            y += coeffs[i] * (x ** i)
+        return y
 
 class linearRegressionDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -105,32 +125,66 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureX = QComboBox(self)
         self.featureX.setToolTip('Select feature for X axis')
         self.featureX.move(150, 100)
-        self.featureX.activated.connect(aw.storeXValue)
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
         self.featureY.move(300, 100)
-        self.featureY.activated.connect(aw.storeYValue)
         #populate combo boxes
-        ''''
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
-        '''
         self.yIntercept = QCheckBox("Y-Intercept",self)
         self.yIntercept.move(450, 100)
-        self.yIntercept.stateChanged.connect(aw.clickYIntercept)
         self.rSquared = QCheckBox("R^2",self)
         self.rSquared.move(550, 100)
-        self.rSquared.stateChanged.connect(aw.clickRSquared)
         self.slopeCheck = QCheckBox("Slope",self)
         self.slopeCheck.move(600, 100) 
-        self.slopeCheck.stateChanged.connect(aw.clickSlope)
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
         plotButton.clicked.connect(aw.plotLinearRegression)
+        plotButton.move(700,100)
+        plotButton.resize(50,50)
+
+
+
+class polyRegressionDialog(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        super(polyRegressionDialog, self).__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.title = 'Poly Regression'
+        self.left = 500
+        self.top = 100
+        self.width = 800
+        self.height = 200
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setFixedSize(self.size())
+
+        label = QLabel('Poly Regression', self)
+        label.move(20,90)
+        label.resize(250,50)
+        self.featureX = QComboBox(self)
+        self.featureX.setToolTip('Select feature for X axis')
+        self.featureX.move(150, 100)
+        self.featureY = QComboBox(self)
+        self.featureY.setToolTip('Select feature for Y axis')
+        self.featureY.move(300, 100)
+        self.order = QComboBox(self)
+        self.order.setToolTip('Select order of polynomial fit')
+        self.order.move(450, 100)
+        for i in range(1, 10):
+            self.order.addItem(str(i))
+        descriptions = getDescriptions()
+        descriptions.sort()
+        for d in descriptions:
+            if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
+            self.featureY.addItem(d)
+            self.featureX.addItem(d)
+        plotButton = QPushButton('Plot', self)
+        plotButton.setToolTip('Use button to plot poly regression')
+        plotButton.clicked.connect(aw.plotPolyRegression)
         plotButton.move(700,100)
         plotButton.resize(50,50)
         
@@ -150,22 +204,18 @@ class filterDialog(QtWidgets.QMainWindow):
         self.feature1 = QComboBox(self)
         self.feature1.setToolTip('Select feature 1')
         self.feature1.move(50, 100)
-        self.feature1.activated.connect(aw.storeFirstValue)
         whereLabel = QLabel('WHERE', self)
         whereLabel.move(152,90)
         whereLabel.resize(250,50)
         self.feature2 = QComboBox(self)
         self.feature2.setToolTip('Select feature 2')
         self.feature2.move(200, 100)
-        self.feature2.activated.connect(aw.storeSecondValue)
-        '''
         descriptions = getDescriptions()
         descriptions.sort()
         for d in descriptions:
             if(d != "bottom depth" and d != "top depth" and d != "Cost per unit"): continue
             self.feature1.addItem(d)
             self.feature2.addItem(d)
-        '''
         isLabel = QLabel('IS', self)
         isLabel.move(350,90)
         isLabel.resize(250,50)
@@ -179,7 +229,6 @@ class filterDialog(QtWidgets.QMainWindow):
         self.logic.addItem(">=")
         self.logic.move(400, 100)
         self.logic.resize(50,25)
-        self.logic.activated.connect(aw.storeLogic)
         self.threshold = QLineEdit(self)
         self.threshold.setToolTip('Input numeric value')
         self.threshold.move(500,100)
@@ -190,13 +239,8 @@ class filterDialog(QtWidgets.QMainWindow):
         filterButton.move(700,100)
         filterButton.resize(50,50)
 
-    def getThreshold(self):
-        return self.threshold.text()
-
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
-
-        #self.dialog = filterDialog(self)
         self.dialogs = list()
 
     # Main Window Init
@@ -210,9 +254,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_O)
         self.file_menu.addAction('&Save', self.fileSave,
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_S)
-        self.file_menu.addAction('&Save As', self.fileSaveAs)
-        self.file_menu.addAction('&Export', self.fileExport,
-                                 QtCore.Qt.CTRL + QtCore.Qt.Key_E)
         self.file_menu.addAction('&Quit', self.fileQuit,
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_Q)
         self.menuBar().addMenu(self.file_menu)
@@ -220,6 +261,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # PLOT MENU
         self.plot_menu = QtWidgets.QMenu('&Plot', self)
         self.plot_menu.addAction('&Linear Regression', self.linearRegressionPrompt)
+        self.plot_menu.addAction('&Poly Regression', self.polyRegressPrompt)
         self.menuBar().addSeparator()
         self.menuBar().addMenu(self.plot_menu)
 
@@ -275,37 +317,19 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     #Define All Actions Below
     def fileOpen(self):
-        lrd.close()
+        fileName, _ = QFileDialog.getSaveFileName(self,
+                        "Open Dataset",
+                        "", "CSV Files (*.csv)")
 
     def fileSave(self):
-        self.close()
-
-    def fileSaveAs(self):
-        self.close()
-
-    def fileExport(self):
-        self.close()
+        if self.data is None:
+           return #return error code bc no data to save
+        fileName, _ = QFileDialog.getSaveFileName(self,
+                        "Save Dataset",
+                        "", "CSV Files (*.csv)")
 
     def fileQuit(self):
         self.close()
-
-    def closeEvent(self, ce):
-        self.fileQuit()
-
-    def storeXValue(self, index):
-        self.xFeature = lrd.featureX.itemText(index)
-
-    def storeYValue(self, index):
-        self.yFeature = lrd.featureY.itemText(index)
-
-    def storeFirstValue(self, index):
-        self.oneFeature = fd.feature1.itemText(index)
-
-    def storeSecondValue(self, index):
-        self.twoFeature = fd.feature2.itemText(index)
-
-    def storeLogic(self, index):
-        self.filterLogic = fd.logic.itemText(index)
 
     def filterPrompt(self):
         self.dialog = filterDialog(self)
@@ -315,10 +339,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def filterData(self):
         '''
         try:
-            threshold = float(self.dialog.getThreshold())
+            threshold = float(str(self.dialog.threshold.text()))
         except:
-            threshold = self.dialog.getThreshold()
-        filterResult = da.filtering(self.oneFeature, self.twoFeature, self.filterLogic, threshold)
+            threshold = str(self.dialog.threshold.text())
+        f1 = str(self.dialog.feature1.currentText())
+        f2 = str(self.dialog.feature2.currentText())
+        logic = str(self.dialog.logic.currentText())
+        filterResult = da.filtering(f1, f2, logic, threshold)
         self.data = filterResult[1]
         '''
         self.df = pd.DataFrame({"a" : [0 ,0, 0],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
@@ -343,31 +370,36 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def plotLinearRegression(self):
-        coefs = da.linearRegression(self.xFeature, self.yFeature)
+        x = str(self.dialog.featureX.currentText())
+        y = str(self.dialog.featureY.currentText())
+        coefs = da.linearRegression(x, y)
         self.data = coefs[0]
-        self.sc.update_figure(coefs, self.xFeature, self.yFeature, self.yChecked, self.sChecked, self.rChecked)
+        self.sc.update_figure(coefs, x, y, Linear=True,
+                              yint=self.dialog.yIntercept.isChecked(),
+                              slope=self.dialog.slopeCheck.isChecked(),
+                              rsquare=self.dialog.rSquared.isChecked())
+        self.dialog.close()
+        self.dialogs.pop()
+
+    def polyRegressPrompt(self):
+        self.dialog = polyRegressionDialog(self)
+        self.dialogs.append(self.dialog)
+        self.dialog.show()
+
+    def plotPolyRegression(self):
+        x = str(self.dialog.featureX.currentText())
+        y = str(self.dialog.featureY.currentText())
+        order = int(self.dialog.order.currentText())
+        coefs = da.polynomialRegression(x, y, order)
+        self.data = coefs[0]
+
+        self.sc.update_figure(coefs, x, y, Poly=True)
+        self.dialog.close()
+        self.dialogs.pop()
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
         
-    def clickYIntercept(self,state):
-        if state == QtCore.Qt.Checked:
-            self.yChecked = True
-        else:
-            self.yChecked = False
-            
-    def clickRSquared(self,state):
-        if state == QtCore.Qt.Checked:
-            self.rChecked = True
-        else:
-            self.rChecked = False
-            
-    def clickSlope(self,state):
-        if state == QtCore.Qt.Checked:
-            self.sChecked = True
-        else:
-            self.sChecked = False
-
 if __name__ == '__main__':
     serverL = "MYPC\SQLEXPRESS"
     dbNameL = "BHBackupRestore"
@@ -377,8 +409,6 @@ if __name__ == '__main__':
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
-    lrd = linearRegressionDialog()
-    fd = filterDialog()
     aw.setWindowTitle("Analysis Toolkit Prototype")
     aw.show()
     sys.exit(qApp.exec_())

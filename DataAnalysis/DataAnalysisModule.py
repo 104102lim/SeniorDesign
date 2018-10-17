@@ -15,6 +15,7 @@ import pandas as pd
 import numpy as np
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import PolynomialFeatures
 import sys
 sys.path.insert(0, '../DBPreprocessing/')
 from DatabasePreprocessing import getData, getDescriptions
@@ -53,21 +54,26 @@ def __testInialization__(self):
 # Inputs:   string names of two feature
 # Outputs:  raw datasets, coefficients of linear regression,
 #           y-intercept, r^2
+#           *** If output format is "str" it explains what type of errors sending to GUI
 #-----------------------------------------------------------------------------------------------
 def linearRegression(feature1, feature2):
     print("------------------ Linear Regression ------------------")
-
-    dataset = getData([feature1, feature2])
-
     # input type checking
     if (type(feature1) != str or type(feature2) != str):
         print("feature(s) should be str type\n")
         return 0
-
     print("\n" + feature1 + " vs. " + feature2)
 
+    # retrieve dataset
+    dataset = getData([feature1, feature2])  
+    
+    # check whether the features compatible
+    checkError = __featureErrorCheckingForRegression(dataset)
+    if checkError != None: # error occuring
+        return checkError  # output string information
+    
     # 1. linear regression
-    train_x = dataset[feature1].reshape(-1, 1)
+    train_x = dataset[feature1].values.reshape(-1, 1)
     train_y = dataset[feature2]
 
     linearRegression = linear_model.LinearRegression()
@@ -109,12 +115,10 @@ def linearRegression(feature1, feature2):
 #           - return 0: feature type error
 #           - return -1: logic type error
 #           - return -2: threshold type error
+#           *** If output format is "str" it explains what type of errors sending to GUI
 #-----------------------------------------------------------------------------------------------
 def filtering(feature1, feature2, logic, threshold):
     print("------------------ Filtering ------------------")
-
-    dataset = getData([feature1, feature2])
-
     # input type checking
     if (type(feature1) != str or type(feature2) != str):
         print("feature(s) should be str type\n")
@@ -123,9 +127,17 @@ def filtering(feature1, feature2, logic, threshold):
         logic != "==" and logic != "!=" and logic != "contains" and logic != "!contains"):
         print("logic value error\n")
         return -1
-    if (type(threshold) != int and type(threshold) != float and type(threshold) != str):
+    if (type(threshold) != int and type(threshold) != float and type(threshold) != complex and type(threshold) != str):
         print("threshold should be int, float, or str type\n")
         return -2
+
+    # retrieve dataset
+    dataset = getData([feature1, feature2])
+    
+    # check whether threshold and second feature are compatible
+    checkError = __thresholdAndFeatureErrorCheckingForFiltering(dataset, threshold)
+    if checkError != None:
+        return checkError
 
     # f1.size & f2.size should be same
     # get data from feature2
@@ -197,8 +209,48 @@ def polynomialRegression(feature1, feature2, order):
     dataset = getData([feature1, feature2])
     X = np.array(dataset[feature1].values).reshape(-1, 1)
     y = np.array(dataset[feature2].values).reshape(-1, 1)
-    from sklearn.preprocessing import PolynomialFeatures
     poly = PolynomialFeatures(degree=order)
     poly_features = poly.fit_transform(X)
     poly_regression = linear_model.LinearRegression()
-    return poly_regression.fit(poly_features, y).coef_
+    poly_fit = poly_regression.fit(poly_features, y)
+    return [dataset, poly_fit.coef_]
+
+
+
+
+
+# check whether features compatible
+# data should be numerical values for regressions
+# feature1 & feature2
+def __featureErrorCheckingForRegression(dataset):
+    if dataset.columns[0] == dataset.columns[1]:
+        return ("Same feature(s) cannot be modeled.\n")
+    f1 = dataset[dataset.columns[0]].values
+    f2 = dataset[dataset.columns[1]].values
+    for i in range(0, len(f1)):
+        if type(f1[i]) == str:
+            return (dataset.columns[0] + " has non-numerical data type.\n")
+        elif type(f1[i].item()) != int and type(f1[i].item()) != float and type(f1[i].item()) != complex:
+            return (dataset.columns[0] + " has non-numerical data type.\n")
+    for i in range(0, len(f2)):
+        if type(f2[i]) == str:
+            return (dataset.columns[1] + " has non-numerical data type.\n")
+        elif type(f2[i].item()) != int and type(f2[i].item()) != float and type(f2[i].item()) != complex:
+            return (dataset.columns[1] + " has non-numerical data type.\n")
+    return None
+
+# check whether second feature and threshold compatible
+# second feature and threshold should have same data type
+# for example, str & str, int & int, float & float, complex & complex
+def __thresholdAndFeatureErrorCheckingForFiltering(dataset, threshold):
+    f2 = dataset[dataset.columns[1]].values
+    if type(threshold) == str: # str compatible check
+        for i in range(0, len(f2)):
+            if type(f2[i]) != str:
+                return ("Threshold is string, but some of data in " + dataset.columns[1] + " are not string.\n")
+    else: # numeric compatible check
+        for i in range(0, len(f2)):
+            if type(f2[i].item()) != int and type(f2[i].item()) != float and type(f2[i].item()) != complex:
+                return ("Threshold is numeric, but some of data in " + dataset.columns[1] + " are not numeric.\n")
+    return None
+
