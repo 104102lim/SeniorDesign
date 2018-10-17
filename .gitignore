@@ -103,5 +103,5 @@ ENV/
 # .idea
 .idea/
 
-#Joey's ignores
+#Joeys ignores
 *.DS_Store
