@@ -1,9 +1,6 @@
 from __future__ import unicode_literals
 import sys
-sys.path.insert(0, '../DBPreprocessing/')
-sys.path.insert(0, '../DataAnalysis/')
 import os
-import random
 import matplotlib
 import numpy as np
 import pandas as pd
@@ -14,13 +11,13 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 from matplotlib.figure import Figure
 
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
-from PyQt5.QtWidgets import QScrollArea, QTableWidget,QVBoxLayout, QTableWidgetItem, QWidget
+from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton, QCheckBox
+from PyQt5.QtWidgets import QScrollArea, QTableWidget, QVBoxLayout, QTableWidgetItem, QWidget
 from PyQt5.QtWidgets import QFileDialog
 
 from Init import Init
 from DatabasePreprocessing import getDescriptions
-import DataAnalysisModule as da
+import DataAnalysis as da
 
 matplotlib.use('Qt5Agg')
 
@@ -97,7 +94,7 @@ class MyMplCanvas(FigureCanvas):
 
     def PolyCoefficients(self, x, coeffs):
         """ Returns a polynomial for ``x`` values for the ``coeffs`` provided.
-        
+
         The coefficients must be in ascending order (``x**0`` to ``x**o``).
         """
         o = len(coeffs)

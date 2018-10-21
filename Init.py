@@ -3,6 +3,7 @@ import pandas as pd
 from Tree import Tree
 import EnumerateDescriptions as ED
 import AssociationFunctions as AF
+from TableNames import getTableNames
 
 class Init:
     __GETPRIMARYKEYSQLCODE = "SELECT Col.Column_Name from " + \
@@ -35,14 +36,6 @@ class Init:
         return cursor
 
     @classmethod
-    def __getTableNames(cls):
-        tbNamesDf = pd.read_csv('../DBPreprocessing/FilteredDictionary.csv')
-        tableNames = []
-        for index, row in tbNamesDf.iterrows():
-            tableNames.append(row[0])
-        return tableNames
-
-    @classmethod
     # gets features, FKs, PKs, etc...
     def __getTableInfo(cls, sqlCode):
         infoListByName = {}
@@ -67,7 +60,7 @@ class Init:
     def init(cls, server, dbName, UID, PWD):
         cls.cursor = cls.__connect(server, dbName, UID, PWD)
         cls.ti = {}
-        cls.ti[0] = cls.__getTableNames()
+        cls.ti[0] = getTableNames()
         cls.ti[1] = cls.__getTableInfo(cls.__GETPRIMARYKEYSQLCODE)
         cls.ti[2] = cls.__getTableInfo(cls.__GETFOREIGNKEYSQLCODE)
         cls.validDescriptions = cls.__getValidDescriptions()
