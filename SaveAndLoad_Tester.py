@@ -176,15 +176,75 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     # Define All Actions Below
     def fileOpen(self):
-        fileName, _ = QFileDialog.getSaveFileName(self,
+        fileName, _ = QFileDialog.getOpenFileName(self,
                                                   "Open Dataset",
-                                                  "", "Baker Hughes Files (*.bh)")
+
+                                                 "", "Baker Hughes Files (*.bh)")
+
+        # Following block extract the last line
         tmp = ""
         with open(fileName, 'r') as f:
             for row in reversed(list(csv.reader(f))):
                 tmp = ', '.join(row)
                 break
-        print(tmp)
+        # Extract dataset
+        count = 0
+        XLabel = ""
+        YLabel = ""
+        with open(fileName, 'r') as inp, open('temp.csv', 'w') as out:
+            writer = csv.writer(out)
+            for row in csv.reader(inp):
+                if not row:
+                    break
+                if count == 0:
+                    XLabel = row[1]
+                    YLabel = row[2]
+                writer.writerow(row)
+                count += 1
+
+        dp = pd.read_csv('temp.csv')
+        stmp = tmp.split(" ")
+        tmpList = []
+
+        # parse last line to extract coefs
+        if stmp[0] == "POLY:":
+            for n in stmp:
+                if not n:
+                    continue
+                if n != "POLY:":
+                    tmpList.append(float(n))
+            self.coefs = [dp, tmpList]
+            self.sc.update_figure(self.coefs, XLabel, YLabel, Poly=True)
+
+        elif stmp[0] == "LINEAR:":
+            count = 0
+            y_int = 0.0
+            s = 0.0
+            rr = 0.0
+            for n in stmp:
+                if not n:
+                    continue
+                if n != "LINEAR:":
+                    if count == 1:
+                        y_int = float(n)
+                    elif count == 2:
+                        s = float(n)
+                    elif count == 3:
+                        rr= float(n)
+                    elif count == 4:
+                        self.dialog.yIntercept.isChecked = (n == "True")
+                    elif count == 5:
+                        self.dialog.slopeCheck.isChecked = (n == "True")
+                    elif count == 6:
+                        self.dialog.rSquared.isChecked = (n == "True")
+                count += 1
+            self.coefs = [dp, y_int, s, rr]
+            self.sc.update_figure(self.coefs, XLabel, YLabel, Linear=True,
+                                yint = self.dialog.yIntercept.isChecked(),
+                                slope = self.dialog.slopeCheck.isChecked(),
+                                rsquare = self.dialog.rSquared.isChecked())
+
+
 
     # Temporary Method, would be merged later
     def fileLoad(self):
