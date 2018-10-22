@@ -97,96 +97,246 @@ def linearRegression(feature1, feature2):
 
 #-----------------------------------------------------------------------------------------------
 # Function: filtering
-# Public function to do filtering the second feature given existing two feature string inputs
-# Inputs:   string names of two feature, logic, and threshold
-#           - feature 1 & feature 2 should str type
+# Public function to filter some data given a target feature given the information of set of features
+# Inputs:   targetFeature, comparisonFutures, logics, thresholds, operators
+#           - all features should have str type
 #           - logic should be one of the followings:
 #               * >, <, >=, <=, =. !=, contains, does not contain
 #               * where >, <, >=, <=, =, !=: int, float threshold (and data type)
 #               * where =. !=, contains, does not contain: str threshold (and data type)
 #           - threshold should be one of the types:
 #               * int, float, string
+#           - operator should be one of the followings:
+#               * AND, OR
+#           *** Length of comparisonFeatures, logics, thresholds should be same with at most 6
+#           *** Length of operators should be one less than length of comparisonFeatures
 # Outputs:  filtered dataset
 #           - Panda dataframes with original feature1 & filtered feature1
 #           *** If output format is "str" it explains what type of error sending to GUI
 #-----------------------------------------------------------------------------------------------
-def filtering(feature1, feature2, logic, threshold):
+def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     print("------------------ Filtering ------------------")
-    # input type checking
-    if (type(feature1) != str or type(feature2) != str):
-        return ("feature(s) should be str type\n")
-    if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
-        logic != "=" and logic != "!=" and logic != "contains" and logic != "does not contain"):
-        return ("logic value error\n")
-    if (type(threshold) != int and type(threshold) != float and type(threshold) != complex and type(threshold) != str):
-        return ("threshold should be int, float, or str type\n")
-        
-    # retrieve dataset
-    dataset = getData([feature1, feature2])
     
-    # check whether threshold and second feature are compatible
-    checkError = __thresholdAndFeatureErrorCheckingForFiltering(dataset, threshold)
-    if checkError != None:
-        return checkError
+    # input type checking
+    if (type(targetFeature) != str):
+        return ("Target feature should be str type\n")
+    for i in range(0, len(comparisonFeatures)):
+        if (type(comparisonFeatures[i]) != str):
+            return ("Comparison feature(s) should be str type\n")
+        
+    if len(comparisonFeatures) != len(logics):
+        return ("Number of features and logics should be same\n")
+    if len(comparisonFeatures) != len(thresholds):
+        return ("Number of features and thresholds should be same\n")
+    if len(comparisonFeatures) != (len(operators) + 1):
+        return ("Number of operators should be one less than number of features\n")
+    
+    for i in range(0, len(logics)):
+        if (logics[i] != ">" and logics[i] != "<" and logics[i] != ">=" and logics[i] != "<=" and
+            logics[i] != "=" and logics[i] != "!=" and logics[i] != "contains" and logics[i] != "does not contain"):
+            return ("logic value(s) error\n")
+    for i in range(0, len(thresholds)):
+        if (type(thresholds[i]) != int and type(thresholds[i]) != float and type(thresholds[i]) != complex and type(thresholds[i]) != str):
+            return ("threshold(s) should be int, float, or str type\n")
+    for i in range(0, len(operators)):
+        if (operators[i] != "AND" and operators[i] != "OR"):
+            return ("operator(s) should be 'AND' or 'OR'\n")
+    
+    # get length
+    length = len(comparisonFeatures)
+    
+    new_targetfs = []
+    new_targetfs_idx = []
+    
+    # filter target feature given comparison features
+    for i in range(0, length):
+        # get dataset
+        dataset = getData([targetFeature, comparisonFeatures[i]])
+        
+        
+        # check whether threshold and second feature are compatible
+        checkError = __thresholdAndFeatureErrorCheckingForFiltering(dataset, thresholds[i])
+        if checkError != None:
+            return checkError
 
-    # f1.size & f2.size should be same
-    # get data from feature2
-    f1 = dataset[feature1]
-    f2 = dataset[feature2]
-    new_f1 = []
+        # *** size of target feature & size of comparison feature should be same
+        # get data
+        targetf = dataset[targetFeature]
+        comparisonf = dataset[comparisonFeatures[i]]
+        
+        new_targetf = []
+        new_targetf_idx = []
 
-    # do filtering for feature2
-    # ex) (type(f2[i]) == int or type(f2[i]) == long) and (type(threshold) == int or type(threshold) == float)
-    if logic == '>':
-        for i in range(0, len(f1)):
-            if (f2[i] > threshold):
-                new_f1.append(f1[i])
-    elif logic == '<':
-        for i in range(0, len(f1)):
-            if (f2[i] < threshold):
-                new_f1.append(f1[i])
-    elif logic == '>=':
-        for i in range(0, len(f1)):
-            if (f2[i] >= threshold):
-                new_f1.append(f1[i])
-    elif logic == '<=':
-        for i in range(0, len(f1)):
-            if (f2[i] <= threshold):
-                new_f1.append(f1[i])
-    elif logic == '=':
-        for i in range(0, len(f1)):
-            if (type(f2[i]) == str and type(threshold) == str and f2[i] == threshold):
-                new_f1.append(f1[i])
-            elif (f2[i] == threshold):
-                new_f1.append(f1[i])
-    elif logic == '!=':
-        for i in range(0, len(f1)):
-            if (type(f2[i]) == str and type(threshold) == str and f2[i] != threshold):
-                new_f1.append(f1[i])
-            elif (f2[i] != threshold):
-                new_f1.append(f1[i])
-    elif logic == 'contains':
-        for i in range(0, len(f1)):
-            if (type(f2[i]) == str and type(threshold) == str):
-                if (threshold in f2[i]):
-                    new_f1.append(f1[i])
-    elif logic == 'does not contain':
-        for i in range(0, len(f1)):
-            if (type(f2[i]) == str and type(threshold) == str):
-                if (threshold not in f2[i]):
-                    new_f1.append(f1[i])
+        # do filtering for target feature
+        if logics[i] == '>':
+            for j in range(0, len(targetf)):
+                if (comparisonf[j] > thresholds[i]):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
+        elif logics[i] == '<':
+            for j in range(0, len(targetf)):
+                if (comparisonf[j] < thresholds[i]):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
+        elif logics[i] == '>=':
+            for j in range(0, len(targetf)):
+                if (comparisonf[j] >= thresholds[i]):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
+        elif logics[i] == '<=':
+            for j in range(0, len(targetf)):
+                if (comparisonf[j] <= thresholds[i]):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
+        elif logics[i] == '=':
+            for j in range(0, len(targetf)):
+                if (type(comparisonf[j]) == str and type(thresholds[i]) == str and comparisonf[j] == thresholds[i]):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
+                elif (comparisonf[j] == thresholds[i]):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
+        elif logics[i] == '!=':
+            for j in range(0, len(targetf)):
+                if (type(comparisonf[j]) == str and type(thresholds[i]) == str and comparisonf[j] != thresholds[i]):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
+                elif (comparisonf[j] != thresholds[i]):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
+        elif logics[i] == 'contains':
+            for j in range(0, len(targetf)):
+                if (type(comparisonf[j]) == str and type(thresholds[i]) == str):
+                    if (thresholds[i] in comparisonf[j]):
+                        new_targetf.append(targetf[j])
+                        new_targetf_idx.append(j)
+        elif logics[i] == 'does not contain':
+            for j in range(0, len(targetf)):
+                if (type(comparisonf[j]) == str and type(thresholds[i]) == str):
+                    if (thresholds[i] not in comparisonf[j]):
+                        new_targetf.append(targetf[j])
+                        new_targetf_idx.append(j)
+        
+        # append the new target feature to the set of new target features
+        new_targetfs.append(new_targetf)
+        new_targetfs_idx.append(new_targetf_idx)
+    
+    
+    # compose all filtered target features for the result
+    result = new_targetfs[0]
+    result_idx = new_targetfs_idx[0]
+    new_result = []
+    new_result_idx = []
+    
+    for i in range(0,length-1): # compare new_targetfs[i+1] and result
+        if operators[i] == "AND":
+            new_result = []
+            new_result_idx = []
+            for j in range(0,len(result_idx)):
+                if result_idx[j] in new_targetfs_idx[i+1]:
+                    new_result.append(result[j])
+                    new_result_idx.append(j)
+            result = new_result
+            result_idx = new_result_idx
+        elif operators[i] == "OR":
+            for j in range(0,len(new_targetfs_idx[i+1])):
+                if new_targetfs_idx[i+1][j] not in result_idx:
+                    result.append(new_targetfs[i+1][j])
+                    result_idx.append(j)
 
     # create new dataframe for output
-    f1 = pd.DataFrame(data={feature1 : dataset[feature1]})
-    new_f1 = {feature1 : new_f1}
-    new_f1 = pd.DataFrame(data=new_f1)
-    output = [f1, new_f1]
+    #targetf = pd.DataFrame(data={targetFeature : []})
+    targetf = pd.DataFrame(data={targetFeature : getData[targetFeature]})
+    result = {targetFeature : result}
+    result = pd.DataFrame(data=result)
+    output = [targetf, result]
     print("First feature:")
     print(output[0])
     print("Filtered first feature:")
     print(output[1])
     print("------------------ Filtering Done ------------------\n")
     return output
+
+
+
+#def filtering(feature1, feature2, logic, threshold):
+#    print("------------------ Filtering ------------------")
+#    # input type checking
+#    if (type(feature1) != str or type(feature2) != str):
+#        return ("feature(s) should be str type\n")
+#    if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
+#        logic != "=" and logic != "!=" and logic != "contains" and logic != "does not contain"):
+#        return ("logic value error\n")
+#    if (type(threshold) != int and type(threshold) != float and type(threshold) != complex and type(threshold) != str):
+#        return ("threshold should be int, float, or str type\n")
+#        
+#    # retrieve dataset
+#    dataset = getData([feature1, feature2])
+#    
+#    # check whether threshold and second feature are compatible
+#    checkError = __thresholdAndFeatureErrorCheckingForFiltering(dataset, threshold)
+#    if checkError != None:
+#        return checkError
+#
+#    # f1.size & f2.size should be same
+#    # get data from feature2
+#    f1 = dataset[feature1]
+#    f2 = dataset[feature2]
+#    new_f1 = []
+#
+#    # do filtering for feature2
+#    # ex) (type(f2[i]) == int or type(f2[i]) == long) and (type(threshold) == int or type(threshold) == float)
+#    if logic == '>':
+#        for i in range(0, len(f1)):
+#            if (f2[i] > threshold):
+#                new_f1.append(f1[i])
+#    elif logic == '<':
+#        for i in range(0, len(f1)):
+#            if (f2[i] < threshold):
+#                new_f1.append(f1[i])
+#    elif logic == '>=':
+#        for i in range(0, len(f1)):
+#            if (f2[i] >= threshold):
+#                new_f1.append(f1[i])
+#    elif logic == '<=':
+#        for i in range(0, len(f1)):
+#            if (f2[i] <= threshold):
+#                new_f1.append(f1[i])
+#    elif logic == '=':
+#        for i in range(0, len(f1)):
+#            if (type(f2[i]) == str and type(threshold) == str and f2[i] == threshold):
+#                new_f1.append(f1[i])
+#            elif (f2[i] == threshold):
+#                new_f1.append(f1[i])
+#    elif logic == '!=':
+#        for i in range(0, len(f1)):
+#            if (type(f2[i]) == str and type(threshold) == str and f2[i] != threshold):
+#                new_f1.append(f1[i])
+#            elif (f2[i] != threshold):
+#                new_f1.append(f1[i])
+#    elif logic == 'contains':
+#        for i in range(0, len(f1)):
+#            if (type(f2[i]) == str and type(threshold) == str):
+#                if (threshold in f2[i]):
+#                    new_f1.append(f1[i])
+#    elif logic == 'does not contain':
+#        for i in range(0, len(f1)):
+#            if (type(f2[i]) == str and type(threshold) == str):
+#                if (threshold not in f2[i]):
+#                    new_f1.append(f1[i])
+#
+#    # create new dataframe for output
+#    f1 = pd.DataFrame(data={feature1 : dataset[feature1]})
+#    new_f1 = {feature1 : new_f1}
+#    new_f1 = pd.DataFrame(data=new_f1)
+#    output = [f1, new_f1]
+#    print("First feature:")
+#    print(output[0])
+#    print("Filtered first feature:")
+#    print(output[1])
+#    print("------------------ Filtering Done ------------------\n")
+#    return output
+
 
 #-----------------------------------------------------------------------------------------------
 # Function: polynomialRegression
