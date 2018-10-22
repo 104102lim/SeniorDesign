@@ -27,9 +27,9 @@ progversion = "0.1"
 
 class MyMplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        FigureCanvas.__init__(self, fig)
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111)
+        FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
         FigureCanvas.setSizePolicy(self,
                                    QtWidgets.QSizePolicy.Expanding,
@@ -334,8 +334,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         
     def fileOpen(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
-                        "Open Dataset",
+                        "Open Case",
                         "", "Baker Hughes Files (*.bh)")
+        if fileName == '':
+            return #no file name given
         tmp = ""
         with open(fileName, 'r') as f:
             for row in reversed(list(csv.reader(f))):
@@ -343,23 +345,27 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 break
         print(tmp)
 
-
-
     def fileExport(self):
-        fileName, _ = QFileDialog.getSaveFileName(self,
-                                                  "Export CSV File",
-                                                  "", "CSV Files (*.csv)")
         if self.data is None:
             return  # return error code bc no data to save
-        else:
-            self.data.to_csv(fileName)
+        fileName, _ = QFileDialog.getSaveFileName(self,
+                                                  "Export Data and Plot",
+                                                  "", "CSV/PNG Files (*.csv *.png)")
+        if fileName == '':
+            return #no file name given
+        fileName, extension = os.path.splitext(fileName)
+        self.data.to_csv(fileName + ".csv")
+        if self.mode_linear or self.mode_poly:
+            self.sc.fig.savefig(fileName + ".png")
 
     def fileSave(self):
         if self.data is None:
             return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
-                                                  "Save File",
+                                                  "Save Case",
                                                   "", "Baker Hughes Files (*.bh)")
+        if fileName == '':
+            return #no file name given
         output = self.data.copy()
         output.to_csv(fileName)
         file = open(fileName, 'a')
