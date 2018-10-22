@@ -340,7 +340,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Export CSV File",
                                                   "", "CSV Files (*.csv)")
-
         if self.data is None:
             return  # return error code bc no data to save
         else:
@@ -353,13 +352,21 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                                                   "Save File",
                                                   "", "Baker Hughes Files (*.bh)")
         output = self.data.copy()
-        if self.mode_linear:
-            output["yint"] = self.coefs[2]
-            output["slope"] = self.coefs[1][0]
-            output["r2"] = self.coefs[3]
-        elif self.mode_poly:
-            output["coefs"] = self.coefs[1][0]
         output.to_csv(fileName)
+        file = open(fileName, 'a')
+        if self.mode_linear:
+            file.write("\n\nLINEAR: " +
+                str(self.coefs[2]) + " " +
+                str(self.coefs[1][0]) + " " +
+                str(self.coefs[3]) + " " +
+                str(self.checkyint) + " " +
+                str(self.checkslope) + " " +
+                str(self.checkrsquare) + " ")
+        elif self.mode_poly:
+            file.write("\n\nPOLY: ")
+            for c in self.coefs[1][0]:
+                file.write(str(c) + " ")
+        file.close()
 
     def fileQuit(self):
         self.close()
@@ -400,6 +407,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
         self.coefs = da.linearRegression(x, y)
+        self.checkyint = self.dialog.yIntercept.isChecked()
+        self.checkslope = self.dialog.slopeCheck.isChecked()
+        self.checkrsquare = self.dialog.rSquared.isChecked()
         if (type(self.coefs) == str):
             self.errorLabel.setText(self.coefs)
         self.coefs = da.linearRegression(x, y)
