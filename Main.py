@@ -260,8 +260,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.file_menu = QtWidgets.QMenu('&File', self)
         self.file_menu.addAction('&Open', self.fileOpen,
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_O)
-        self.file_menu.addAction('&Load', self.fileLoad,
-                                 QtCore.Qt.CTRL + QtCore.Qt.Key_L)
         self.file_menu.addAction('&Export', self.fileExport,
                                  QtCore.Qt.CTRL + QtCore.Qt.Key_E)
         self.file_menu.addAction('&Save', self.fileSave,
@@ -336,14 +334,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def fileOpen(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
                         "Open Dataset",
-                        "", "CSV Files (*.csv)")
-
-    # Temporary Method, would be merged later
-    def fileLoad(self):
-        fileName, _ = QFileDialog.getOpenFileName(self,
-                                                  "Load File",
-                                                  "", "BH Files (*.bh)")
-        loadFile = pd.read_csv(fileName)
+                        "", "Baker Hughes Files (*.bh)")
 
     # Temporary Method, would be merged later
     def fileExport(self):
@@ -360,17 +351,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Save File",
-                                                  "", "CSV Files (*.bh)")
-        if (self.dataUpdate):
-            if(self.mode_linear):
-                output = pd.DataFrame({"data": self.data, "slope": self.coefs[1], "yint": self.coefs[2]},
-                                      index=[0, 1, 2])
-            if(self.mode_poly):
-                output = pd.DataFrame({"data": self.data, "coefs": self.coefs[1][0]},
-                                      index=[0, 1])
-            output.to_csv(fileName)
-        else:
-            print("Error: self.data has not been initialized")
+                                                  "", "Baker Hughes Files (*.bh)")
+        output = self.data.copy()
+        if self.mode_linear:
+            output["yint"] = self.coefs[2]
+            output["slope"] = self.coefs[1][0]
+            output["r2"] = self.coefs[3]
+        elif self.mode_poly:
+            output["coefs"] = self.coefs[1][0]
+        output.to_csv(fileName)
 
     def fileQuit(self):
         self.close()
@@ -381,7 +370,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def filterData(self):
-        
         try:
             threshold = float(str(self.dialog.threshold.text()))
         except:
@@ -416,7 +404,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.errorLabel.setText(self.coefs)
         self.coefs = da.linearRegression(x, y)
         if (type(self.coefs) == str):
-            self.errorLabel.setText(coefs)
+            self.errorLabel.setText(self.coefs)
             self.dialog.close()
             self.dialogs.pop()
         else:
@@ -429,7 +417,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.updateDataDisplay()
             self.dialog.close()
             self.dialogs.pop()
-        self.dataUpdate = True
 
     def polyRegressPrompt(self):
         self.dialog = polyRegressionDialog(self)
@@ -454,7 +441,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.updateDataDisplay()
             self.dialog.close()
             self.dialogs.pop()
-        self.dataUpdate = True
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
