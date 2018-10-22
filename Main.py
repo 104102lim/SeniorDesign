@@ -339,7 +339,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     # Temporary Method, would be merged later
     def fileExport(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
-                                                  "Export File",
+                                                  "Export CSV File",
                                                   "", "CSV Files (*.csv)")
         if (self.dataUpdate):
             self.data.to_csv(fileName)
