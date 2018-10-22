@@ -8,6 +8,7 @@ import sys
 sys.path.insert(0, '../DBPreprocessing/')
 sys.path.insert(0, '../DataAnalysis/')
 import os
+import csv
 import random
 import matplotlib
 import numpy as np
@@ -177,7 +178,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def fileOpen(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Open Dataset",
-                                                  "", "CSV Files (*.csv)")
+                                                  "", "Baker Hughes Files (*.bh)")
+        tmp = ""
+        with open(fileName, 'r') as f:
+            for row in reversed(list(csv.reader(f))):
+                tmp = ', '.join(row)
+                break
+        print(tmp)
 
     # Temporary Method, would be merged later
     def fileLoad(self):

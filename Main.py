@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import csv
 import sys
 import os
 import matplotlib
@@ -335,6 +336,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         fileName, _ = QFileDialog.getSaveFileName(self,
                         "Open Dataset",
                         "", "Baker Hughes Files (*.bh)")
+        tmp = ""
+        with open(fileName, 'r') as f:
+            for row in reversed(list(csv.reader(f))):
+                tmp = ', '.join(row)
+                break
+        print(tmp)
+
+
 
     def fileExport(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
