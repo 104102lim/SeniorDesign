@@ -333,7 +333,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         
         
     def fileOpen(self):
-        fileName, _ = QFileDialog.getSaveFileName(self,
+        fileName, _ = QFileDialog.getOpenFileName(self,
                         "Open Case",
                         "", "Baker Hughes Files (*.bh)")
         if fileName == '':
@@ -362,17 +362,22 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         stmp = tmp.split(" ")
         tmpList = []
 
+        self.mode_linear = False
+        self.mode_poly = False
+
         # parse last line to extract coefs
         if stmp[0] == "POLY:":
+            self.mode_poly = True
             for n in stmp:
                 if not n:
                     continue
                 if n != "POLY:":
                     tmpList.append(float(n))
-            self.coefs = [dp, tmpList]
+            self.coefs = [dp, [tmpList]]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Poly=True)
 
         elif stmp[0] == "LINEAR:":
+            self.mode_linear = True
             count = 0
             y_int = 0.0
             s = 0.0
@@ -388,17 +393,17 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                     elif count == 3:
                         rr = float(n)
                     elif count == 4:
-                        self.dialog.yIntercept.isChecked = (n == "True")
+                        self.checkyint = (n == "True")
                     elif count == 5:
-                        self.dialog.slopeCheck.isChecked = (n == "True")
+                        self.checkslope = (n == "True")
                     elif count == 6:
-                        self.dialog.rSquared.isChecked = (n == "True")
+                        self.checkrsquare = (n == "True")
                 count += 1
-            self.coefs = [dp, y_int, s, rr]
+            self.coefs = [dp, s, y_int, rr]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Linear=True,
-                                  yint=self.dialog.yIntercept.isChecked(),
-                                  slope=self.dialog.slopeCheck.isChecked(),
-                                  rsquare=self.dialog.rSquared.isChecked())
+                                  yint=self.checkyint,
+                                  slope=self.checkslope,
+                                  rsquare=self.checkrsquare)
 
     def fileExport(self):
         if self.data is None:
