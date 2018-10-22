@@ -419,7 +419,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.errorLabel.setText(self.coefs)
         self.coefs = da.linearRegression(x, y)
         if (type(self.coefs) == str):
-            self.errorLabel.setText(coefs)
+            self.errorLabel.setText(self.coefs)
             self.dialog.close()
             self.dialogs.pop()
         else:
