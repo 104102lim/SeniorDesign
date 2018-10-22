@@ -341,14 +341,14 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     # Temporary Method, would be merged later
     def fileLoad(self):
         fileName, _ = QFileDialog.getOpenFileName(self,
-                                                  "Load File",
+                                                  "Load BH File",
                                                   "", "BH Files (*.bh)")
         loadFile = pd.read_csv(fileName)
 
     # Temporary Method, would be merged later
     def fileExport(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
-                                                  "Export File",
+                                                  "Export CSV File",
                                                   "", "CSV Files (*.csv)")
         if (self.dataUpdate):
             self.data.to_csv(fileName)
@@ -359,7 +359,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         if self.data is None:
             return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
-                                                  "Save File",
+                                                  "Save BH File",
                                                   "", "CSV Files (*.bh)")
         if (self.dataUpdate):
             if(self.mode_linear):
