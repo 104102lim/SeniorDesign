@@ -336,15 +336,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                         "Open Dataset",
                         "", "Baker Hughes Files (*.bh)")
 
-    # Temporary Method, would be merged later
     def fileExport(self):
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Export CSV File",
                                                   "", "CSV Files (*.csv)")
-        if (self.dataUpdate):
-            self.data.to_csv(fileName)
+
+        if self.data is None:
+            return  # return error code bc no data to save
         else:
-            print("Error: self.data has not been initialized")
+            self.data.to_csv(fileName)
 
     def fileSave(self):
         if self.data is None:
