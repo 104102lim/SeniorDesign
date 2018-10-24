@@ -36,6 +36,10 @@ class MyMplCanvas(FigureCanvas):
                                    QtWidgets.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
+    def clear_figure(self):
+        self.axes.plot()
+        self.draw()
+
     def update_figure(self, data, Xlabel, Ylabel, Linear=False, Poly=False, yint=False, slope=False, rsquare=False):
         sData = data[0]
         sX = sData[Xlabel].tolist()
@@ -373,8 +377,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                     continue
                 if n != "POLY:":
                     tmpList.append(float(n))
+            self.data = dp
             self.coefs = [dp, [tmpList]]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Poly=True)
+            self.updateDataDisplay()
 
         elif stmp[0] == "LINEAR:":
             self.mode_linear = True
@@ -399,11 +405,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                     elif count == 6:
                         self.checkrsquare = (n == "True")
                 count += 1
+            self.data = dp
             self.coefs = [dp, s, y_int, rr]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Linear=True,
                                   yint=self.checkyint,
                                   slope=self.checkslope,
                                   rsquare=self.checkrsquare)
+        else:
+            self.data = dp
+            self.sc.clear_figure()
 
     def fileExport(self):
         if self.data is None:
@@ -441,6 +451,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             file.write("\n\nPOLY: ")
             for c in self.coefs[1][0]:
                 file.write(str(c) + " ")
+
+        else:
+            file.write("\n\nDATA")
         file.close()
 
     def fileQuit(self):
