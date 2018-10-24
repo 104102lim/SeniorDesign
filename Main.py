@@ -406,18 +406,19 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         count = 0
         XLabel = ""
         YLabel = ""
-        with open(fileName, 'r') as inp, open('temp.csv', 'w') as out:
-            writer = csv.writer(out)
-            for row in csv.reader(inp):
-                if not row:
-                    break
-                if count == 0:
-                    XLabel = row[1]
-                    YLabel = row[2]
-                writer.writerow(row)
+        with open(fileName, "r+w") as inp:
+            lines = inp.readlines()
+            lines = lines[:-3]
+            writer = csv.writer(inp, delimiter=',')
+            for line in lines:
+                # if count == 0:
+                #     XLabel = row[1]
+                #     YLabel = row[2]
+                writer.writerow(line)
                 count += 1
 
-        dp = pd.read_csv('temp.csv')
+        dp = pd.read_csv(fileName)
+        labels = dp.columns
         stmp = tmp.split(" ")
         tmpList = []
 
@@ -432,6 +433,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                     continue
                 if n != "POLY:":
                     tmpList.append(float(n))
+            XLabel = labels[1]
+            YLabel = labels[2]
             self.data = dp
             self.coefs = [dp, [tmpList]]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Poly=True)
@@ -460,6 +463,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                     elif count == 6:
                         self.checkrsquare = (n == "True")
                 count += 1
+            XLabel = labels[1]
+            YLabel = labels[2]
             self.data = dp
             self.coefs = [dp, s, y_int, rr]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Linear=True,
@@ -508,7 +513,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 file.write(str(c) + " ")
 
         else:
-            file.write("\n\nDATA")
+            file.write("\n\nDATA: ")
         file.close()
 
     def fileQuit(self):
