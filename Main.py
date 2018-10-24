@@ -469,6 +469,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         else:
             self.data = dp
             self.sc.clear_figure()
+        self.updateDataDisplay()
 
     def fileExport(self):
         if self.data is None:
@@ -520,6 +521,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def filterData(self):
+        self.mode_linear = False
+        self.mode_poly = False
+        self.sc.clear_figure()
         try:
             threshold = float(str(self.dialog.threshold.text()))
         except:
