@@ -248,6 +248,61 @@ class filterDialog(QtWidgets.QMainWindow):
         filterButton.move(700,100)
         filterButton.resize(50,50)
 
+
+class loginDialog(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        super(loginDialog, self).__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.title = 'User Login'
+        self.left = 200
+        self.top = 100
+        self.width = 450
+        self.height = 370
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setFixedSize(self.size())
+        # input boxes and labels
+        label = QLabel('Machine Name/IP', self)
+        label.move(80, 60)
+        label.resize(150, 30)
+        self.server = QLineEdit(self)
+        self.server.setToolTip('Enter Machine Name/IP')
+        self.server.move(200, 60)
+        self.server.resize(130, 30)
+        label = QLabel('Port/Instance', self)
+        label.move(80, 100)
+        label.resize(150, 30)
+        self.port = QLineEdit(self)
+        self.port.setToolTip('Enter Port/Instance')
+        self.port.move(200, 100)
+        self.port.resize(130, 30)
+        label = QLabel('Database Name', self)
+        label.move(80, 140)
+        label.resize(150, 30)
+        self.databaseName = QLineEdit(self)
+        self.databaseName.setToolTip('Enter Database Name')
+        self.databaseName.move(200, 140)
+        self.databaseName.resize(130, 30)
+        label = QLabel('Username', self)
+        label.move(80, 180)
+        label.resize(150, 30)
+        self.username = QLineEdit(self)
+        self.username.setToolTip('Enter Username')
+        self.username.move(200, 180)
+        self.username.resize(130, 30)
+        label = QLabel('Password', self)
+        label.move(80, 220)
+        label.resize(150, 30)
+        self.password = QLineEdit(self)
+        self.password.setToolTip('Enter Password')
+        self.password.move(200, 220)
+        self.password.resize(130, 30)
+        enterButton = QPushButton('Login', self)
+        enterButton.setToolTip('Login')
+        enterButton.clicked.connect(aw.login)
+        enterButton.move(224, 260)
+        enterButton.resize(80, 50)
+
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         self.dialogs = list()
@@ -530,15 +585,32 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
 
+    def loginPrompt(self):
+        self.dialog = loginDialog(self)
+        self.dialogs.append(self.dialog)
+        self.dialog.show()
+
+    def login(self):
+        machine = str(self.dialog.server.text())
+        portLog = str(self.dialog.port.text())
+        database = str(self.dialog.databaseName.text())
+        userName = str(self.dialog.username.text())
+        passWord = str(self.dialog.password.text())
+        if(True):
+            machine = "MYPC\SQLEXPRESS"
+            portLog = ""
+            database = "BHBackupRestore"
+            userName = "SQLDummy"
+            passWord = "bushdid9/11"
+        self.dialog.close()
+        self.dialogs.pop()
+        Init.init(machine, portLog, database, userName, passWord)
+        self.show()
+
 if __name__ == '__main__':
-    serverL = "MYPC\SQLEXPRESS"
-    dbNameL = "BHBackupRestore"
-    UIDL = "SQLDummy"
-    PWDL = "bushdid9/11"
-    Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
     aw.setWindowTitle("Analysis Toolkit Prototype")
-    aw.show()
+    aw.loginPrompt()
     sys.exit(qApp.exec_())

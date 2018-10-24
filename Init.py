@@ -28,10 +28,18 @@ class Init:
     trees = None
 
     @classmethod
-    def __connect(cls, server, dbName, UID, PWD):
-        cnxn = pyodbc.connect(
-            "DRIVER={SQL Server}; SERVER=" + server + ";" +
-            " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
+    def __connect(cls, server, port, dbName, UID, PWD):
+        if port == "":
+            try:
+                cntstr = ("DRIVER={SQL Server}; SERVER=" + server + ";" +
+                    " DATABASE=" + dbName + "; UID=" + UID + "; PWD=" + PWD)
+                print(cntstr)
+                cnxn = pyodbc.connect(cntstr)
+            except pyodbc.Error as ex:
+                pass
+        else:
+            cnxn = pyodbc.connect("DRIVER={SQL Server}; SERVER=" + server + "," + port + ";" +
+                " DATABASE=" + dbName + "; UID= " + UID + "; PWD= " + PWD)
         cursor = cnxn.cursor()
         return cursor
 
@@ -57,8 +65,8 @@ class Init:
         return names
 
     @classmethod
-    def init(cls, server, dbName, UID, PWD):
-        cls.cursor = cls.__connect(server, dbName, UID, PWD)
+    def init(cls, server, port, dbName, UID, PWD):
+        cls.cursor = cls.__connect(server, port, dbName, UID, PWD)
         cls.ti = {}
         cls.ti[0] = getTableNames()
         cls.ti[1] = cls.__getTableInfo(cls.__GETPRIMARYKEYSQLCODE)

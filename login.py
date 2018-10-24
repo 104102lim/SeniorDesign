@@ -24,31 +24,6 @@ from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton,QCheckBox
 from PyQt5.QtWidgets import QScrollArea, QTableWidget,QVBoxLayout, QTableWidgetItem, QWidget
 from PyQt5.QtWidgets import QFileDialog
 
-"""class errorLogin(QtWidgets.QMainWindow):
-     def __init__(self):
-        self.dialogs = list()
-
-    # Main Window Init
-        QtWidgets.QMainWindow.__init__(self)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.title = 'Login Error'
-        self.left = 200
-        self.top = 100
-        self.width = 300
-        self.height = 200
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        self.setFixedSize(self.size())
-        #input boxes and labels
-        label = QLabel('Invalid Credentials. Please Try Again.', self)
-        label.move(30,50)
-        label.resize(400,80)
-        retryButton = QPushButton('Login', self) 
-        retryButton.setToolTip('Login')
-        retryButton.clicked.connect(aw.loginWindowDialog)
-        retryButton.move(224,260)
-        retryButton.resize(80,50)
-"""
 class loginWindowDialog(QtWidgets.QMainWindow):
     def __init__(self):
         self.dialogs = list()
@@ -114,21 +89,3 @@ class loginWindowDialog(QtWidgets.QMainWindow):
         passWord = str(self.password.text())
         #Init.init(machine, database, userName, passWord)
         #aw.show()
-            
-            
-            
-            
-        
-    
-if __name__ == '__main__':
-    serverL = "MYPC\SQLEXPRESS"
-    realPort = "Paul"
-    dbNameL = "BHBackupRestore"
-    UIDL = "SQLDummy"
-    PWDL = "bushdid9/11"
-    qapp = 0
-    qApp = QtWidgets.QApplication(sys.argv)
-    aw = loginWindowDialog()
-    aw.setWindowTitle("Baker Hughes Oil Based Characterization")
-    aw.show()
-    sys.exit(qApp.exec_())
