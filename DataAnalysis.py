@@ -125,11 +125,11 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
             return ("Comparison feature(s) should be str type\n")
         
     if len(comparisonFeatures) != len(logics):
-        return ("Number of features and logics should be same\n")
+        return ("Number of comparison features and logics should be same\n")
     if len(comparisonFeatures) != len(thresholds):
-        return ("Number of features and thresholds should be same\n")
+        return ("Number of comparison features and thresholds should be same\n")
     if len(comparisonFeatures) != (len(operators) + 1):
-        return ("Number of operators should be one less than number of features\n")
+        return ("Number of operators should be one less than number of comparison features\n")
     
     for i in range(0, len(logics)):
         if (logics[i] != ">" and logics[i] != "<" and logics[i] != ">=" and logics[i] != "<=" and
@@ -152,7 +152,6 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     for i in range(0, length):
         # get dataset
         dataset = getData([targetFeature, comparisonFeatures[i]])
-        
         
         # check whether threshold and second feature are compatible
         checkError = __thresholdAndFeatureErrorCheckingForFiltering(dataset, thresholds[i])
