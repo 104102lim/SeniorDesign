@@ -37,7 +37,7 @@ class MyMplCanvas(FigureCanvas):
         FigureCanvas.updateGeometry(self)
 
     def clear_figure(self):
-        self.axes.plot()
+        self.axes.cla()
         self.draw()
 
     def update_figure(self, data, Xlabel, Ylabel, Linear=False, Poly=False, yint=False, slope=False, rsquare=False):
@@ -403,21 +403,18 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 tmp = ', '.join(row)
                 break
         # Extract dataset
-        count = 0
-        XLabel = ""
-        YLabel = ""
-        with open(fileName, "r+w") as inp:
+        towrite = ""
+        with open(fileName, 'r') as inp:
             lines = inp.readlines()
             lines = lines[:-3]
-            writer = csv.writer(inp, delimiter=',')
-            for line in lines:
-                # if count == 0:
-                #     XLabel = row[1]
-                #     YLabel = row[2]
-                writer.writerow(line)
-                count += 1
+            for l in lines:
+                towrite += l
+        with open(fileName, 'w') as out:
+            out.write(towrite)
 
-        dp = pd.read_csv(fileName)
+        dp = pd.read_csv(fileName, )
+        with open(fileName, 'a') as out:
+            out.write("\n\n" + tmp)
         labels = dp.columns
         stmp = tmp.split(" ")
         tmpList = []
@@ -433,8 +430,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                     continue
                 if n != "POLY:":
                     tmpList.append(float(n))
-            XLabel = labels[1]
-            YLabel = labels[2]
+            XLabel = labels[0]
+            YLabel = labels[1]
             self.data = dp
             self.coefs = [dp, [tmpList]]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Poly=True)
@@ -463,8 +460,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                     elif count == 6:
                         self.checkrsquare = (n == "True")
                 count += 1
-            XLabel = labels[1]
-            YLabel = labels[2]
+            XLabel = labels[0]
+            YLabel = labels[1]
             self.data = dp
             self.coefs = [dp, s, y_int, rr]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Linear=True,
@@ -485,7 +482,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         if fileName == '':
             return #no file name given
         fileName, extension = os.path.splitext(fileName)
-        self.data.to_csv(fileName + ".csv")
+        self.data.to_csv(fileName + ".csv", index=False)
         if self.mode_linear or self.mode_poly:
             self.sc.fig.savefig(fileName + ".png")
 
@@ -498,7 +495,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         if fileName == '':
             return #no file name given
         output = self.data.copy()
-        output.to_csv(fileName)
+        output.to_csv(fileName, index=False)
         file = open(fileName, 'a')
         if self.mode_linear:
             file.write("\n\nLINEAR: " +
