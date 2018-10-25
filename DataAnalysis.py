@@ -361,10 +361,9 @@ def polynomialRegression(feature1, feature2, order):
     poly_features = poly.fit_transform(X)
     poly_regression = linear_model.LinearRegression()
     poly_fit = poly_regression.fit(poly_features, y)
-    return [dataset, poly_fit.coef_]
-
-
-
+    coefs = poly_fit.coef_.copy()
+    coefs[0, 0] = poly_fit.intercept_[0]
+    return [dataset, coefs]
 
 # check whether features compatible
 # data should be numerical values for regressions
