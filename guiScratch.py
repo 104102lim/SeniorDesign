@@ -38,23 +38,33 @@ class filterDialog(QtWidgets.QMainWindow):
 
         self.vLayout = QVBoxLayout(self.centralWidget)
 
-        '''
+        
         self.bw1 = QWidget()
         self.bw2 = QWidget()
         self.bw3 = QWidget()
-        self.buttonsWidgets = [self.bw1, self.bw2, self.bw3]
+        self.bw4 = QWidget()
+        self.bw5 = QWidget()
+        self.bw6 = QWidget()
+        self.buttonsWidget = [self.bw1, self.bw2, self.bw3, self.bw4, self.bw5, self.bw6]
     
-        self.bwl1 = QHBoxLayout(self.buttonsWidgets[0])
-        self.bwl2 = QHBoxLayout(self.buttonsWidgets[0])
-        self.bwl3 = QHBoxLayout(self.buttonsWidgets[0])
-        self.buttonsWidgetLayout = [self.bwl1, self.bwl2, self.bwl3]
+        self.bwl1 = QHBoxLayout(self.buttonsWidget[0])
+        self.bwl2 = QHBoxLayout(self.buttonsWidget[1])
+        self.bwl3 = QHBoxLayout(self.buttonsWidget[2])
+        self.bwl4 = QHBoxLayout(self.buttonsWidget[3])
+        self.bwl5 = QHBoxLayout(self.buttonsWidget[4])
+        self.bwl6 = QHBoxLayout(self.buttonsWidget[5])
+        self.buttonsWidgetLayout = [self.bwl1, self.bwl2, self.bwl3, self.bwl4, self.bwl5, self.bwl6]
         
         self.threshold1 = QLineEdit(self)
         self.threshold2 = QLineEdit(self)
         self.threshold3 = QLineEdit(self)
-        '''       
+        self.threshold4 = QLineEdit(self)
+        self.threshold5 = QLineEdit(self)
+        self.threshold6 = QLineEdit(self)
+        '''    
         self.buttonsWidget = QWidget()
         self.buttonsWidgetLayout = QHBoxLayout(self.buttonsWidget)
+        '''
         self.feature1 = QComboBox(self)
         self.feature2 = QComboBox(self)
         self.logic = QComboBox(self)
@@ -67,28 +77,28 @@ class filterDialog(QtWidgets.QMainWindow):
         self.logic.addItem(">=")
         self.logic.addItem("contains")
         self.logic.addItem("does not contain")
-        self.threshold = QLineEdit(self)
-        #self.thresholds = [self.threshold1, self.threshold2, self.threshold3]
+        #self.threshold = QLineEdit(self)
+        self.threshold = [self.threshold1, self.threshold2, self.threshold3, self.threshold4, self.threshold5, self.threshold6]
         addButton = QPushButton('+', self) 
         addButton.clicked.connect(self.addExpression)
         filterButton = QPushButton('Filter', self) 
         filterButton.setToolTip('Use button to filter the feature based on the chosen logic')
         filterButton.clicked.connect(self.filterData)
         
-        self.buttonsWidgetLayout.addWidget(self.feature1)
-        self.buttonsWidgetLayout.addWidget(self.feature2)
-        self.buttonsWidgetLayout.addWidget(self.logic)
-        self.buttonsWidgetLayout.addWidget(self.threshold)
-        self.buttonsWidgetLayout.addWidget(addButton)
-        self.buttonsWidgetLayout.addWidget(filterButton)
+        self.buttonsWidgetLayout[0].addWidget(self.feature1)
+        self.buttonsWidgetLayout[0].addWidget(self.feature2)
+        self.buttonsWidgetLayout[0].addWidget(self.logic)
+        self.buttonsWidgetLayout[0].addWidget(self.threshold[0])
+        self.buttonsWidgetLayout[0].addWidget(addButton)
+        self.buttonsWidgetLayout[0].addWidget(filterButton)
         
         
-        self.vLayout.addWidget(self.buttonsWidget)
+        self.vLayout.addWidget(self.buttonsWidget[0])
             
     def addExpression(self):
         if(self.counter < 5):
-            self.buttonsWidget2 = QWidget()
-            self.buttonsWidgetLayout2 = QHBoxLayout(self.buttonsWidget2)
+            #self.buttonsWidget2 = QWidget()
+            #self.buttonsWidgetLayout[self.counter + 1] = QHBoxLayout(self.buttonsWidget2)
             self.feature1 = QComboBox(self)
             self.feature2 = QComboBox(self)
             self.logic = QComboBox(self)
@@ -101,12 +111,12 @@ class filterDialog(QtWidgets.QMainWindow):
             self.logic.addItem(">=")
             self.logic.addItem("contains")
             self.logic.addItem("does not contain")
-            self.threshold = QLineEdit(self)
-            self.buttonsWidgetLayout2.addWidget(self.feature1)
-            self.buttonsWidgetLayout2.addWidget(self.feature2)
-            self.buttonsWidgetLayout2.addWidget(self.logic)
-            self.buttonsWidgetLayout2.addWidget(self.threshold)
-            self.vLayout.addWidget(self.buttonsWidget2)
+            #self.threshold = QLineEdit(self)
+            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature1)
+            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature2)
+            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.logic)
+            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.threshold[self.counter + 1])
+            self.vLayout.addWidget(self.buttonsWidget[self.counter + 1])
             self.counter += 1
         else:
             pass
@@ -116,9 +126,13 @@ class filterDialog(QtWidgets.QMainWindow):
         f2 = str(self.feature2.currentText())
         threshold1 = self.threshold1.text()
         threshold2 = self.threshold2.text()
+        threshold3 = self.threshold3.text()
+        threshold4 = self.threshold4.text()
+        threshold5 = self.threshold5.text()
+        threshold6 = self.threshold6.text()
         print("Processing")
-        print(f1 + " " + f2 + " " + threshold1 + " " + threshold2)
-        
+        print(f1 + " " + f2 + " " + threshold1 + " " + threshold2 + " " + 
+              threshold3 + " " + threshold4 + " " + threshold5 + " " + threshold6)
 
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
