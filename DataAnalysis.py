@@ -142,30 +142,46 @@ def filtering2(targetFeature, comparisonFeatures, logics, thresholds, operators)
         if (operators[i] != "AND" and operators[i] != "OR"):
             return ("operator(s) should be 'AND' or 'OR'\n")
     
+    
     # get length
     length = len(comparisonFeatures)
+    
+    
+    allFeatureNames = []
+    allFeatureNames.append(targetFeature)
+    for i in range (0, length):
+        allFeatureNames.append(comparisonFeatures[i])
+    
+    
+    # get dataset
+    dataset = getData(allFeatureNames)
     
     new_targetfs = []
     new_targetfs_idx = []
     
+    
     # filter target feature given comparison features
     for i in range(0, length):
-        # get dataset
-        dataset = getData([targetFeature, comparisonFeatures[i]])
-        
-        # check whether threshold and second feature are compatible
-        checkError = __thresholdAndFeatureErrorCheckingForFiltering(dataset, thresholds[i])
-        if checkError != None:
-            return checkError
-
-        # *** size of target feature & size of comparison feature should be same
         # get data
         targetf = dataset[targetFeature]
         comparisonf = dataset[comparisonFeatures[i]]
         
         new_targetf = []
         new_targetf_idx = []
-
+        
+        
+        # merge two features for error checking
+        targetAndComparisonf = None
+        if (targetFeature == comparisonFeatures[i]):
+            targetAndComparisonf = targetf
+        else:
+            targetAndComparisonf = pd.concat([targetf, comparisonf], axis=1, sort=False)
+        # check whether threshold and second feature are compatible
+        checkError = __thresholdAndFeatureErrorCheckingForFiltering(targetAndComparisonf, thresholds[i])
+        if checkError != None:
+            return checkError
+        
+        
         # do filtering for target feature
         if logics[i] == '>':
             for j in range(0, len(targetf)):
@@ -244,8 +260,7 @@ def filtering2(targetFeature, comparisonFeatures, logics, thresholds, operators)
                     result_idx.append(j)
 
     # create new dataframe for output
-    #targetf = pd.DataFrame(data={targetFeature : []})
-    targetf = pd.DataFrame(data={targetFeature : getData[targetFeature]})
+    targetf = pd.DataFrame(data={targetFeature : dataset[targetFeature]})
     result = {targetFeature : result}
     result = pd.DataFrame(data=result)
     output = [targetf, result]
