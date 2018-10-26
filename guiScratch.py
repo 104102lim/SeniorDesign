@@ -37,82 +37,92 @@ class filterDialog(QtWidgets.QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         self.vLayout = QVBoxLayout(self.centralWidget)
-
         
         self.bw1 = QWidget()
         self.bw2 = QWidget()
         self.bw3 = QWidget()
-        self.buttonsWidgets = [self.bw1, self.bw2, self.bw3]
+        self.bw4 = QWidget()
+        self.bw5 = QWidget()
+        self.bw6 = QWidget()
+        self.buttonsWidget = [self.bw1, self.bw2, self.bw3, self.bw4, self.bw5, self.bw6]
     
-        self.bwl1 = QHBoxLayout(self.buttonsWidgets[0])
-        self.bwl2 = QHBoxLayout(self.buttonsWidgets[0])
-        self.bwl3 = QHBoxLayout(self.buttonsWidgets[0])
-        self.buttonsWidgetLayout = [self.bwl1, self.bwl2, self.bwl3]
+        self.bwl1 = QHBoxLayout(self.buttonsWidget[0])
+        self.bwl2 = QHBoxLayout(self.buttonsWidget[1])
+        self.bwl3 = QHBoxLayout(self.buttonsWidget[2])
+        self.bwl4 = QHBoxLayout(self.buttonsWidget[3])
+        self.bwl5 = QHBoxLayout(self.buttonsWidget[4])
+        self.bwl6 = QHBoxLayout(self.buttonsWidget[5])
+        self.buttonsWidgetLayout = [self.bwl1, self.bwl2, self.bwl3, self.bwl4, self.bwl5, self.bwl6]
         
-        self.feature1 = QComboBox(self)
-        self.feature2 = QComboBox(self)
-        self.logic = QComboBox(self)
-        self.logic.setToolTip('Select logic')
-        self.logic.addItem("=")
-        self.logic.addItem("!=")
-        self.logic.addItem("<")
-        self.logic.addItem(">")
-        self.logic.addItem("<=")
-        self.logic.addItem(">=")
-        self.logic.addItem("contains")
-        self.logic.addItem("does not contain")
         self.threshold1 = QLineEdit(self)
         self.threshold2 = QLineEdit(self)
         self.threshold3 = QLineEdit(self)
-        self.thresholds = [self.threshold1, self.threshold2, self.threshold3]
+        self.threshold4 = QLineEdit(self)
+        self.threshold5 = QLineEdit(self)
+        self.threshold6 = QLineEdit(self)
+        self.threshold = [self.threshold1, self.threshold2, self.threshold3, self.threshold4, self.threshold5, self.threshold6]
+        
+        self.fa = QComboBox(self)
+        self.fb = QComboBox(self)
+        self.fc = QComboBox(self)
+        self.fd = QComboBox(self)
+        self.fe = QComboBox(self)
+        self.ff = QComboBox(self)
+        self.feature1 = [self.fa, self.fb, self.fc, self.fd, self.fe, self.ff]
+        
+        self.fg = QComboBox(self)
+        self.fh = QComboBox(self)
+        self.fi = QComboBox(self)
+        self.fj = QComboBox(self)
+        self.fk = QComboBox(self)
+        self.fl = QComboBox(self)
+        self.feature2 = [self.fg, self.fh, self.fi, self.fj, self.fk, self.fl]
+        
+        self.l1 = QComboBox(self)
+        self.l2 = QComboBox(self)
+        self.l3 = QComboBox(self)
+        self.l4 = QComboBox(self)
+        self.l5 = QComboBox(self)
+        self.l6 = QComboBox(self)
+        self.logic = [self.l1, self.l2, self.l3, self.l4, self.l5, self.l6]
+ 
         addButton = QPushButton('+', self) 
         addButton.clicked.connect(self.addExpression)
         filterButton = QPushButton('Filter', self) 
         filterButton.setToolTip('Use button to filter the feature based on the chosen logic')
         filterButton.clicked.connect(self.filterData)
         
-        self.buttonsWidgetLayout[0].addWidget(self.feature1)
-        self.buttonsWidgetLayout[0].addWidget(self.feature2)
-        self.buttonsWidgetLayout[0].addWidget(self.logic)
-        self.buttonsWidgetLayout[0].addWidget(self.thresholds[0])
+        self.buttonsWidgetLayout[0].addWidget(self.feature1[0])
+        self.buttonsWidgetLayout[0].addWidget(self.feature2[0])
+        self.buttonsWidgetLayout[0].addWidget(self.logic[0])
+        self.buttonsWidgetLayout[0].addWidget(self.threshold[0])
         self.buttonsWidgetLayout[0].addWidget(addButton)
         self.buttonsWidgetLayout[0].addWidget(filterButton)
         
         
-        self.vLayout.addWidget(self.buttonsWidgets[0])
-        
-    def filterData(self):
-            f1 = str(self.feature1.currentText())
-            f2 = str(self.feature2.currentText())
-            threshold1 = self.threshold1.text()
-            threshold2 = self.threshold2.text()
-            print("Processing")
-            print(f1 + " " + f2 + " " + threshold1 + " " + threshold2)
+        self.vLayout.addWidget(self.buttonsWidget[0])
             
     def addExpression(self):
         if(self.counter < 5):
-            #self.vLayout.addWidget(self.feature1)
-            self.feature1 = QComboBox(self)
-            self.feature2 = QComboBox(self)
-            self.logic = QComboBox(self)
-            self.logic.setToolTip('Select logic')
-            self.logic.addItem("=")
-            self.logic.addItem("!=")
-            self.logic.addItem("<")
-            self.logic.addItem(">")
-            self.logic.addItem("<=")
-            self.logic.addItem(">=")
-            self.logic.addItem("contains")
-            self.logic.addItem("does not contain")
-            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature1)
-            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature2)
-            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.logic)
-            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.thresholds[self.counter + 1])
-            self.vLayout.addWidget(self.buttonsWidgets[self.counter + 1])
+            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature1[self.counter + 1])
+            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature2[self.counter + 1])
+            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.logic[self.counter + 1])
+            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.threshold[self.counter + 1])
+            self.vLayout.addWidget(self.buttonsWidget[self.counter + 1])
             self.counter += 1
         else:
             pass
         
+    def filterData(self):
+        threshold1 = self.threshold[0].text()
+        threshold2 = self.threshold[1].text()
+        threshold3 = self.threshold[2].text()
+        threshold4 = self.threshold[3].text()
+        threshold5 = self.threshold[4].text()
+        threshold6 = self.threshold[5].text()
+        print("Processing")
+        print(threshold1 + " " + threshold2 + " " + 
+              threshold3 + " " + threshold4 + " " + threshold5 + " " + threshold6)
 
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
