@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton, QCheckBox
 from PyQt5.QtWidgets import QScrollArea, QTableWidget, QVBoxLayout, QTableWidgetItem, QWidget
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QCompleter
 
 from Init import Init
 from DatabasePreprocessing import getDescriptions
@@ -134,18 +134,27 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         #populate combo boxes
         descriptions = getDescriptions()
         descriptions.sort()
+        # attempt at completion
+        # try:
+        #     comp = QCompleter(descriptions.copy())
+        #     comp.setCompletionMode(QCompleter.PopupCompletion)
+        #     self.featureX.setCompleter(comp)
+        #     self.featureX.setEditable(True)
+        # except Exception as e:
+        #     print(e)
         for d in descriptions:
             if(d != "bottom depth"
                     and d != "top depth"
                     and d != "Cost per unit"
-                    and d != "Name of mud engineer"): continue
+                    and d != "Name of mud engineer"):
+                continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
-        self.yIntercept = QCheckBox("Y-Intercept",self)
+        self.yIntercept = QCheckBox("Y-Intercept", self)
         self.yIntercept.move(450, 100)
-        self.rSquared = QCheckBox("R^2",self)
+        self.rSquared = QCheckBox("R^2", self)
         self.rSquared.move(550, 100)
-        self.slopeCheck = QCheckBox("Slope",self)
+        self.slopeCheck = QCheckBox("Slope", self)
         self.slopeCheck.move(600, 100) 
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
