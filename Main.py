@@ -6,19 +6,18 @@ import matplotlib
 import numpy as np
 import pandas as pd
 
-from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton, QCheckBox
-from PyQt5.QtWidgets import QScrollArea, QTableWidget, QVBoxLayout, QTableWidgetItem, QWidget
-from PyQt5.QtWidgets import QFileDialog, QCompleter
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QFileDialog
 
 from Init import Init
 from DatabasePreprocessing import getDescriptions
 import DataAnalysis as da
+import filterdialog as fd
 
 matplotlib.use('Qt5Agg')
 
@@ -205,63 +204,6 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         plotButton.move(700,100)
         plotButton.resize(50,50)
         
-
-class filterDialog(QtWidgets.QMainWindow):
-    def __init__(self, parent=None):
-        super(filterDialog, self).__init__(parent)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.title = 'Filter Data'
-        self.left = 500
-        self.top = 100
-        self.width = 800
-        self.height = 200
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        self.setFixedSize(self.size())
-        self.feature1 = QComboBox(self)
-        self.feature1.setToolTip('Select feature 1')
-        self.feature1.move(50, 100)
-        whereLabel = QLabel('WHERE', self)
-        whereLabel.move(152,90)
-        whereLabel.resize(250,50)
-        self.feature2 = QComboBox(self)
-        self.feature2.setToolTip('Select feature 2')
-        self.feature2.move(200, 100)
-        descriptions = getDescriptions()
-        descriptions.sort()
-        for d in descriptions:
-            if(d != "bottom depth"
-                    and d != "top depth"
-                    and d != "Cost per unit"
-                    and d != "Name of mud engineer"): continue
-            self.feature1.addItem(d)
-            self.feature2.addItem(d)
-        isLabel = QLabel('IS', self)
-        isLabel.move(350,90)
-        isLabel.resize(250,50)
-        self.logic = QComboBox(self)
-        self.logic.setToolTip('Select logic')
-        self.logic.addItem("=")
-        self.logic.addItem("!=")
-        self.logic.addItem("<")
-        self.logic.addItem(">")
-        self.logic.addItem("<=")
-        self.logic.addItem(">=")
-        self.logic.addItem("contains")
-        self.logic.addItem("does not contain")
-        self.logic.move(400, 100)
-        self.logic.resize(50,25)
-        self.threshold = QLineEdit(self)
-        self.threshold.setToolTip('Input numeric value')
-        self.threshold.move(500,100)
-        self.threshold.resize(100,25)
-        filterButton = QPushButton('Filter', self) 
-        filterButton.setToolTip('Use button to filter the feature based on the chosen logic')
-        filterButton.clicked.connect(aw.filterData)
-        filterButton.move(700,100)
-        filterButton.resize(50,50)
-
-
 class loginDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(loginDialog, self).__init__(parent)
@@ -527,7 +469,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.close()
 
     def filterPrompt(self):
-        self.dialog = filterDialog(self)
+        self.dialog = fd.filterDialog(self)
         self.dialogs.append(self.dialog)
         self.dialog.show()
 
