@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QPushButton
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
+from DatabasePreprocessing import getDescriptions
 
 class filterDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -22,6 +23,8 @@ class filterDialog(QtWidgets.QMainWindow):
 
         self.vLayout = QVBoxLayout(self.centralWidget)
 
+        descriptions = getDescriptions()
+        descriptions.sort()
         self.buttonsWidget = []
         self.buttonsWidgetLayout = []
         self.threshold = []
@@ -34,8 +37,24 @@ class filterDialog(QtWidgets.QMainWindow):
             self.threshold.append(QLineEdit(self))
             self.feature1.append(QComboBox(self))
             self.feature2.append(QComboBox(self))
-            self.logic.append(QComboBox(self))
-
+            for d in descriptions:
+                if (d != "bottom depth"
+                        and d != "top depth"
+                        and d != "Cost per unit"
+                        and d != "Name of mud engineer"):
+                    continue
+                if(i == 0):
+                    self.feature1[i].addItem(d)
+                self.feature2[i].addItem(d)
+                self.logic.append(QComboBox(self))
+        operators = ["AND", "OR"]
+        for i in range(1, len(self.threshold)):
+            for p in operators:
+                self.feature1[i].addItem(p)
+        logics = ["=", "!=", "<", ">", "<=", ">=", "Contains", "Does Not Contain"]
+        for i in range(len(self.logic)):
+            for l in logics:
+                self.logic[i].addItem(l)
         addButton = QPushButton('+', self)
         addButton.clicked.connect(self.addExpression)
         filterButton = QPushButton('Filter', self)

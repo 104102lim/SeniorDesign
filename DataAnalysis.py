@@ -114,7 +114,7 @@ def linearRegression(feature1, feature2):
 #           - Panda dataframes with original feature1 & filtered feature1
 #           *** If output format is "str" it explains what type of error sending to GUI
 #-----------------------------------------------------------------------------------------------
-def filtering2(targetFeature, comparisonFeatures, logics, thresholds, operators):
+def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     print("------------------ Filtering ------------------")
     
     # input type checking
@@ -133,7 +133,7 @@ def filtering2(targetFeature, comparisonFeatures, logics, thresholds, operators)
     
     for i in range(0, len(logics)):
         if (logics[i] != ">" and logics[i] != "<" and logics[i] != ">=" and logics[i] != "<=" and
-            logics[i] != "=" and logics[i] != "!=" and logics[i] != "contains" and logics[i] != "does not contain"):
+            logics[i] != "=" and logics[i] != "!=" and logics[i] != "Contains" and logics[i] != "Does Not Contain"):
             return ("logic value(s) error\n")
     for i in range(0, len(thresholds)):
         if (type(thresholds[i]) != int and type(thresholds[i]) != float and type(thresholds[i]) != complex and type(thresholds[i]) != str):
@@ -165,21 +165,19 @@ def filtering2(targetFeature, comparisonFeatures, logics, thresholds, operators)
         # get data
         targetf = dataset[targetFeature]
         comparisonf = dataset[comparisonFeatures[i]]
-        
         new_targetf = []
         new_targetf_idx = []
         
-        
-        # merge two features for error checking
-        targetAndComparisonf = None
-        if (targetFeature == comparisonFeatures[i]):
-            targetAndComparisonf = targetf
-        else:
-            targetAndComparisonf = pd.concat([targetf, comparisonf], axis=1, sort=False)
-        # check whether threshold and second feature are compatible
-        checkError = __thresholdAndFeatureErrorCheckingForFiltering(targetAndComparisonf, thresholds[i])
-        if checkError != None:
-            return checkError
+        # # merge two features for error checking
+        # targetAndComparisonf = None
+        # if (targetFeature == comparisonFeatures[i]):
+        #     targetAndComparisonf = targetf
+        # else:
+        #     targetAndComparisonf = pd.concat([targetf, comparisonf], axis=1, sort=False)
+        # # check whether threshold and second feature are compatible
+        # checkError = __thresholdAndFeatureErrorCheckingForFiltering(targetAndComparisonf, thresholds[i])
+        # if checkError != None:
+        #     return checkError
         
         
         # do filtering for target feature
@@ -273,7 +271,7 @@ def filtering2(targetFeature, comparisonFeatures, logics, thresholds, operators)
 
 
 
-def filtering(feature1, feature2, logic, threshold):
+def filtering2(feature1, feature2, logic, threshold):
    print("------------------ Filtering ------------------")
    # input type checking
    if (type(feature1) != str or type(feature2) != str):
@@ -328,12 +326,12 @@ def filtering(feature1, feature2, logic, threshold):
                new_f1.append(f1[i])
            elif (f2[i] != threshold):
                new_f1.append(f1[i])
-   elif logic == 'contains':
+   elif logic == 'Contains':
        for i in range(0, len(f1)):
            if (type(f2[i]) == str and type(threshold) == str):
                if (threshold in f2[i]):
                    new_f1.append(f1[i])
-   elif logic == 'does not contain':
+   elif logic == 'Does Not Contain':
        for i in range(0, len(f1)):
            if (type(f2[i]) == str and type(threshold) == str):
                if (threshold not in f2[i]):

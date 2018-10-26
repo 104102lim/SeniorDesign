@@ -477,14 +477,26 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.mode_linear = False
         self.mode_poly = False
         self.sc.clear_figure()
-        try:
-            threshold = float(str(self.dialog.threshold.text()))
-        except:
-            threshold = str(self.dialog.threshold.text())
-        f1 = str(self.dialog.feature1.currentText())
-        f2 = str(self.dialog.feature2.currentText())
-        logic = str(self.dialog.logic.currentText())
-        filterResult = da.filtering(f1, f2, logic, threshold)
+        threshs = []
+        feat1s = []
+        feat2s = []
+        logics = []
+        numfilters = self.dialog.counter + 1
+        for i in range(numfilters):
+            threshs.append(self.dialog.threshold[i].text())
+            feat1s.append(self.dialog.feature1[i].currentText())
+            feat2s.append(self.dialog.feature2[i].currentText())
+            logics.append(self.dialog.logic[i].currentText())
+        for i in range(numfilters):
+            try:
+                threshs[i] = float(str(threshs[i]))
+            except:
+                threshs[i] = str(threshs[i])
+            feat1s[i] = str(feat1s[i])
+            feat2s[i] = str(feat2s[i])
+            logics[i] = str(logics[i])
+        filterResult = da.filtering(feat1s[0], feat2s, logics, threshs,
+                                    [feat1s[i] for i in range(1, numfilters)])
         if (type(filterResult) == str):
             self.errorLabel.setText(filterResult)
             self.dialog.close()
