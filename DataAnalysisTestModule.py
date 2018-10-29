@@ -25,8 +25,9 @@ import DataAnalysis as DA
 #linearRegressionOutput = DA.linearRegression('Feature1', 'Feature2')
 
 
+filteringOutput = DA.filtering2("Feature5", "Feature5", ">=", 0)
 #filteringOutput = DA.filtering("Feature5", ["Feature5"], [">="], [0], [])
-filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5"], [">=", "<="], [0, 5], ["AND"])
+#filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5"], [">=", "<="], [0, 5], ["AND"])
 #filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5"], [">=", "<="], [0, 3], ["OR"])
 #filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5", "Feature5"], [">=", "<=", "<="], [0, 5, 3], ["AND", "AND"])
 #filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5", "Feature5","Feature5","Feature5","Feature5"], ["<=", "<=", "<=","<=","<=","<="], [10, 9, 8,7,6,5], ["AND", "AND","AND", "AND","AND"])

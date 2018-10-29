@@ -6,7 +6,7 @@
   Data Analysis Module for BH Oil Characterization Software Applcation
   
   Author: Sungho Lim, Joey Gallardo
-  Last Updated Date: 09/28/2018
+  Last Updated Date: 10/29/2018
 -----------------------------------------------------------------------
 """
 
@@ -44,6 +44,7 @@ def __testInialization__(self):
 
     ds = pd.DataFrame(data, columns=cols, dtype=float)  # test dataframe
     dataset = ds
+    print (dataset)
     print("Test Dataset Initialized")
 
 #-----------------------------------------------------------------------------------------------
@@ -62,7 +63,11 @@ def linearRegression(feature1, feature2):
     print("\n" + feature1 + " vs. " + feature2)
 
     # retrieve dataset
-    dataset = getData([feature1, feature2])  
+    dataset = getData([feature1, feature2])
+    
+    # check whether features(s) are connected
+    if type(dataset) == str:
+        return dataset
     
     # check whether the features compatible
     checkError = __featureErrorCheckingForRegression(dataset)
@@ -142,44 +147,36 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
         if (operators[i] != "AND" and operators[i] != "OR"):
             return ("operator(s) should be 'AND' or 'OR'\n")
     
-    
     # get length
     length = len(comparisonFeatures)
     
-    
+    # get dataset
     allFeatureNames = []
     allFeatureNames.append(targetFeature)
     for i in range (0, length):
         allFeatureNames.append(comparisonFeatures[i])
-    
-    
-    # get dataset
     dataset = getData(allFeatureNames)
+    
+    # check whether features(s) are connected
+    if type(dataset) == str:
+        return dataset
     
     new_targetfs = []
     new_targetfs_idx = []
     
-    
     # filter target feature given comparison features
     for i in range(0, length):
+        # check whether threshold and comparison feature are compatible
+        checkError = __thresholdAndFeatureErrorCheckingForFiltering(comparisonFeatures[i], dataset[comparisonFeatures[i]], thresholds[i])
+        if checkError != None:
+            return checkError
+        
         # get data
         targetf = dataset[targetFeature]
         comparisonf = dataset[comparisonFeatures[i]]
         new_targetf = []
         new_targetf_idx = []
-        
-        # # merge two features for error checking
-        # targetAndComparisonf = None
-        # if (targetFeature == comparisonFeatures[i]):
-        #     targetAndComparisonf = targetf
-        # else:
-        #     targetAndComparisonf = pd.concat([targetf, comparisonf], axis=1, sort=False)
-        # # check whether threshold and second feature are compatible
-        # checkError = __thresholdAndFeatureErrorCheckingForFiltering(targetAndComparisonf, thresholds[i])
-        # if checkError != None:
-        #     return checkError
-        
-        
+           
         # do filtering for target feature
         if logics[i] == '>':
             for j in range(0, len(targetf)):
@@ -217,13 +214,13 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
                 elif (comparisonf[j] != thresholds[i]):
                     new_targetf.append(targetf[j])
                     new_targetf_idx.append(j)
-        elif logics[i] == 'contains':
+        elif logics[i] == 'Contains':
             for j in range(0, len(targetf)):
                 if (type(comparisonf[j]) == str and type(thresholds[i]) == str):
                     if (thresholds[i] in comparisonf[j]):
                         new_targetf.append(targetf[j])
                         new_targetf_idx.append(j)
-        elif logics[i] == 'does not contain':
+        elif logics[i] == 'Does Not Contain':
             for j in range(0, len(targetf)):
                 if (type(comparisonf[j]) == str and type(thresholds[i]) == str):
                     if (thresholds[i] not in comparisonf[j]):
@@ -284,9 +281,13 @@ def filtering2(feature1, feature2, logic, threshold):
 
    # retrieve dataset
    dataset = getData([feature1, feature2])
+   
+   # check whether features(s) are connected
+   if type(dataset) == str:
+      return dataset
 
    # check whether threshold and second feature are compatible
-   checkError = __thresholdAndFeatureErrorCheckingForFiltering(dataset, threshold)
+   checkError = __thresholdAndFeatureErrorCheckingForFiltering(feature2, dataset[feature2], threshold)
    if checkError != None:
        return checkError
 
@@ -358,12 +359,17 @@ def filtering2(feature1, feature2, logic, threshold):
 #           y-intercept, r^2 (?)
 #-----------------------------------------------------------------------------------------------
 def polynomialRegression(feature1, feature2, order):
-    
+    # input type checking
     if (type(feature1) != str or type(feature2) != str):
         return ("feature(s) should be str type\n")
     print("\n" + feature1 + " vs. " + feature2)
 
     dataset = getData([feature1, feature2])
+    
+    # check whether features(s) are connected
+    if type(dataset) == str:
+        return dataset
+    
     checkError = __featureErrorCheckingForRegression(dataset)
     if checkError != None: # error occuring
         return checkError  # output string information
@@ -378,12 +384,13 @@ def polynomialRegression(feature1, feature2, order):
     coefs[0, 0] = poly_fit.intercept_[0]
     return [dataset, coefs]
 
+
 # check whether features compatible
 # data should be numerical values for regressions
 # feature1 & feature2
 def __featureErrorCheckingForRegression(dataset):
     if len(dataset.columns) == 1:
-        return ("Same feature(s) cannot be modeled.\n")
+        return ("Two same features cannot be modeled.\n")
     f1 = dataset[dataset.columns[0]].values
     f2 = dataset[dataset.columns[1]].values
     for i in range(0, len(f1)):
@@ -401,17 +408,14 @@ def __featureErrorCheckingForRegression(dataset):
 # check whether second feature and threshold compatible
 # second feature and threshold should have same data type
 # for example, str & str, int & int, float & float, complex & complex
-def __thresholdAndFeatureErrorCheckingForFiltering(dataset, threshold):
-    idx = 1
-    if len(dataset.columns) == 1:
-        idx = 0
-    f2 = dataset[dataset.columns[idx]].values
+def __thresholdAndFeatureErrorCheckingForFiltering(f2_name, f2, threshold):
+    f2 = f2.values
     if type(threshold) == str: # str compatible check
         for i in range(0, len(f2)):
             if type(f2[i]) != str:
-                return ("Threshold is string, but some of data in " + dataset.columns[idx] + " are not string.\n")
+                return ("Threshold is string, but some of data in " + f2_name + " are not string.\n")
     else: # numeric compatible check
         for i in range(0, len(f2)):
             if type(f2[i].item()) != int and type(f2[i].item()) != float and type(f2[i].item()) != complex:
-                return ("Threshold is numeric, but some of data in " + dataset.columns[idx] + " are not numeric.\n")
+                return ("Threshold is numeric, but some of data in " + f2_name + " are not numeric.\n")
     return None
