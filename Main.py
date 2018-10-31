@@ -337,6 +337,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                         "Open Case",
                         "", "Baker Hughes Files (*.bh)")
         if fileName == '':
+            self.errorLabel = QLabel('Error: No file name given', self)
+            self.updateDataDisplay()
             return #no file name given
         tmp = ""
         with open(fileName, 'r') as f:
@@ -402,11 +404,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def fileExport(self):
         if self.data is None:
+            self.errorLabel = QLabel('Error: No data to save', self)
+            self.updateDataDisplay()
             return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Export Data and Plot",
                                                   "", "CSV/PNG Files (*.csv *.png)")
         if fileName == '':
+            self.errorLabel = QLabel('Error: No file name given', self)
+            self.updateDataDisplay()
             return #no file name given
         fileName, extension = os.path.splitext(fileName)
         self.data.to_csv(fileName + ".csv")
@@ -415,11 +421,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def fileSave(self):
         if self.data is None:
+            self.errorLabel = QLabel('Error: No data to save', self)
+            self.updateDataDisplay()
             return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Save Case",
                                                   "", "Baker Hughes Files (*.bh)")
         if fileName == '':
+            self.errorLabel = QLabel('Error: No file name given', self)
+            self.updateDataDisplay()
             return #no file name given
         output = self.data.copy()
         output.to_csv(fileName)
