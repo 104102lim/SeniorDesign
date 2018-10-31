@@ -17,6 +17,14 @@ class filterDialog(QtWidgets.QMainWindow):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
 
+        self.setWindowFlags(
+        QtCore.Qt.Window |
+        QtCore.Qt.CustomizeWindowHint |
+        QtCore.Qt.WindowTitleHint |
+        QtCore.Qt.WindowCloseButtonHint |
+        QtCore.Qt.WindowStaysOnTopHint
+        )
+
         self.counter = 0
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)

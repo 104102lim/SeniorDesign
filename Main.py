@@ -120,6 +120,14 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
+        
+        self.setWindowFlags(
+        QtCore.Qt.Window |
+        QtCore.Qt.CustomizeWindowHint |
+        QtCore.Qt.WindowTitleHint |
+        QtCore.Qt.WindowCloseButtonHint |
+        QtCore.Qt.WindowStaysOnTopHint
+        )
 
         label = QLabel('Linear Regression', self)
         label.move(20,90)
@@ -174,6 +182,14 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
+        
+        self.setWindowFlags(
+        QtCore.Qt.Window |
+        QtCore.Qt.CustomizeWindowHint |
+        QtCore.Qt.WindowTitleHint |
+        QtCore.Qt.WindowCloseButtonHint |
+        QtCore.Qt.WindowStaysOnTopHint
+        )
 
         label = QLabel('Poly Regression', self)
         label.move(20,90)
@@ -579,11 +595,18 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
         if(True):
+            machine = "MSI\SQLEXPRESS"
+            portLog = ""
+            database = "senior_design"
+            userName = "SQLBH"
+            passWord = "mudtable"
+            '''
             machine = "MYPC\SQLEXPRESS"
             portLog = ""
             database = "BHBackupRestore"
             userName = "SQLDummy"
             passWord = "bushdid9/11"
+            '''
         self.dialog.close()
         self.dialogs.pop()
         Init.init(machine, portLog, database, userName, passWord)
