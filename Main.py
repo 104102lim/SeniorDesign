@@ -514,8 +514,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.close()
 
     def filterPrompt(self):
+        if self.dialog is not None:
+            return
         self.dialog = fd.filterDialog(self)
-        self.dialogs.append(self.dialog)
         self.dialog.show()
 
     def filterData(self):
@@ -545,17 +546,20 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         if (type(filterResult) == str):
             self.errorLabel.setText(filterResult)
             self.dialog.close()
-            self.dialogs.pop()
+            self.dialog = None
+
         else:
             self.errorLabel.setText("")
             self.data = filterResult[1]
             self.updateDataDisplay()
             self.dialog.close()
-            self.dialogs.pop()
+            self.dialog = None
+
 
     def linearRegressionPrompt(self):
+        if self.dialog is not None:
+            return
         self.dialog = linearRegressionDialog(self)
-        self.dialogs.append(self.dialog)
         self.dialog.show()
 
     def plotLinearRegression(self):
@@ -573,7 +577,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         if (type(self.coefs) == str):
             self.errorLabel.setText(self.coefs)
             self.dialog.close()
-            self.dialogs.pop()
+            self.dialog = None
+           
         else:
             self.data = self.coefs[0]
             self.errorLabel.setText("")
@@ -583,11 +588,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                               rsquare=self.dialog.rSquared.isChecked())
             self.updateDataDisplay()
             self.dialog.close()
-            self.dialogs.pop()
-
+            self.dialog = None
+          
     def polyRegressPrompt(self):
+        if self.dialog is not None:
+            return
         self.dialog = polyRegressionDialog(self)
-        self.dialogs.append(self.dialog)
         self.dialog.show()
 
     def plotPolyRegression(self):
@@ -600,21 +606,22 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         if (type(self.coefs) == str):
             self.errorLabel.setText(self.coefs)
             self.dialog.close()
-            self.dialogs.pop()
+            self.dialog = None
         else:
             self.data = self.coefs[0]
             self.errorLabel.setText("")
             self.sc.update_figure(self.coefs, x, y, Poly=True)
             self.updateDataDisplay()
             self.dialog.close()
-            self.dialogs.pop()
+            self.dialog = None
 
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
 
     def loginPrompt(self):
+        if self.dialog is not None:
+            return
         self.dialog = loginDialog(self)
-        self.dialogs.append(self.dialog)
         self.dialog.show()
 
     def login(self):
@@ -637,12 +644,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             passWord = "bushdid9/11"
             '''
         self.dialog.close()
-        self.dialogs.pop()
+        self.dialog = None
         self.dialog = ProgressBar(self);
         self.dialog.show()
         Init.init(machine, portLog, database, userName, passWord)
-
         self.dialog.close()
+        self.dialog = None
         self.show()
 
 if __name__ == '__main__':
