@@ -25,14 +25,16 @@ import DataAnalysis as DA
 #linearRegressionOutput = DA.linearRegression('Feature1', 'Feature2')
 
 
-filteringOutput = DA.filtering2("Feature5", "Feature5", ">=", 0)
+#filteringOutput = DA.filtering2("Feature5", "Feature5", ">=", 0)
 #filteringOutput = DA.filtering("Feature5", ["Feature5"], [">="], [0], [])
 #filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5"], [">=", "<="], [0, 5], ["AND"])
 #filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5"], [">=", "<="], [0, 3], ["OR"])
 #filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5", "Feature5"], [">=", "<=", "<="], [0, 5, 3], ["AND", "AND"])
 #filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5", "Feature5","Feature5","Feature5","Feature5"], ["<=", "<=", "<=","<=","<=","<="], [10, 9, 8,7,6,5], ["AND", "AND","AND", "AND","AND"])
+filteringOutput = DA.filtering("Feature2", ["Feature2"], ["Does Not Contain"], ["HI"], [])
 
-
+#filteringOutput = DA.filtering("Feature1", ["Feature2","Feature2"], ["Contains","Does Not Contain"], ["hi","hi"], ["AND"])
+#filteringOutput = DA.filtering("Feature1", ["Feature2","Feature2"], ["Contains","Does Not Contain"], ["hi","hi"], ["OR"])
 
 # 1. output of linearRegression
 #if type(linearRegressionOutput) == str:
