@@ -12,7 +12,7 @@ from matplotlib.figure import Figure
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton, QCheckBox
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QCompleter
 
 from Init import Init
 from DatabasePreprocessing import getDescriptions
@@ -130,25 +130,17 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
         self.featureY.move(300, 100)
-        #populate combo boxes
         descriptions = getDescriptions()
+        descriptions = [d.lower() for d in descriptions]
         descriptions.sort()
-        # attempt at completion
-        # try:
-        #     comp = QCompleter(descriptions.copy())
-        #     comp.setCompletionMode(QCompleter.PopupCompletion)
-        #     self.featureX.setCompleter(comp)
-        #     self.featureX.setEditable(True)
-        # except Exception as e:
-        #     print(e)
-        for d in descriptions:
-            if(d != "bottom depth"
-                    and d != "top depth"
-                    and d != "Cost per unit"
-                    and d != "Name of mud engineer"):
-                continue
-            self.featureY.addItem(d)
-            self.featureX.addItem(d)
+        self.featureX.setInsertPolicy(QComboBox.NoInsert)
+        self.featureX.setEditable(True)
+        self.featureX.setCompleter(QCompleter(descriptions))
+        self.featureX.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
+        self.featureY.setInsertPolicy(QComboBox.NoInsert)
+        self.featureY.setEditable(True)
+        self.featureY.setCompleter(QCompleter(descriptions))
+        self.featureY.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
         self.yIntercept = QCheckBox("Y-Intercept", self)
         self.yIntercept.move(450, 100)
         self.rSquared = QCheckBox("R^2", self)
