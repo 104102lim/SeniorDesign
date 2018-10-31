@@ -38,7 +38,7 @@ def getData(features):
             tree = tr
             break
     if tree == None:
-        return "ERROR NO COMMON PARENT INDEX"
+        return "Analysis is impossible - data is not related"
 
     # generate SQL to retrieve features from database
     SQL = tree.writeSQL(Init.ti, tables)

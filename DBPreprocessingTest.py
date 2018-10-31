@@ -23,18 +23,10 @@ def printTable(name, ti):
 if __name__ == "__main__":
     start = time()
     if LAPTOP:
-        Init.init(serverL, dbNameL, UIDL, PWDL)
+        Init.init(serverL, "", dbNameL, UIDL, PWDL)
     else:
-        Init.init(serverP, dbNameP, UIDP, PWDP)
+        Init.init(serverP, "", dbNameP, UIDP, PWDP)
     end = time()
+    print(Init.ti[1])
     print(end - start)
-    features = []
-    features.append(Init.validDescriptions[866]) # WELL_HX
-    features.append(Init.validDescriptions[668]) # AREA_NAME
-    start = time()
-    data = dp.getData(features)
-    end = time()
-    print(end - start)
-    print(data)
-
 

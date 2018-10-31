@@ -11,31 +11,46 @@
 """
 
 
-import DataAnalysisModule as DA
+import DataAnalysis as DA
 
 
 # Initialization
-da = DA.DataAnalysis()
-da.__testInialization__()
-da.__printDataset__()
+#da = DA.DataAnalysis()
+#da.__testInialization__()
+#da.__printDataset__()
 
 
 #------------ Simple Test 1 ------------
 # *** Please refer to "testInialization" for the feature name(s)
-linearRegressionOutput = da.linearRegression('Feature1', 'Feature2')
-filteringOutput = da.filtering('Feature1', 'Feature2', '>', 0)
+#linearRegressionOutput = DA.linearRegression('Feature1', 'Feature2')
+
+
+#filteringOutput = DA.filtering2("Feature5", "Feature5", ">=", 0)
+#filteringOutput = DA.filtering("Feature5", ["Feature5"], [">="], [0], [])
+#filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5"], [">=", "<="], [0, 5], ["AND"])
+#filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5"], [">=", "<="], [0, 3], ["OR"])
+#filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5", "Feature5"], [">=", "<=", "<="], [0, 5, 3], ["AND", "AND"])
+#filteringOutput = DA.filtering("Feature5", ["Feature5", "Feature5", "Feature5","Feature5","Feature5","Feature5"], ["<=", "<=", "<=","<=","<=","<="], [10, 9, 8,7,6,5], ["AND", "AND","AND", "AND","AND"])
+filteringOutput = DA.filtering("Feature2", ["Feature2"], ["Does Not Contain"], ["HI"], [])
+
+#filteringOutput = DA.filtering("Feature1", ["Feature2","Feature2"], ["Contains","Does Not Contain"], ["hi","hi"], ["AND"])
+#filteringOutput = DA.filtering("Feature1", ["Feature2","Feature2"], ["Contains","Does Not Contain"], ["hi","hi"], ["OR"])
 
 # 1. output of linearRegression
-print linearRegressionOutput[0]
-print '\nCoefficients:', linearRegressionOutput[1]
-print 'Y-intecept:', linearRegressionOutput[2]
-print 'R^2:', linearRegressionOutput[3]
+#if type(linearRegressionOutput) == str:
+#    print (linearRegressionOutput)
+#print (linearRegressionOutput[0])
+#print ('\nCoefficients:', linearRegressionOutput[1])
+#print ('Y-intecept:', linearRegressionOutput[2])
+#print ('R^2:', linearRegressionOutput[3])
 
 # 2. output of filtering
-print "\nFirst feature:"
-print filteringOutput[0]
-print "\nFiltered first feature:"
-print filteringOutput[1]
+if type(filteringOutput) == str:
+    print (filteringOutput)
+print ("\nFirst feature:")
+print (filteringOutput[0])
+print ("\nFiltered first feature:")
+print (filteringOutput[1])
 
 
 
@@ -47,4 +62,3 @@ print filteringOutput[1]
 #data_analysis_module_linear_regression(cols[0], cols[3])
 
 #data_analysis_module_filtering(cols[0], cols[1], '>', 0)
-

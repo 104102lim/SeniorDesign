@@ -6,19 +6,18 @@ import matplotlib
 import numpy as np
 import pandas as pd
 
-from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton, QCheckBox
-from PyQt5.QtWidgets import QScrollArea, QTableWidget, QVBoxLayout, QTableWidgetItem, QWidget
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
 from PyQt5.QtWidgets import QFileDialog
 
 from Init import Init
 from DatabasePreprocessing import getDescriptions
 import DataAnalysis as da
+import filterdialog as fd
 
 matplotlib.use('Qt5Agg')
 
@@ -35,6 +34,10 @@ class MyMplCanvas(FigureCanvas):
                                    QtWidgets.QSizePolicy.Expanding,
                                    QtWidgets.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
+
+    def clear_figure(self):
+        self.axes.cla()
+        self.draw()
 
     def update_figure(self, data, Xlabel, Ylabel, Linear=False, Poly=False, yint=False, slope=False, rsquare=False):
         sData = data[0]
@@ -117,6 +120,14 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
+        
+        self.setWindowFlags(
+        QtCore.Qt.Window |
+        QtCore.Qt.CustomizeWindowHint |
+        QtCore.Qt.WindowTitleHint |
+        QtCore.Qt.WindowCloseButtonHint |
+        QtCore.Qt.WindowStaysOnTopHint
+        )
 
         label = QLabel('Linear Regression', self)
         label.move(20,90)
@@ -130,18 +141,27 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         #populate combo boxes
         descriptions = getDescriptions()
         descriptions.sort()
+        # attempt at completion
+        # try:
+        #     comp = QCompleter(descriptions.copy())
+        #     comp.setCompletionMode(QCompleter.PopupCompletion)
+        #     self.featureX.setCompleter(comp)
+        #     self.featureX.setEditable(True)
+        # except Exception as e:
+        #     print(e)
         for d in descriptions:
             if(d != "bottom depth"
                     and d != "top depth"
                     and d != "Cost per unit"
-                    and d != "Name of mud engineer"): continue
+                    and d != "Name of mud engineer"):
+                continue
             self.featureY.addItem(d)
             self.featureX.addItem(d)
-        self.yIntercept = QCheckBox("Y-Intercept",self)
+        self.yIntercept = QCheckBox("Y-Intercept", self)
         self.yIntercept.move(450, 100)
-        self.rSquared = QCheckBox("R^2",self)
+        self.rSquared = QCheckBox("R^2", self)
         self.rSquared.move(550, 100)
-        self.slopeCheck = QCheckBox("Slope",self)
+        self.slopeCheck = QCheckBox("Slope", self)
         self.slopeCheck.move(600, 100) 
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
@@ -162,6 +182,14 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
+        
+        self.setWindowFlags(
+        QtCore.Qt.Window |
+        QtCore.Qt.CustomizeWindowHint |
+        QtCore.Qt.WindowTitleHint |
+        QtCore.Qt.WindowCloseButtonHint |
+        QtCore.Qt.WindowStaysOnTopHint
+        )
 
         label = QLabel('Poly Regression', self)
         label.move(20,90)
@@ -192,61 +220,59 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         plotButton.move(700,100)
         plotButton.resize(50,50)
         
-
-class filterDialog(QtWidgets.QMainWindow):
+class loginDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
-        super(filterDialog, self).__init__(parent)
+        super(loginDialog, self).__init__(parent)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.title = 'Filter Data'
-        self.left = 500
+        self.title = 'User Login'
+        self.left = 200
         self.top = 100
-        self.width = 800
-        self.height = 200
+        self.width = 450
+        self.height = 370
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
-        self.feature1 = QComboBox(self)
-        self.feature1.setToolTip('Select feature 1')
-        self.feature1.move(50, 100)
-        whereLabel = QLabel('WHERE', self)
-        whereLabel.move(152,90)
-        whereLabel.resize(250,50)
-        self.feature2 = QComboBox(self)
-        self.feature2.setToolTip('Select feature 2')
-        self.feature2.move(200, 100)
-        descriptions = getDescriptions()
-        descriptions.sort()
-        for d in descriptions:
-            if(d != "bottom depth"
-                    and d != "top depth"
-                    and d != "Cost per unit"
-                    and d != "Name of mud engineer"): continue
-            self.feature1.addItem(d)
-            self.feature2.addItem(d)
-        isLabel = QLabel('IS', self)
-        isLabel.move(350,90)
-        isLabel.resize(250,50)
-        self.logic = QComboBox(self)
-        self.logic.setToolTip('Select logic')
-        self.logic.addItem("=")
-        self.logic.addItem("!=")
-        self.logic.addItem("<")
-        self.logic.addItem(">")
-        self.logic.addItem("<=")
-        self.logic.addItem(">=")
-        self.logic.addItem("contains")
-        self.logic.addItem("does not contain")
-        self.logic.move(400, 100)
-        self.logic.resize(50,25)
-        self.threshold = QLineEdit(self)
-        self.threshold.setToolTip('Input numeric value')
-        self.threshold.move(500,100)
-        self.threshold.resize(100,25)
-        filterButton = QPushButton('Filter', self) 
-        filterButton.setToolTip('Use button to filter the feature based on the chosen logic')
-        filterButton.clicked.connect(aw.filterData)
-        filterButton.move(700,100)
-        filterButton.resize(50,50)
+        # input boxes and labels
+        label = QLabel('Machine Name/IP', self)
+        label.move(80, 60)
+        label.resize(150, 30)
+        self.server = QLineEdit(self)
+        self.server.setToolTip('Enter Machine Name/IP')
+        self.server.move(200, 60)
+        self.server.resize(130, 30)
+        label = QLabel('Port/Instance', self)
+        label.move(80, 100)
+        label.resize(150, 30)
+        self.port = QLineEdit(self)
+        self.port.setToolTip('Enter Port/Instance')
+        self.port.move(200, 100)
+        self.port.resize(130, 30)
+        label = QLabel('Database Name', self)
+        label.move(80, 140)
+        label.resize(150, 30)
+        self.databaseName = QLineEdit(self)
+        self.databaseName.setToolTip('Enter Database Name')
+        self.databaseName.move(200, 140)
+        self.databaseName.resize(130, 30)
+        label = QLabel('Username', self)
+        label.move(80, 180)
+        label.resize(150, 30)
+        self.username = QLineEdit(self)
+        self.username.setToolTip('Enter Username')
+        self.username.move(200, 180)
+        self.username.resize(130, 30)
+        label = QLabel('Password', self)
+        label.move(80, 220)
+        label.resize(150, 30)
+        self.password = QLineEdit(self)
+        self.password.setToolTip('Enter Password')
+        self.password.move(200, 220)
+        self.password.resize(130, 30)
+        enterButton = QPushButton('Login', self)
+        enterButton.setToolTip('Login')
+        enterButton.clicked.connect(aw.login)
+        enterButton.move(224, 260)
+        enterButton.resize(80, 50)
 
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -333,7 +359,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         
         
     def fileOpen(self):
-        fileName, _ = QFileDialog.getSaveFileName(self,
+        fileName, _ = QFileDialog.getOpenFileName(self,
                         "Open Case",
                         "", "Baker Hughes Files (*.bh)")
         if fileName == '':
@@ -346,35 +372,42 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 tmp = ', '.join(row)
                 break
         # Extract dataset
-        count = 0
-        XLabel = ""
-        YLabel = ""
-        with open(fileName, 'r') as inp, open('temp.csv', 'w') as out:
-            writer = csv.writer(out)
-            for row in csv.reader(inp):
-                if not row:
-                    break
-                if count == 0:
-                    XLabel = row[1]
-                    YLabel = row[2]
-                writer.writerow(row)
-                count += 1
+        towrite = ""
+        with open(fileName, 'r') as inp:
+            lines = inp.readlines()
+            lines = lines[:-3]
+            for l in lines:
+                towrite += l
+        with open(fileName, 'w') as out:
+            out.write(towrite)
 
-        dp = pd.read_csv('temp.csv')
+        dp = pd.read_csv(fileName, )
+        with open(fileName, 'a') as out:
+            out.write("\n\n" + tmp)
+        labels = dp.columns
         stmp = tmp.split(" ")
         tmpList = []
 
+        self.mode_linear = False
+        self.mode_poly = False
+
         # parse last line to extract coefs
         if stmp[0] == "POLY:":
+            self.mode_poly = True
             for n in stmp:
                 if not n:
                     continue
                 if n != "POLY:":
                     tmpList.append(float(n))
-            self.coefs = [dp, tmpList]
+            XLabel = labels[0]
+            YLabel = labels[1]
+            self.data = dp
+            self.coefs = [dp, [tmpList]]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Poly=True)
+            self.updateDataDisplay()
 
         elif stmp[0] == "LINEAR:":
+            self.mode_linear = True
             count = 0
             y_int = 0.0
             s = 0.0
@@ -390,17 +423,24 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                     elif count == 3:
                         rr = float(n)
                     elif count == 4:
-                        self.dialog.yIntercept.isChecked = (n == "True")
+                        self.checkyint = (n == "True")
                     elif count == 5:
-                        self.dialog.slopeCheck.isChecked = (n == "True")
+                        self.checkslope = (n == "True")
                     elif count == 6:
-                        self.dialog.rSquared.isChecked = (n == "True")
+                        self.checkrsquare = (n == "True")
                 count += 1
-            self.coefs = [dp, y_int, s, rr]
+            XLabel = labels[0]
+            YLabel = labels[1]
+            self.data = dp
+            self.coefs = [dp, s, y_int, rr]
             self.sc.update_figure(self.coefs, XLabel, YLabel, Linear=True,
-                                  yint=self.dialog.yIntercept.isChecked(),
-                                  slope=self.dialog.slopeCheck.isChecked(),
-                                  rsquare=self.dialog.rSquared.isChecked())
+                                  yint=self.checkyint,
+                                  slope=self.checkslope,
+                                  rsquare=self.checkrsquare)
+        else:
+            self.data = dp
+            self.sc.clear_figure()
+        self.updateDataDisplay()
 
     def fileExport(self):
         if self.data is None:
@@ -415,7 +455,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.updateDataDisplay()
             return #no file name given
         fileName, extension = os.path.splitext(fileName)
-        self.data.to_csv(fileName + ".csv")
+        self.data.to_csv(fileName + ".csv", index=False)
         if self.mode_linear or self.mode_poly:
             self.sc.fig.savefig(fileName + ".png")
 
@@ -432,7 +472,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.updateDataDisplay()
             return #no file name given
         output = self.data.copy()
-        output.to_csv(fileName)
+        output.to_csv(fileName, index=False)
         file = open(fileName, 'a')
         if self.mode_linear:
             file.write("\n\nLINEAR: " +
@@ -446,25 +486,43 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             file.write("\n\nPOLY: ")
             for c in self.coefs[1][0]:
                 file.write(str(c) + " ")
+
+        else:
+            file.write("\n\nDATA: ")
         file.close()
 
     def fileQuit(self):
         self.close()
 
     def filterPrompt(self):
-        self.dialog = filterDialog(self)
+        self.dialog = fd.filterDialog(self)
         self.dialogs.append(self.dialog)
         self.dialog.show()
 
     def filterData(self):
-        try:
-            threshold = float(str(self.dialog.threshold.text()))
-        except:
-            threshold = str(self.dialog.threshold.text())
-        f1 = str(self.dialog.feature1.currentText())
-        f2 = str(self.dialog.feature2.currentText())
-        logic = str(self.dialog.logic.currentText())
-        filterResult = da.filtering(f1, f2, logic, threshold)
+        self.mode_linear = False
+        self.mode_poly = False
+        self.sc.clear_figure()
+        threshs = []
+        feat1s = []
+        feat2s = []
+        logics = []
+        numfilters = self.dialog.counter + 1
+        for i in range(numfilters):
+            threshs.append(self.dialog.threshold[i].text())
+            feat1s.append(self.dialog.feature1[i].currentText())
+            feat2s.append(self.dialog.feature2[i].currentText())
+            logics.append(self.dialog.logic[i].currentText())
+        for i in range(numfilters):
+            try:
+                threshs[i] = float(str(threshs[i]))
+            except:
+                threshs[i] = str(threshs[i])
+            feat1s[i] = str(feat1s[i])
+            feat2s[i] = str(feat2s[i])
+            logics[i] = str(logics[i])
+        filterResult = da.filtering(feat1s[0], feat2s, logics, threshs,
+                                    [feat1s[i] for i in range(1, numfilters)])
         if (type(filterResult) == str):
             self.errorLabel.setText(filterResult)
             self.dialog.close()
@@ -535,15 +593,39 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def about(self):
         QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
 
+    def loginPrompt(self):
+        self.dialog = loginDialog(self)
+        self.dialogs.append(self.dialog)
+        self.dialog.show()
+
+    def login(self):
+        machine = str(self.dialog.server.text())
+        portLog = str(self.dialog.port.text())
+        database = str(self.dialog.databaseName.text())
+        userName = str(self.dialog.username.text())
+        passWord = str(self.dialog.password.text())
+        if(True):
+            machine = "MSI\SQLEXPRESS"
+            portLog = ""
+            database = "senior_design"
+            userName = "SQLBH"
+            passWord = "mudtable"
+            '''
+            machine = "MYPC\SQLEXPRESS"
+            portLog = ""
+            database = "BHBackupRestore"
+            userName = "SQLDummy"
+            passWord = "bushdid9/11"
+            '''
+        self.dialog.close()
+        self.dialogs.pop()
+        Init.init(machine, portLog, database, userName, passWord)
+        self.show()
+
 if __name__ == '__main__':
-    serverL = "MYPC\SQLEXPRESS"
-    dbNameL = "BHBackupRestore"
-    UIDL = "SQLDummy"
-    PWDL = "bushdid9/11"
-    Init.init(serverL, dbNameL, UIDL, PWDL)
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     aw = ApplicationWindow()
     aw.setWindowTitle("Analysis Toolkit Prototype")
-    aw.show()
+    aw.loginPrompt()
     sys.exit(qApp.exec_())
