@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 -----------------------------------------------------------------------
-  DataAnalysisModule.py
+  DataAnalysis.py
   
   Data Analysis Module for BH Oil Characterization Software Applcation
   
   Author: Sungho Lim, Joey Gallardo
-  Last Updated Date: 10/29/2018
+  Last Updated Date: 10/31/2018
 -----------------------------------------------------------------------
 """
-
 
 import pandas as pd
 import numpy as np
@@ -18,34 +17,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import PolynomialFeatures
 from DatabasePreprocessing import getData, getDescriptions
 
-
-#-----------------------------------------------------------------------------------------------
-#                       DATA ANALYSIS MODULE
-#
-# Backend parts of the software application for GUI Module
-#
-# INPUTS FROM GUI:
-# 1) Analysis Type - Linear Regression, Polynomial Regression, or Filtering
-# 2) Feature Names (2 or 3)
-# 3) Threshold - logic operator, threshold
-#
-# OUTPUTS TO GUI:
-# 1) Indicators - (filtered or raw) Datasets, Coefficents, R^2, y-intercept
-#-----------------------------------------------------------------------------------------------
-#-----------------------------------------------------------------------------------------------
-# Function: __testInialization__
-# Private function for testing public methods
-#-----------------------------------------------------------------------------------------------
-def __testInialization__(self):
-    data = [[3,'ha',0,5,4], [23,'he',8,9,10], [2,'hi',6,7,1], [0,'ho',2,5,-2],
-            [5,'hu',13,14,15], [0,'ohio',4,3,5], [8,'hello',18,19,20], [-2,'hike',-3,-8,9],
-            [21,'hamony',23,24,25], [-9,'hihihio',-13,-14,-15]]
-    cols = ["Feature1","Feature2","Feature3","Feature4","Feature5"]
-
-    ds = pd.DataFrame(data, columns=cols, dtype=float)  # test dataframe
-    dataset = ds
-    print (dataset)
-    print("Test Dataset Initialized")
 
 #-----------------------------------------------------------------------------------------------
 # Function: linearRegression
@@ -65,9 +36,9 @@ def linearRegression(feature1, feature2):
     # retrieve dataset
     dataset = getData([feature1, feature2])
     
-    # check whether features(s) are connected
-    if type(dataset) == str:
-        return dataset
+    # check whether we analyze connected features
+    if type(dataset) == str: # error cccuring
+        return dataset       # output string information
     
     # check whether the features compatible
     checkError = __featureErrorCheckingForRegression(dataset)
@@ -90,8 +61,7 @@ def linearRegression(feature1, feature2):
 
     output = [rawDataFrame, linearRegression.coef_,
                      linearRegression.intercept_, r2_score(train_y, pred_y)]
-
-    print('\nRaw features:')
+    print('\nRaw two features:')
     print(output[0])
     print('\nCoefficients:', output[1])
     print('Y-intecept:', output[2])
@@ -121,7 +91,6 @@ def linearRegression(feature1, feature2):
 #-----------------------------------------------------------------------------------------------
 def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     print("------------------ Filtering ------------------")
-    
     # input type checking
     if (type(targetFeature) != str):
         return ("Target feature should be str type\n")
@@ -157,9 +126,9 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
         allFeatureNames.append(comparisonFeatures[i])
     dataset = getData(allFeatureNames)
     
-    # check whether features(s) are connected
-    if type(dataset) == str:
-        return dataset
+    # check whether we analyze connected features
+    if type(dataset) == str: # error cccuring
+        return dataset       # output string information
     
     new_targetfs = []
     new_targetfs_idx = []
@@ -168,8 +137,8 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     for i in range(0, length):
         # check whether threshold and comparison feature are compatible
         checkError = __thresholdAndFeatureErrorCheckingForFiltering(comparisonFeatures[i], dataset[comparisonFeatures[i]], thresholds[i])
-        if checkError != None:
-            return checkError
+        if checkError != None: # error cccuring
+            return checkError  # output string information
         
         # get data
         targetf = dataset[targetFeature]
@@ -200,32 +169,30 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
                     new_targetf_idx.append(j)
         elif logics[i] == '=':
             for j in range(0, len(targetf)):
-                if (type(comparisonf[j]) == str and type(thresholds[i]) == str and comparisonf[j] == thresholds[i]):
+                if (type(comparisonf[j]) == str and type(thresholds[i]) == str and comparisonf[j].lower() == thresholds[i].lower()):
                     new_targetf.append(targetf[j])
                     new_targetf_idx.append(j)
-                elif (comparisonf[j] == thresholds[i]):
+                elif (type(comparisonf[j]) != str and type(thresholds[i]) != str and comparisonf[j] == thresholds[i]):
                     new_targetf.append(targetf[j])
                     new_targetf_idx.append(j)
         elif logics[i] == '!=':
             for j in range(0, len(targetf)):
-                if (type(comparisonf[j]) == str and type(thresholds[i]) == str and comparisonf[j] != thresholds[i]):
+                if (type(comparisonf[j]) == str and type(thresholds[i]) == str and comparisonf[j].lower() != thresholds[i].lower()):
                     new_targetf.append(targetf[j])
                     new_targetf_idx.append(j)
-                elif (comparisonf[j] != thresholds[i]):
+                elif (type(comparisonf[j]) != str and type(thresholds[i]) != str and comparisonf[j] != thresholds[i]):
                     new_targetf.append(targetf[j])
                     new_targetf_idx.append(j)
         elif logics[i] == 'Contains':
             for j in range(0, len(targetf)):
-                if (type(comparisonf[j]) == str and type(thresholds[i]) == str):
-                    if (thresholds[i] in comparisonf[j]):
-                        new_targetf.append(targetf[j])
-                        new_targetf_idx.append(j)
+                if (type(comparisonf[j]) == str and type(thresholds[i]) == str and thresholds[i].lower() in comparisonf[j].lower()):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
         elif logics[i] == 'Does Not Contain':
             for j in range(0, len(targetf)):
-                if (type(comparisonf[j]) == str and type(thresholds[i]) == str):
-                    if (thresholds[i] not in comparisonf[j]):
-                        new_targetf.append(targetf[j])
-                        new_targetf_idx.append(j)
+                if (type(comparisonf[j]) == str and type(thresholds[i]) == str and thresholds[i].lower() not in comparisonf[j].lower()):
+                    new_targetf.append(targetf[j])
+                    new_targetf_idx.append(j)
         
         # append the new target feature to the set of new target features
         new_targetfs.append(new_targetf)
@@ -237,7 +204,6 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     result_idx = new_targetfs_idx[0]
     new_result = []
     new_result_idx = []
-    
     for i in range(0,length-1): # compare new_targetfs[i+1] and result
         if operators[i] == "AND":
             new_result = []
@@ -274,7 +240,7 @@ def filtering2(feature1, feature2, logic, threshold):
    if (type(feature1) != str or type(feature2) != str):
        return ("feature(s) should be str type\n")
    if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
-       logic != "=" and logic != "!=" and logic != "contains" and logic != "does not contain"):
+       logic != "=" and logic != "!=" and logic != "Contains" and logic != "Does Not Contain"):
        return ("logic value error\n")
    if (type(threshold) != int and type(threshold) != float and type(threshold) != complex and type(threshold) != str):
        return ("threshold should be int, float, or str type\n")
@@ -282,9 +248,9 @@ def filtering2(feature1, feature2, logic, threshold):
    # retrieve dataset
    dataset = getData([feature1, feature2])
    
-   # check whether features(s) are connected
-   if type(dataset) == str:
-      return dataset
+   # check whether we analyze connected features
+   if type(dataset) == str: # error occuring
+      return dataset        # output string information
 
    # check whether threshold and second feature are compatible
    checkError = __thresholdAndFeatureErrorCheckingForFiltering(feature2, dataset[feature2], threshold)
@@ -317,26 +283,24 @@ def filtering2(feature1, feature2, logic, threshold):
                new_f1.append(f1[i])
    elif logic == '=':
        for i in range(0, len(f1)):
-           if (type(f2[i]) == str and type(threshold) == str and f2[i] == threshold):
+           if (type(f2[i]) == str and type(threshold) == str and f2[i].lower() == threshold.lower()):
                new_f1.append(f1[i])
            elif (f2[i] == threshold):
                new_f1.append(f1[i])
    elif logic == '!=':
        for i in range(0, len(f1)):
-           if (type(f2[i]) == str and type(threshold) == str and f2[i] != threshold):
+           if (type(f2[i]) == str and type(threshold) == str and f2[i].lower() != threshold.lower()):
                new_f1.append(f1[i])
            elif (f2[i] != threshold):
                new_f1.append(f1[i])
    elif logic == 'Contains':
        for i in range(0, len(f1)):
-           if (type(f2[i]) == str and type(threshold) == str):
-               if (threshold in f2[i]):
-                   new_f1.append(f1[i])
+           if (type(f2[i]) == str and type(threshold) == str and threshold.lower() in f2[i].lower()):
+               new_f1.append(f1[i])
    elif logic == 'Does Not Contain':
        for i in range(0, len(f1)):
-           if (type(f2[i]) == str and type(threshold) == str):
-               if (threshold not in f2[i]):
-                   new_f1.append(f1[i])
+           if (type(f2[i]) == str and type(threshold) == str and threshold.lower() not in f2[i].lower()):
+               new_f1.append(f1[i])
 
    # create new dataframe for output
    f1 = pd.DataFrame(data={feature1 : dataset[feature1]})
@@ -366,10 +330,11 @@ def polynomialRegression(feature1, feature2, order):
 
     dataset = getData([feature1, feature2])
     
-    # check whether features(s) are connected
-    if type(dataset) == str:
-        return dataset
+    # check whether we analyze connected features
+    if type(dataset) == str: # error occuring
+        return dataset       # output string information
     
+    # check whether the features compatible
     checkError = __featureErrorCheckingForRegression(dataset)
     if checkError != None: # error occuring
         return checkError  # output string information
@@ -386,11 +351,11 @@ def polynomialRegression(feature1, feature2, order):
 
 
 # check whether features compatible
-# data should be numerical values for regressions
+# data should be numeric values for regressions
 # feature1 & feature2
 def __featureErrorCheckingForRegression(dataset):
     if len(dataset.columns) == 1:
-        return ("Two same features cannot be modeled.\n")
+        return ("Same features cannot be modeled.\n")
     f1 = dataset[dataset.columns[0]].values
     f2 = dataset[dataset.columns[1]].values
     for i in range(0, len(f1)):
@@ -407,15 +372,27 @@ def __featureErrorCheckingForRegression(dataset):
 
 # check whether second feature and threshold compatible
 # second feature and threshold should have same data type
-# for example, str & str, int & int, float & float, complex & complex
+# for example, str & str or numeric & numeric
 def __thresholdAndFeatureErrorCheckingForFiltering(f2_name, f2, threshold):
     f2 = f2.values
     if type(threshold) == str: # str compatible check
         for i in range(0, len(f2)):
             if type(f2[i]) != str:
-                return ("Threshold is string, but some of data in " + f2_name + " are not string.\n")
+                return ("Threshold " + threshold + " is string, but some of data in " + f2_name + " are not string.\n")
     else: # numeric compatible check
         for i in range(0, len(f2)):
             if type(f2[i].item()) != int and type(f2[i].item()) != float and type(f2[i].item()) != complex:
-                return ("Threshold is numeric, but some of data in " + f2_name + " are not numeric.\n")
+                return ("Threshold " + threshold + " is numeric, but some of data in " + f2_name + " are not numeric.\n")
     return None
+
+# private function for testing public methods
+def __testInialization__(self):
+    data = [[3,'ha',0,5,4], [23,'he',8,9,10], [2,'hi',6,7,1], [0,'ho',2,5,-2],
+            [5,'hu',13,14,15], [0,'ohio',4,3,5], [8,'hello',18,19,20], [-2,'hike',-3,-8,9],
+            [21,'hamony',23,24,25], [-9,'hihihio',-13,-14,-15]]
+    cols = ["Feature1","Feature2","Feature3","Feature4","Feature5"]
+
+    ds = pd.DataFrame(data, columns=cols, dtype=float)  # test dataframe
+    dataset = ds
+    print (dataset)
+    print("Test Dataset Initialized")
