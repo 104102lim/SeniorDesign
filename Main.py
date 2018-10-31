@@ -624,15 +624,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
         if(True):
-<<<<<<< HEAD
             machine = "MSI\SQLEXPRESS"
             portLog = ""
             database = "senior_design"
             userName = "SQLBH"
             passWord = "mudtable"
             '''
-=======
->>>>>>> 8910671c07b486f3ae6338d899732904de991422
             machine = "MYPC\SQLEXPRESS"
             portLog = ""
             database = "BHBackupRestore"
