@@ -313,7 +313,7 @@ class ProgressBar(QtWidgets.QWidget):
 
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        self.dialogs = list()
+        self.dialog = None
         self.data = None
 
         # Main Window Init
@@ -655,6 +655,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         )
 
         if(True):
+            '''
             machine = "MSI\SQLEXPRESS"
             portLog = ""
             database = "senior_design"
@@ -666,7 +667,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             database = "BHBackupRestore"
             userName = "SQLDummy"
             passWord = "bushdid9/11"
-            '''
         self.dialog.close()
         self.dialog = None
         self.dialog = ProgressBar(self);
