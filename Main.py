@@ -12,7 +12,8 @@ from matplotlib.figure import Figure
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QLabel, QPushButton, QCheckBox
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
-from PyQt5.QtWidgets import QFileDialog, QCompleter
+from PyQt5.QtWidgets import QFileDialog, QProgressBar
+from PyQt5.QtCore import QBasicTimer, Qt
 
 from Init import Init
 from DatabasePreprocessing import getDescriptions
@@ -120,14 +121,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
-        
-        self.setWindowFlags(
-        QtCore.Qt.Window |
-        QtCore.Qt.CustomizeWindowHint |
-        QtCore.Qt.WindowTitleHint |
-        QtCore.Qt.WindowCloseButtonHint |
-        QtCore.Qt.WindowStaysOnTopHint
-        )
 
         label = QLabel('Linear Regression', self)
         label.move(20,90)
@@ -138,17 +131,25 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
         self.featureY.move(300, 100)
+        #populate combo boxes
         descriptions = getDescriptions()
-        descriptions = [d.lower() for d in descriptions]
         descriptions.sort()
-        self.featureX.setInsertPolicy(QComboBox.NoInsert)
-        self.featureX.setEditable(True)
-        self.featureX.setCompleter(QCompleter(descriptions))
-        self.featureX.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
-        self.featureY.setInsertPolicy(QComboBox.NoInsert)
-        self.featureY.setEditable(True)
-        self.featureY.setCompleter(QCompleter(descriptions))
-        self.featureY.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
+        # attempt at completion
+        # try:
+        #     comp = QCompleter(descriptions.copy())
+        #     comp.setCompletionMode(QCompleter.PopupCompletion)
+        #     self.featureX.setCompleter(comp)
+        #     self.featureX.setEditable(True)
+        # except Exception as e:
+        #     print(e)
+        for d in descriptions:
+            if(d != "bottom depth"
+                    and d != "top depth"
+                    and d != "Cost per unit"
+                    and d != "Name of mud engineer"):
+                continue
+            self.featureY.addItem(d)
+            self.featureX.addItem(d)
         self.yIntercept = QCheckBox("Y-Intercept", self)
         self.yIntercept.move(450, 100)
         self.rSquared = QCheckBox("R^2", self)
@@ -174,14 +175,6 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
-        
-        self.setWindowFlags(
-        QtCore.Qt.Window |
-        QtCore.Qt.CustomizeWindowHint |
-        QtCore.Qt.WindowTitleHint |
-        QtCore.Qt.WindowCloseButtonHint |
-        QtCore.Qt.WindowStaysOnTopHint
-        )
 
         label = QLabel('Poly Regression', self)
         label.move(20,90)
@@ -276,10 +269,43 @@ class loginDialog(QtWidgets.QMainWindow):
         enterButton.move(224, 260)
         enterButton.resize(80, 50)
 
+
+class ProgressBar(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        QtWidgets.QWidget.__init__(self)
+
+        self.setGeometry(300, 300, 250, 150)
+        self.setWindowTitle('Loading')
+        self.pbar = QProgressBar(self)
+        self.pbar.setGeometry(30, 40, 200, 25)
+
+        self.button = QPushButton('Start', self)
+        self.button.setFocusPolicy(Qt.NoFocus)
+        self.button.move(40, 80)
+
+        self.button.clicked.connect(self.onStart)
+        self.timer = QBasicTimer()
+        self.step = 0
+
+    def timerEvent(self, event):
+        if self.step >= 100:
+            self.timer.stop()
+            return
+        self.step = self.step + 1
+        self.pbar.setValue(self.step)
+
+    def onStart(self):
+        if self.timer.isActive():
+            self.timer.stop()
+            self.button.setText('Start')
+        else:
+            self.timer.start(100, self)
+            self.button.setText('Stop')
+
+
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         self.dialogs = list()
-        self.data = None
 
     # Main Window Init
         QtWidgets.QMainWindow.__init__(self)
@@ -349,7 +375,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     #Define All Actions Below
     
     def updateDataDisplay(self):
+        #self.df = pd.DataFrame({"a" : [0 ,0, 0],"b" : [7, 8, 9],"c" : [10, 11, 12]},index = [1, 2, 3])
+        #df = DataFrame.read_csv("./EricTestData")
         df = self.data
+        #df.to_csv('./EricTestData.csv')
         self.table.setColumnCount(len(df.columns))
         self.table.setRowCount(len(df.index))
         self.table.setHorizontalHeaderLabels(df.columns)
@@ -363,7 +392,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                         "Open Case",
                         "", "Baker Hughes Files (*.bh)")
         if fileName == '':
-            self.errorLabel.setText('Open Error: No file name given')
             return #no file name given
         tmp = ""
         with open(fileName, 'r') as f:
@@ -443,13 +471,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def fileExport(self):
         if self.data is None:
-            self.errorLabel.setText('Export Error: No data to export')
             return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Export Data and Plot",
                                                   "", "CSV/PNG Files (*.csv *.png)")
         if fileName == '':
-            self.errorLabel.setText('Export Error: No file name given')
             return #no file name given
         fileName, extension = os.path.splitext(fileName)
         self.data.to_csv(fileName + ".csv", index=False)
@@ -458,13 +484,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def fileSave(self):
         if self.data is None:
-            self.errorLabel.setText('Save Error: No data to save')
             return  # return error code bc no data to save
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Save Case",
                                                   "", "Baker Hughes Files (*.bh)")
         if fileName == '':
-            self.errorLabel.setText('Save Error: No file name given')
             return #no file name given
         output = self.data.copy()
         output.to_csv(fileName, index=False)
@@ -600,12 +624,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
         if(True):
+<<<<<<< HEAD
             machine = "MSI\SQLEXPRESS"
             portLog = ""
             database = "senior_design"
             userName = "SQLBH"
             passWord = "mudtable"
             '''
+=======
+>>>>>>> 8910671c07b486f3ae6338d899732904de991422
             machine = "MYPC\SQLEXPRESS"
             portLog = ""
             database = "BHBackupRestore"
@@ -614,7 +641,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             '''
         self.dialog.close()
         self.dialogs.pop()
+        self.dialog = ProgressBar(self);
+        self.dialog.show()
         Init.init(machine, portLog, database, userName, passWord)
+
+        self.dialog.close()
         self.show()
 
 if __name__ == '__main__':
