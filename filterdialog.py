@@ -7,7 +7,6 @@ from DatabasePreprocessing import getDescriptions
 class filterDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(filterDialog, self).__init__(parent)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.title = 'Filter Data'
         self.left = 500
         self.top = 50
