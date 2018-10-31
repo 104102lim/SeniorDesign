@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QBasicTimer
 
 
-class ProgressBar(QtWidgets.QWidget):
+class ProgressBar(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self)
 

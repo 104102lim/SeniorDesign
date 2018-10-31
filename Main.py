@@ -621,7 +621,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             passWord = "bushdid9/11"
         self.dialog.close()
         self.dialogs.pop()
+        self.dialog = ProgressBar(self);
+        self.dialog.show()
         Init.init(machine, portLog, database, userName, passWord)
+
+        self.dialog.close()
         self.show()
 
 if __name__ == '__main__':
