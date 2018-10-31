@@ -23,9 +23,9 @@ def printTable(name, ti):
 if __name__ == "__main__":
     start = time()
     if LAPTOP:
-        Init.init(serverL, dbNameL, UIDL, PWDL)
+        Init.init(serverL, "", dbNameL, UIDL, PWDL)
     else:
-        Init.init(serverP, dbNameP, UIDP, PWDP)
+        Init.init(serverP, "", dbNameP, UIDP, PWDP)
     end = time()
     print(Init.ti[1])
     print(end - start)
