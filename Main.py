@@ -185,20 +185,22 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
         self.featureY.move(300, 100)
+        descriptions = getDescriptions()
+        descriptions = [d.lower() for d in descriptions]
+        descriptions.sort()
+        self.featureX.setInsertPolicy(QComboBox.NoInsert)
+        self.featureX.setEditable(True)
+        self.featureX.setCompleter(QCompleter(descriptions))
+        self.featureX.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
+        self.featureY.setInsertPolicy(QComboBox.NoInsert)
+        self.featureY.setEditable(True)
+        self.featureY.setCompleter(QCompleter(descriptions))
+        self.featureY.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
         self.order = QComboBox(self)
         self.order.setToolTip('Select order of polynomial fit')
         self.order.move(450, 100)
         for i in range(1, 10):
             self.order.addItem(str(i))
-        descriptions = getDescriptions()
-        descriptions.sort()
-        for d in descriptions:
-            if(d != "bottom depth"
-                    and d != "top depth"
-                    and d != "Cost per unit"
-                    and d != "Name of mud engineer"): continue
-            self.featureY.addItem(d)
-            self.featureX.addItem(d)
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot poly regression')
         plotButton.clicked.connect(aw.plotPolyRegression)
@@ -345,9 +347,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.table.resize(100,100)
         # Our data frame goes below, current df is dummy data for testing
         self.df = pd.DataFrame({"a" : [0 ,0, 0],"b" : [0, 0, 0],"c" : [0, 0, 0]},index = [1, 2, 3])
-        #df = DataFrame.read_csv("./EricTestData")
-        #df = aw.data
-        #df.to_csv('./EricTestData.csv')
         self.table.setColumnCount(len(self.df.columns))
         self.table.setRowCount(len(self.df.index))
         self.table.setHorizontalHeaderLabels(self.df.columns)

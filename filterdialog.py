@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QComboBox, QLineEdit, QPushButton
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QCompleter
 from DatabasePreprocessing import getDescriptions
 
 class filterDialog(QtWidgets.QMainWindow):
@@ -32,6 +32,7 @@ class filterDialog(QtWidgets.QMainWindow):
         self.vLayout = QVBoxLayout(self.centralWidget)
 
         descriptions = getDescriptions()
+        descriptions = [d.lower() for d in descriptions]
         descriptions.sort()
         self.buttonsWidget = []
         self.buttonsWidgetLayout = []
@@ -43,18 +44,19 @@ class filterDialog(QtWidgets.QMainWindow):
             self.buttonsWidget.append(QWidget())
             self.buttonsWidgetLayout.append(QHBoxLayout(self.buttonsWidget[i]))
             self.threshold.append(QLineEdit(self))
+
             self.feature1.append(QComboBox(self))
             self.feature2.append(QComboBox(self))
-            for d in descriptions:
-                if (d != "bottom depth"
-                        and d != "top depth"
-                        and d != "Cost per unit"
-                        and d != "Name of mud engineer"):
-                    continue
-                if(i == 0):
-                    self.feature1[i].addItem(d)
-                self.feature2[i].addItem(d)
-                self.logic.append(QComboBox(self))
+            if(i == 0):
+                self.feature1[i].setInsertPolicy(QComboBox.NoInsert)
+                self.feature1[i].setEditable(True)
+                self.feature1[i].setCompleter(QCompleter(descriptions))
+                self.feature1[i].completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
+            self.feature2[i].setInsertPolicy(QComboBox.NoInsert)
+            self.feature2[i].setEditable(True)
+            self.feature2[i].setCompleter(QCompleter(descriptions))
+            self.feature2[i].completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
+            self.logic.append(QComboBox(self))
         operators = ["AND", "OR"]
         for i in range(1, len(self.threshold)):
             for p in operators:
