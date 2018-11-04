@@ -10,8 +10,8 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.title = 'Linear Regression'
         self.left = 500
         self.top = 100
-        self.width = 800
-        self.height = 200
+        self.width = 600
+        self.height = 100
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
@@ -23,16 +23,21 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
             QtCore.Qt.WindowCloseButtonHint |
             QtCore.Qt.WindowStaysOnTopHint
         )
-
-        label = QLabel('Linear Regression', self)
-        label.move(20, 90)
-        label.resize(250, 50)
+        
         self.featureX = QComboBox(self)
         self.featureX.setToolTip('Select feature for X axis')
-        self.featureX.move(150, 100)
+        self.featureX.move(50, 20)
+        self.featureX.resize(100, 20)
+        label = QLabel('X-Axis Feature', self)
+        label.move(50, 30)
+        label.resize(100, 50)
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
-        self.featureY.move(300, 100)
+        self.featureY.move(200, 20)
+        self.featureY.resize(100, 20)
+        label = QLabel('Y-Axis Feature', self)
+        label.move(200, 30)
+        label.resize(100, 50)
         descriptions = getDescriptions()
         descriptions = [d.lower() for d in descriptions]
         descriptions.sort()
@@ -45,13 +50,13 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         self.featureY.setCompleter(QCompleter(descriptions))
         self.featureY.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
         self.yIntercept = QCheckBox("Y-Intercept", self)
-        self.yIntercept.move(450, 100)
+        self.yIntercept.move(350, 10)
         self.rSquared = QCheckBox("R^2", self)
-        self.rSquared.move(550, 100)
+        self.rSquared.move(350, 40)
         self.slopeCheck = QCheckBox("Slope", self)
-        self.slopeCheck.move(600, 100)
+        self.slopeCheck.move(350, 70)
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot linear regression')
         plotButton.clicked.connect(self.parent().plotLinearRegression)
-        plotButton.move(700, 100)
+        plotButton.move(500, 20)
         plotButton.resize(50, 50)

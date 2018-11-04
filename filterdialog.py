@@ -11,7 +11,7 @@ class filterDialog(QtWidgets.QMainWindow):
         self.left = 500
         self.top = 50
         self.width = 800
-        self.height = 300
+        self.height = 400
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
@@ -56,6 +56,7 @@ class filterDialog(QtWidgets.QMainWindow):
             self.feature2[i].setCompleter(QCompleter(descriptions))
             self.feature2[i].completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
             self.logic.append(QComboBox(self))
+            self.filler = QComboBox(self)
         operators = ["AND", "OR"]
         for i in range(1, len(self.threshold)):
             for p in operators:

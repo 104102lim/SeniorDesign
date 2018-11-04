@@ -41,7 +41,7 @@ class applicationWindow(QtWidgets.QMainWindow):
         # PLOT MENU
         self.plot_menu = QtWidgets.QMenu('&Plot', self)
         self.plot_menu.addAction('&Linear Regression', self.linearRegressionPrompt)
-        self.plot_menu.addAction('&Poly Regression', self.polyRegressPrompt)
+        self.plot_menu.addAction('&Polynomial Regression', self.polyRegressPrompt)
         self.menuBar().addSeparator()
         self.menuBar().addMenu(self.plot_menu)
 
@@ -355,7 +355,6 @@ class applicationWindow(QtWidgets.QMainWindow):
         passWord = str(self.dialog.password.text())
 
         if (True):
-            '''
             machine = "MSI\SQLEXPRESS"
             portLog = ""
             database = "senior_design"
@@ -367,6 +366,7 @@ class applicationWindow(QtWidgets.QMainWindow):
             database = "BHBackupRestore"
             userName = "SQLDummy"
             passWord = "bushdid9/11"
+            '''
         self.dialog.close()
         self.dialog = None
         self.dialog = pgd.progressDialog(self);
