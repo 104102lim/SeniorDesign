@@ -75,6 +75,29 @@ class Init:
         return names
 
     @classmethod
+    def connect(cls, server, port, dbName, UID, PWD):
+        cls.cursor = cls.__connect(server, port, dbName, UID, PWD)
+        if cls.cursor == None:
+            return "FAIL"
+        else:
+            return None
+
+    @classmethod
+    def gettableinfo(cls):
+        cls.ti = {}
+        cls.ti[0] = getTableNames()
+        cls.ti[1] = cls.__getTableInfo(cls.__GETPRIMARYKEYSQLCODE)
+        cls.ti[2] = cls.__getTableInfo(cls.__GETFOREIGNKEYSQLCODE)
+        cls.validDescriptions = cls.__getValidDescriptions()
+
+    @classmethod
+    def maketrees(cls):
+        roots = AF.getRootParents(cls.ti)
+        cls.trees = []
+        for r in roots:
+            cls.trees.append(Tree(r, cls.ti))
+
+    @classmethod
     def init(cls, server, port, dbName, UID, PWD):
         cls.cursor = cls.__connect(server, port, dbName, UID, PWD)
         if cls.cursor == None:

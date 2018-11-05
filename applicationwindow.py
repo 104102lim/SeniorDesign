@@ -371,13 +371,28 @@ class applicationWindow(QtWidgets.QMainWindow):
             passWord = "bushdid9/11"
         self.dialog.close()
         self.dialog = None
+
         self.dialog = pgd.progressDialog(self)
         self.dialog.show()
         QCoreApplication.processEvents()
-        ret = Init.init(machine, portLog, database, userName, passWord)
-        self.dialog.close()
-        self.dialog = None
+        ret = Init.connect(machine, portLog, database, userName, passWord)
         if ret is not None:
+            # show failed
+            QCoreApplication.processEvents()
+            sleep(2)
+            self.dialog.close()
+            self.dialog = None
             self.loginPrompt()
         else:
+            #show connect completed
+            QCoreApplication.processEvents()
+            Init.gettableinfo()
+            #show get table info completed
+            QCoreApplication.processEvents()
+            Init.maketrees()
+            #show trees completed
+            QCoreApplication.processEvents()
+            sleep(2)
+            self.dialog.close()
+            self.dialog = None
             self.show()
