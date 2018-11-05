@@ -1,1 +1,1 @@
-('08001', '[08001] [Microsoft][ODBC SQL Server Driver][Shared Memory]SQL Server does not exist or access denied. (17) (SQLDriverConnect); [08001] [Microsoft][ODBC SQL Server Driver][Shared Memory]ConnectionOpen (Connect()). (2); [08001] [Microsoft][ODBC SQL Server Driver]Invalid connection string attribute (0)')
+must be str, not int
