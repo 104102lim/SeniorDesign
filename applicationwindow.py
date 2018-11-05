@@ -347,6 +347,12 @@ class applicationWindow(QtWidgets.QMainWindow):
         self.dialog = lid.loginDialog(self)
         self.dialog.show()
 
+
+    def closelogin(self):
+        self.dialog.close()
+        self.dialog = None
+
+
     def login(self):
         machine = str(self.dialog.server.text())
         portLog = str(self.dialog.port.text())
@@ -368,9 +374,8 @@ class applicationWindow(QtWidgets.QMainWindow):
             passWord = "bushdid9/11"
         self.dialog.close()
         self.dialog = None
-        #self.dialog = pgd.progressDialog(self)
-        #self.dialog.show()
-        Init.init(machine, portLog, database, userName, passWord)
-        #self.dialog.close()
-        #self.dialog = None
+        self.pb = pgd.progressDialog(self)
+        self.pb.show()
         self.show()
+        Init.init(machine, portLog, database, userName, passWord)
+
