@@ -3,8 +3,6 @@ import csv
 import os
 import pandas as pd
 
-from time import sleep
-
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QFileDialog

@@ -58,7 +58,7 @@ class loginDialog(QtWidgets.QMainWindow):
         self.password.setToolTip('Enter Password')
         self.password.move(200, 220)
         self.password.resize(130, 30)
-        label = QLabel('Instance', self)
+        label = QLabel('Instance (Optional', self)
         label.move(80, 260)
         label.resize(150, 30)
         self.instance = QLineEdit(self)
@@ -83,27 +83,24 @@ class loginDialog(QtWidgets.QMainWindow):
                 cnxn = pyodbc.connect(
                     "DRIVER={SQL Server}; SERVER=" + server + "\\" + instance + "," + portLog + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
             elif portLog != '':
                 cnxn = pyodbc.connect(
                     "DRIVER={SQL Server}; SERVER=" + server + "," + portLog + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
             elif instance != '':
                 cnxn = pyodbc.connect(
                     "DRIVER={SQL Server}; SERVER=" + server + "\\" + instance + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
             else:
                 cnxn = pyodbc.connect(
                     "DRIVER={SQL Server}; SERVER=" + server + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
-            print("Success")
+            QtWidgets.QMessageBox.about(self, "Success!", """Success!""")
         except Exception as e:
-            print("Failure")
-            
-        
+            with open("LoginLog.txt", mode="w") as f:
+                f.write(str(e))
+            QtWidgets.QMessageBox.about(self, "Failure!", """Failure!""")
+        self.close()
 
 if __name__ == '__main__':
     qapp = 0
