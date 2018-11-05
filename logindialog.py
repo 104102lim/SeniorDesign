@@ -58,7 +58,7 @@ class loginDialog(QtWidgets.QMainWindow):
         self.password.resize(130, 30)
         enterButton = QPushButton('Login', self)
         enterButton.setToolTip('Login')
-        enterButton.clicked.connect(self.login)
+        enterButton.clicked.connect(self.parent().login)
         enterButton.move(245, 260)
         enterButton.resize(80, 50)
      

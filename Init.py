@@ -31,16 +31,24 @@ class Init:
     def __connect(cls, server, port, dbName, UID, PWD):
         cursor = None
         try:
-            if port == "":
+            if port == '':
                 cnxn = pyodbc.connect(
                     "DRIVER={SQL Server}; SERVER=" + server + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
             else:
-                 cnxn = pyodbc.connect(
-                    "DRIVER={SQL Server}; SERVER=" + server + "," + port + ";" +
+                try:
+                    p = int(port)
+                except:
+                    p = port
+            if type(p) is int:
+                cnxn = pyodbc.connect(
+                    "DRIVER={SQL Server}; SERVER=" + server + "," + p + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                 cursor = cnxn.cursor()
+            elif type(p) is str:
+                cnxn = pyodbc.connect(
+                    "DRIVER={SQL Server}; SERVER=" + server + "\\" + p + ";" +
+                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
+            cursor = cnxn.cursor()
         except Exception as e:
             print(e)
         return cursor
@@ -69,6 +77,8 @@ class Init:
     @classmethod
     def init(cls, server, port, dbName, UID, PWD):
         cls.cursor = cls.__connect(server, port, dbName, UID, PWD)
+        if cls.cursor == None:
+            return "FAIL"
         cls.ti = {}
         cls.ti[0] = getTableNames()
         cls.ti[1] = cls.__getTableInfo(cls.__GETPRIMARYKEYSQLCODE)
@@ -78,5 +88,5 @@ class Init:
         cls.trees = []
         for r in roots:
             cls.trees.append(Tree(r, cls.ti))
-        return
+        return None
 

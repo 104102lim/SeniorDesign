@@ -370,7 +370,10 @@ class applicationWindow(QtWidgets.QMainWindow):
         self.dialog = None
         #self.dialog = pgd.progressDialog(self)
         #self.dialog.show()
-        Init.init(machine, portLog, database, userName, passWord)
-        #self.dialog.close()
-        #self.dialog = None
-        self.show()
+        ret = Init.init(machine, portLog, database, userName, passWord)
+        if ret is not None:
+            self.loginPrompt()
+        else:
+            #self.dialog.close()
+            #self.dialog = None
+            self.show()
