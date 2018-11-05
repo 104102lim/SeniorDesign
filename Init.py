@@ -29,17 +29,20 @@ class Init:
 
     @classmethod
     def __connect(cls, server, port, dbName, UID, PWD):
-        cursor = None # catch errors for incorrect login below
-        if port == "":
-            cnxn = pyodbc.connect(
-                "DRIVER={SQL Server}; SERVER=" + server + ";" +
-                " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-            cursor = cnxn.cursor()
-        else:
-             cnxn = pyodbc.connect(
-                "DRIVER={SQL Server}; SERVER=" + server + "; PORT=" + port + ";" +
-                " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-             cursor = cnxn.cursor()
+        cursor = None
+        try:
+            if port == "":
+                cnxn = pyodbc.connect(
+                    "DRIVER={SQL Server}; SERVER=" + server + ";" +
+                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
+                cursor = cnxn.cursor()
+            else:
+                 cnxn = pyodbc.connect(
+                    "DRIVER={SQL Server}; SERVER=" + server + "," + port + ";" +
+                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
+                 cursor = cnxn.cursor()
+        except Exception as e:
+            print(e)
         return cursor
 
     @classmethod

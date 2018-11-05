@@ -354,7 +354,7 @@ class applicationWindow(QtWidgets.QMainWindow):
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
 
-        if (True):
+        if (False):
             '''
             machine = "MSI\SQLEXPRESS"
             portLog = ""
