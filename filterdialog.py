@@ -11,7 +11,7 @@ class filterDialog(QtWidgets.QMainWindow):
         self.left = 500
         self.top = 50
         self.width = 800
-        self.height = 300
+        self.height = 400
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
@@ -79,6 +79,12 @@ class filterDialog(QtWidgets.QMainWindow):
         
         
         self.vLayout.addWidget(self.buttonsWidget[0])
+        self.left2 = 0
+        self.top2 = 0
+        self.width2 = 800
+        self.height2 = 50
+        self.vLayout.setGeometry(self,self.left2, self.top2, self.width2, self.height2)
+        #self.buttonsWidget[0].setParent(None)
             
     def addExpression(self):
         if(self.counter < 5):
