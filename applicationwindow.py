@@ -3,6 +3,8 @@ import csv
 import os
 import pandas as pd
 
+from time import sleep
+
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QFileDialog
@@ -368,7 +370,7 @@ class applicationWindow(QtWidgets.QMainWindow):
             passWord = "bushdid9/11"
         self.dialog.close()
         self.dialog = None
-        self.dialog = pgd.progressDialog(self);
+        self.dialog = pgd.progressDialog(self)
         self.dialog.show()
         Init.init(machine, portLog, database, userName, passWord)
         self.dialog.close()
