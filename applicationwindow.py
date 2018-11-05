@@ -3,9 +3,12 @@ import csv
 import os
 import pandas as pd
 
+from time import sleep
+
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QFileDialog
+from PyQt5.QtCore import QCoreApplication
 
 from Init import Init
 import DataAnalysis as da
@@ -368,12 +371,13 @@ class applicationWindow(QtWidgets.QMainWindow):
             passWord = "bushdid9/11"
         self.dialog.close()
         self.dialog = None
-        #self.dialog = pgd.progressDialog(self)
-        #self.dialog.show()
+        self.dialog = pgd.progressDialog(self)
+        self.dialog.show()
+        QCoreApplication.processEvents()
         ret = Init.init(machine, portLog, database, userName, passWord)
+        self.dialog.close()
+        self.dialog = None
         if ret is not None:
             self.loginPrompt()
         else:
-            #self.dialog.close()
-            #self.dialog = None
             self.show()

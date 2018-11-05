@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 import sys
 
 from PyQt5 import QtWidgets
+import progressdialog as pgd
 
 import applicationwindow as aw
 
