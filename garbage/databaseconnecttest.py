@@ -66,37 +66,34 @@ class loginDialog(QtWidgets.QMainWindow):
      
     def login(self):
         server = str(self.server.text())
-        portLog = str(self.port.text())
+        port = str(self.port.text())
         dbName = str(self.databaseName.text())
         UID = str(self.username.text())
         PWD = str(self.password.text())
-        instance = str(self.instance.text())
         try:
-            if portLog != '' and instance != '':
-                cnxn = pyodbc.connect(
-                    "DRIVER={SQL Server}; SERVER=" + server + "\\" + instance + "," + portLog + ";" +
-                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
-            elif portLog != '':
-                cnxn = pyodbc.connect(
-                    "DRIVER={SQL Server}; SERVER=" + server + "," + portLog + ";" +
-                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
-            elif instance != '':
-                cnxn = pyodbc.connect(
-                    "DRIVER={SQL Server}; SERVER=" + server + "\\" + instance + ";" +
-                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
-            else:
+            if port == '':
                 cnxn = pyodbc.connect(
                     "DRIVER={SQL Server}; SERVER=" + server + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-                cursor = cnxn.cursor()
-            print("Success")
+            else:
+                try:
+                    p = int(port)
+                except:
+                    p = port
+            if type(p) is int:
+                cnxn = pyodbc.connect(
+                    "DRIVER={SQL Server}; SERVER=" + server + "," + p + ";" +
+                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
+            elif type(p) is str:
+                cnxn = pyodbc.connect(
+                    "DRIVER={SQL Server}; SERVER=" + server + "\\" + p + ";" +
+                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
+            QtWidgets.QMessageBox.about(self, "Success!", """Success!""")
         except Exception as e:
-            print("Failure")
-            
-        
+            with open("LoginLog.txt", mode="w") as f:
+                f.write(str(e))
+            QtWidgets.QMessageBox.about(self, "Failure!", """Failure!""")
+        self.close()
 
 if __name__ == '__main__':
     qapp = 0

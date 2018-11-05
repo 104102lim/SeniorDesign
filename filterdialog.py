@@ -68,8 +68,8 @@ class filterDialog(QtWidgets.QMainWindow):
         for i in range(len(self.logic)):
             for l in logics:
                 self.logic[i].addItem(l)
-        addButton = QPushButton('+', self)
-        addButton.clicked.connect(self.addExpression)
+        self.addButton = QPushButton('+', self)
+        self.addButton.clicked.connect(self.addExpression)
         filterButton = QPushButton('Filter', self)
         filterButton.setToolTip('Use button to filter the feature based on the chosen logic')
         filterButton.clicked.connect(self.parent().filterData)
@@ -79,7 +79,7 @@ class filterDialog(QtWidgets.QMainWindow):
             self.buttonsWidgetLayout[i].addWidget(self.feature2[i])
             self.buttonsWidgetLayout[i].addWidget(self.logic[i])
             self.buttonsWidgetLayout[i].addWidget(self.threshold[i])
-            self.buttonsWidgetLayout[i].addWidget(addButton)
+            self.buttonsWidgetLayout[i].addWidget(self.addButton)
             self.buttonsWidgetLayout[i].addWidget(filterButton)
             self.vLayout.addWidget(self.buttonsWidget[i])
 
@@ -91,6 +91,8 @@ class filterDialog(QtWidgets.QMainWindow):
         #self.buttonsWidget[0].setParent(None)
             
     def addExpression(self):
+        if(self.counter == 4):
+            self.addButton.hide()
         if(self.counter < 5):
             self.counter += 1
             self.feature2[self.counter].show()
