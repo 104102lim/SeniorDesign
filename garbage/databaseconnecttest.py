@@ -73,27 +73,27 @@ class loginDialog(QtWidgets.QMainWindow):
      
     def login(self):
         server = str(self.server.text())
-        portLog = str(self.port.text())
+        port = str(self.port.text())
         dbName = str(self.databaseName.text())
         UID = str(self.username.text())
         PWD = str(self.password.text())
-        instance = str(self.instance.text())
         try:
-            if portLog != '' and instance != '':
-                cnxn = pyodbc.connect(
-                    "DRIVER={SQL Server}; SERVER=" + server + "\\" + instance + "," + portLog + ";" +
-                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-            elif portLog != '':
-                cnxn = pyodbc.connect(
-                    "DRIVER={SQL Server}; SERVER=" + server + "," + portLog + ";" +
-                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-            elif instance != '':
-                cnxn = pyodbc.connect(
-                    "DRIVER={SQL Server}; SERVER=" + server + "\\" + instance + ";" +
-                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
-            else:
+            if port == '':
                 cnxn = pyodbc.connect(
                     "DRIVER={SQL Server}; SERVER=" + server + ";" +
+                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
+            else:
+                try:
+                    p = int(port)
+                except:
+                    p = port
+            if type(p) is int:
+                cnxn = pyodbc.connect(
+                    "DRIVER={SQL Server}; SERVER=" + server + "," + p + ";" +
+                    " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
+            elif type(p) is str:
+                cnxn = pyodbc.connect(
+                    "DRIVER={SQL Server}; SERVER=" + server + "\\" + p + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
             QtWidgets.QMessageBox.about(self, "Success!", """Success!""")
         except Exception as e:
