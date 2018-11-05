@@ -353,7 +353,7 @@ class applicationWindow(QtWidgets.QMainWindow):
         database = str(self.dialog.databaseName.text())
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
-        if (True):
+        if (False):
             '''
             machine = "MSI\SQLEXPRESS"
             portLog = ""
@@ -368,9 +368,9 @@ class applicationWindow(QtWidgets.QMainWindow):
             passWord = "bushdid9/11"
         self.dialog.close()
         self.dialog = None
-        self.dialog = pgd.progressDialog(self)
-        self.dialog.show()
+        #self.dialog = pgd.progressDialog(self)
+        #self.dialog.show()
         Init.init(machine, portLog, database, userName, passWord)
-        self.dialog.close()
-        self.dialog = None
+        #self.dialog.close()
+        #self.dialog = None
         self.show()
