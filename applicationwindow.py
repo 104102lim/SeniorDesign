@@ -354,6 +354,7 @@ class applicationWindow(QtWidgets.QMainWindow):
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
         if (True):
+            '''
             machine = "MSI\SQLEXPRESS"
             portLog = ""
             database = "senior_design"
@@ -365,7 +366,6 @@ class applicationWindow(QtWidgets.QMainWindow):
             database = "BHBackupRestore"
             userName = "SQLDummy"
             passWord = "bushdid9/11"
-            '''
         self.dialog.close()
         self.dialog = None
         self.dialog = pgd.progressDialog(self);

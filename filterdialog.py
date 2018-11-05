@@ -43,19 +43,23 @@ class filterDialog(QtWidgets.QMainWindow):
             self.buttonsWidget.append(QWidget())
             self.buttonsWidgetLayout.append(QHBoxLayout(self.buttonsWidget[i]))
             self.threshold.append(QLineEdit(self))
-
+            self.logic.append(QComboBox(self))
             self.feature1.append(QComboBox(self))
             self.feature2.append(QComboBox(self))
-            if(i == 0):
+            if i == 0:
                 self.feature1[i].setInsertPolicy(QComboBox.NoInsert)
                 self.feature1[i].setEditable(True)
                 self.feature1[i].setCompleter(QCompleter(descriptions))
                 self.feature1[i].completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
+            else:
+                self.threshold[i].hide()
+                self.feature1[i].hide()
+                self.feature2[i].hide()
+                self.logic[i].hide()
             self.feature2[i].setInsertPolicy(QComboBox.NoInsert)
             self.feature2[i].setEditable(True)
             self.feature2[i].setCompleter(QCompleter(descriptions))
             self.feature2[i].completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
-            self.logic.append(QComboBox(self))
         operators = ["AND", "OR"]
         for i in range(1, len(self.threshold)):
             for p in operators:
@@ -69,31 +73,32 @@ class filterDialog(QtWidgets.QMainWindow):
         filterButton = QPushButton('Filter', self)
         filterButton.setToolTip('Use button to filter the feature based on the chosen logic')
         filterButton.clicked.connect(self.parent().filterData)
-        
-        self.buttonsWidgetLayout[0].addWidget(self.feature1[0])
-        self.buttonsWidgetLayout[0].addWidget(self.feature2[0])
-        self.buttonsWidgetLayout[0].addWidget(self.logic[0])
-        self.buttonsWidgetLayout[0].addWidget(self.threshold[0])
-        self.buttonsWidgetLayout[0].addWidget(addButton)
-        self.buttonsWidgetLayout[0].addWidget(filterButton)
-        
-        
-        self.vLayout.addWidget(self.buttonsWidget[0])
+
+        for i in range(6):
+            self.buttonsWidgetLayout[i].addWidget(self.feature1[i])
+            self.buttonsWidgetLayout[i].addWidget(self.feature2[i])
+            self.buttonsWidgetLayout[i].addWidget(self.logic[i])
+            self.buttonsWidgetLayout[i].addWidget(self.threshold[i])
+            self.buttonsWidgetLayout[i].addWidget(addButton)
+            self.buttonsWidgetLayout[i].addWidget(filterButton)
+            self.vLayout.addWidget(self.buttonsWidget[i])
+
         self.left2 = 0
         self.top2 = 0
         self.width2 = 800
         self.height2 = 50
-        self.vLayout.setGeometry(self,self.left2, self.top2, self.width2, self.height2)
+        #self.vLayout.setGeometry(self,self.left2, self.top2, self.width2, self.height2)
         #self.buttonsWidget[0].setParent(None)
             
     def addExpression(self):
         if(self.counter < 5):
-            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature1[self.counter + 1])
-            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature2[self.counter + 1])
-            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.logic[self.counter + 1])
-            self.buttonsWidgetLayout[self.counter + 1].addWidget(self.threshold[self.counter + 1])
-            self.vLayout.addWidget(self.buttonsWidget[self.counter + 1])
             self.counter += 1
-        else:
-            pass
-
+            self.feature2[self.counter].show()
+            self.feature1[self.counter].show()
+            self.logic[self.counter].show()
+            self.threshold[self.counter].show()
+            # self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature1[self.counter + 1])
+            # self.buttonsWidgetLayout[self.counter + 1].addWidget(self.feature2[self.counter + 1])
+            # self.buttonsWidgetLayout[self.counter + 1].addWidget(self.logic[self.counter + 1])
+            # self.buttonsWidgetLayout[self.counter + 1].addWidget(self.threshold[self.counter + 1])
+            # self.vLayout.addWidget(self.buttonsWidget[self.counter + 1])
