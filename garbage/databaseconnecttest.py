@@ -23,11 +23,11 @@ class loginDialog(QtWidgets.QMainWindow):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
         # input boxes and labels
-        label = QLabel('Machine Name/IP', self)
+        label = QLabel('Machine Name or IP', self)
         label.move(60, 60)
         label.resize(150, 30)
         self.server = QLineEdit(self)
-        self.server.setToolTip('Enter Machine Name/IP')
+        self.server.setToolTip('Enter Machine Name or IP')
         self.server.move(220, 60)
         self.server.resize(130, 30)
         label = QLabel('Port or Instance Name\n(Optional)', self)
