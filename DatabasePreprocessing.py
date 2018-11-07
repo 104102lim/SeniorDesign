@@ -63,4 +63,7 @@ def getData(features):
 
 # Call this to get a list valid feature descriptions
 def getDescriptions():
-    return Init.validDescriptions.copy()
+    ret = Init.validDescriptions.copy()
+    ret = [d.lower() for d in ret]
+    ret.sort()
+    return ret

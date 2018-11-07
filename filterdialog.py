@@ -31,8 +31,6 @@ class filterDialog(QtWidgets.QMainWindow):
         self.vLayout = QVBoxLayout(self.centralWidget)
 
         descriptions = getDescriptions()
-        descriptions = [d.lower() for d in descriptions]
-        descriptions.sort()
         self.buttonsWidget = []
         self.buttonsWidgetLayout = []
         self.threshold = []
