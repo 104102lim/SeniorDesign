@@ -30,15 +30,15 @@ class progressDialog(QMainWindow):
         self.label3.move(60, 120)
         self.label3.resize(70, 30)
 
-        self.label4 = QLabel('waiting', self)
+        self.label4 = QLabel('Waiting', self)
         self.label4.move(140, 20)
         self.label4.resize(50, 30)
 
-        self.label5 = QLabel('waiting', self)
+        self.label5 = QLabel('Waiting', self)
         self.label5.move(140, 70)
         self.label5.resize(50, 30)
 
-        self.label6 = QLabel('waiting', self)
+        self.label6 = QLabel('Waiting', self)
         self.label6.move(140, 120)
         self.label6.resize(50, 30)
 

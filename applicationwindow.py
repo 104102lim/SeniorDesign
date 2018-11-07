@@ -20,6 +20,7 @@ import logindialog as lid
 import plottingcanvas as ptc
 from DatabasePreprocessing import getDescriptions
 
+
 class applicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         self.dialog = None
@@ -189,13 +190,13 @@ class applicationWindow(QtWidgets.QMainWindow):
                 return
         if self.data is None:
             self.errorLabel.setText('Export Error: No data to export')
-            return  # return error code bc no data to save
+            return
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Export Data and Plot",
                                                   "", "CSV/PNG Files (*.csv *.png)")
         if fileName == '':
             self.errorLabel.setText('Export Error: No file name given')
-            return  # no file name given
+            return
         fileName, extension = os.path.splitext(fileName)
         self.data.to_csv(fileName + ".csv", index=False)
         if self.mode_linear or self.mode_poly:
@@ -207,13 +208,13 @@ class applicationWindow(QtWidgets.QMainWindow):
                 return
         if self.data is None:
             self.errorLabel.setText('Save Error: No data to save')
-            return  # return error code bc no data to save
+            return
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   "Save Case",
                                                   "", "Baker Hughes Files (*.bh)")
         if fileName == '':
             self.errorLabel.setText('Save Error: No file name given')
-            return  # no file name given
+            return
         output = self.data.copy()
         output.to_csv(fileName, index=False)
         file = open(fileName, 'a')
@@ -245,9 +246,6 @@ class applicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def filterData(self):
-        self.mode_linear = False
-        self.mode_poly = False
-        self.sc.clear_figure()
         threshs = []
         feat1s = []
         feat2s = []
@@ -280,14 +278,21 @@ class applicationWindow(QtWidgets.QMainWindow):
                     self.dialog.close()
                     self.dialog = None
                     return
-        filterResult = da.filtering(feat1s[0], feat2s, logics, threshs,
+        try:
+            filterResult = da.filtering(feat1s[0], feat2s, logics, threshs,
                                     [feat1s[i] for i in range(1, numfilters)])
-        if (type(filterResult) == str):
+        except:
+            self.errorLabel.setText("An error occurred while loading or analyzing the data.")
+            self.dialog.close()
+            self.dialog = None
+        if type(filterResult) == str:
             self.errorLabel.setText(filterResult)
             self.dialog.close()
             self.dialog = None
-
         else:
+            self.mode_linear = False
+            self.mode_poly = False
+            self.sc.clear_figure()
             self.errorLabel.setText("")
             self.data = filterResult[1]
             self.updateDataDisplay()
@@ -302,8 +307,6 @@ class applicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def plotLinearRegression(self):
-        self.mode_linear = True
-        self.mode_poly = False
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
         descriptions = getDescriptions()
@@ -312,19 +315,22 @@ class applicationWindow(QtWidgets.QMainWindow):
             self.dialog.close()
             self.dialog = None
             return
-        self.coefs = da.linearRegression(x, y)
+        try:
+            self.coefs = da.linearRegression(x, y)
+        except:
+            self.errorLabel.setText("An error occurred while loading or analyzing the data.")
+            self.dialog.close()
+            self.dialog = None
         self.checkyint = self.dialog.yIntercept.isChecked()
         self.checkslope = self.dialog.slopeCheck.isChecked()
         self.checkrsquare = self.dialog.rSquared.isChecked()
         if (type(self.coefs) == str):
             self.errorLabel.setText(self.coefs)
-        self.coefs = da.linearRegression(x, y)
-        if (type(self.coefs) == str):
-            self.errorLabel.setText(self.coefs)
             self.dialog.close()
             self.dialog = None
-
         else:
+            self.mode_linear = True
+            self.mode_poly = False
             self.data = self.coefs[0]
             self.errorLabel.setText("")
             self.sc.update_figure(self.coefs, x, y, Linear=True,
@@ -343,8 +349,6 @@ class applicationWindow(QtWidgets.QMainWindow):
         self.dialog.show()
 
     def plotPolyRegression(self):
-        self.mode_linear = False
-        self.mode_poly = True
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
         order = int(self.dialog.order.currentText())
@@ -354,12 +358,19 @@ class applicationWindow(QtWidgets.QMainWindow):
             self.dialog.close()
             self.dialog = None
             return
-        self.coefs = da.polynomialRegression(x, y, order)
+        try:
+            self.coefs = da.polynomialRegression(x, y, order)
+        except:
+            self.errorLabel.setText("An error occurred while loading or analyzing the data.")
+            self.dialog.close()
+            self.dialog = None
         if (type(self.coefs) == str):
             self.errorLabel.setText(self.coefs)
             self.dialog.close()
             self.dialog = None
         else:
+            self.mode_linear = False
+            self.mode_poly = True
             self.data = self.coefs[0]
             self.errorLabel.setText("")
             self.sc.update_figure(self.coefs, x, y, Poly=True)
@@ -404,24 +415,20 @@ class applicationWindow(QtWidgets.QMainWindow):
         QCoreApplication.processEvents()
         ret = Init.connect(machine, portLog, database, userName, passWord)
         if ret is not None:
-            # show connect failed
-            self.dialog.updateConnectFail
+            self.dialog.updateConnectFail()
             QCoreApplication.processEvents()
-            sleep(2)
+            sleep(4)
             self.dialog.close()
             self.dialog = None
             self.loginPrompt()
         else:
-            #show connect completed
-            self.dialog.updateConnect
+            self.dialog.updateConnect()
             QCoreApplication.processEvents()
             Init.gettableinfo()
-            #show get table info completed
-            self.dialog.updateTable
+            self.dialog.updateTable()
             QCoreApplication.processEvents()
             Init.maketrees()
-            #show trees completed
-            self.dialog.updateTree
+            self.dialog.updateTree()
             QCoreApplication.processEvents()
             sleep(2)
             self.dialog.close()

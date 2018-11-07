@@ -110,7 +110,7 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
             logics[i] != "=" and logics[i] != "!=" and logics[i] != "Contains" and logics[i] != "Does Not Contain"):
             return ("logic value(s) error\n")
     for i in range(0, len(thresholds)):
-        if (type(thresholds[i]) != int and type(thresholds[i]) != float and type(thresholds[i]) != complex and type(thresholds[i]) != str):
+        if (type(thresholds[i]) != int and type(thresholds[i]) != float and type(thresholds[i]) != str):
             return ("threshold(s) should be int, float, or str type\n")
     for i in range(0, len(operators)):
         if (operators[i] != "AND" and operators[i] != "OR"):
@@ -232,89 +232,6 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     print("------------------ Filtering Done ------------------\n")
     return output
 
-
-
-def filtering2(feature1, feature2, logic, threshold):
-   print("------------------ Filtering ------------------")
-   # input type checking
-   if (type(feature1) != str or type(feature2) != str):
-       return ("feature(s) should be str type\n")
-   if (logic != ">" and logic != "<" and logic != ">=" and logic != "<=" and
-       logic != "=" and logic != "!=" and logic != "Contains" and logic != "Does Not Contain"):
-       return ("logic value error\n")
-   if (type(threshold) != int and type(threshold) != float and type(threshold) != complex and type(threshold) != str):
-       return ("threshold should be int, float, or str type\n")
-
-   # retrieve dataset
-   dataset = getData([feature1, feature2])
-   
-   # check whether we analyze connected features
-   if type(dataset) == str: # error occuring
-      return dataset        # output string information
-
-   # check whether threshold and second feature are compatible
-   checkError = __thresholdAndFeatureErrorCheckingForFiltering(feature2, dataset[feature2], threshold)
-   if checkError != None:
-       return checkError
-
-   # f1.size & f2.size should be same
-   # get data from feature2
-   f1 = dataset[feature1]
-   f2 = dataset[feature2]
-   new_f1 = []
-
-   # do filtering for feature2
-   # ex) (type(f2[i]) == int or type(f2[i]) == long) and (type(threshold) == int or type(threshold) == float)
-   if logic == '>':
-       for i in range(0, len(f1)):
-           if (f2[i] > threshold):
-               new_f1.append(f1[i])
-   elif logic == '<':
-       for i in range(0, len(f1)):
-           if (f2[i] < threshold):
-               new_f1.append(f1[i])
-   elif logic == '>=':
-       for i in range(0, len(f1)):
-           if (f2[i] >= threshold):
-               new_f1.append(f1[i])
-   elif logic == '<=':
-       for i in range(0, len(f1)):
-           if (f2[i] <= threshold):
-               new_f1.append(f1[i])
-   elif logic == '=':
-       for i in range(0, len(f1)):
-           if (type(f2[i]) == str and type(threshold) == str and f2[i].lower() == threshold.lower()):
-               new_f1.append(f1[i])
-           elif (f2[i] == threshold):
-               new_f1.append(f1[i])
-   elif logic == '!=':
-       for i in range(0, len(f1)):
-           if (type(f2[i]) == str and type(threshold) == str and f2[i].lower() != threshold.lower()):
-               new_f1.append(f1[i])
-           elif (f2[i] != threshold):
-               new_f1.append(f1[i])
-   elif logic == 'Contains':
-       for i in range(0, len(f1)):
-           if (type(f2[i]) == str and type(threshold) == str and threshold.lower() in f2[i].lower()):
-               new_f1.append(f1[i])
-   elif logic == 'Does Not Contain':
-       for i in range(0, len(f1)):
-           if (type(f2[i]) == str and type(threshold) == str and threshold.lower() not in f2[i].lower()):
-               new_f1.append(f1[i])
-
-   # create new dataframe for output
-   f1 = pd.DataFrame(data={feature1 : dataset[feature1]})
-   new_f1 = {feature1 : new_f1}
-   new_f1 = pd.DataFrame(data=new_f1)
-   output = [f1, new_f1]
-   print("First feature:")
-   print(output[0])
-   print("Filtered first feature:")
-   print(output[1])
-   print("------------------ Filtering Done ------------------\n")
-   return output
-
-
 #-----------------------------------------------------------------------------------------------
 # Function: polynomialRegression
 # Public function to do polynomial regression given existing two feature string inputs
@@ -356,17 +273,13 @@ def polynomialRegression(feature1, feature2, order):
 def __featureErrorCheckingForRegression(dataset):
     if len(dataset.columns) == 1:
         return ("Same features cannot be modeled.\n")
-    f1 = dataset[dataset.columns[0]].values
-    f2 = dataset[dataset.columns[1]].values
+    f1 = dataset[dataset.columns[0]].values.tolist()
+    f2 = dataset[dataset.columns[1]].values.tolist()
     for i in range(0, len(f1)):
-        if type(f1[i]) == str:
-            return (dataset.columns[0] + " has non-numerical data type.\n")
-        elif type(f1[i].item()) != int and type(f1[i].item()) != float and type(f1[i].item()) != complex:
+        if type(f1[i]) != int and type(f1[i]) != float:
             return (dataset.columns[0] + " has non-numerical data type.\n")
     for i in range(0, len(f2)):
-        if type(f2[i]) == str:
-            return (dataset.columns[1] + " has non-numerical data type.\n")
-        elif type(f2[i].item()) != int and type(f2[i].item()) != float and type(f2[i].item()) != complex:
+        if type(f2[i]) != int and type(f2[i]) != float:
             return (dataset.columns[1] + " has non-numerical data type.\n")
     return None
 
@@ -374,25 +287,13 @@ def __featureErrorCheckingForRegression(dataset):
 # second feature and threshold should have same data type
 # for example, str & str or numeric & numeric
 def __thresholdAndFeatureErrorCheckingForFiltering(f2_name, f2, threshold):
-    f2 = f2.values
+    f2 = f2.values.tolist()
     if type(threshold) == str: # str compatible check
         for i in range(0, len(f2)):
             if type(f2[i]) != str:
                 return ("Threshold " + threshold + " is string, but some of data in " + f2_name + " are not string.\n")
     else: # numeric compatible check
         for i in range(0, len(f2)):
-            if type(f2[i].item()) != int and type(f2[i].item()) != float and type(f2[i].item()) != complex:
+            if type(f2[i]) != int and type(f2[i]) != float:
                 return ("Threshold " + threshold + " is numeric, but some of data in " + f2_name + " are not numeric.\n")
     return None
-
-# private function for testing public methods
-def __testInialization__(self):
-    data = [[3,'ha',0,5,4], [23,'he',8,9,10], [2,'hi',6,7,1], [0,'ho',2,5,-2],
-            [5,'hu',13,14,15], [0,'ohio',4,3,5], [8,'hello',18,19,20], [-2,'hike',-3,-8,9],
-            [21,'hamony',23,24,25], [-9,'hihihio',-13,-14,-15]]
-    cols = ["Feature1","Feature2","Feature3","Feature4","Feature5"]
-
-    ds = pd.DataFrame(data, columns=cols, dtype=float)  # test dataframe
-    dataset = ds
-    print (dataset)
-    print("Test Dataset Initialized")

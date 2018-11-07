@@ -89,6 +89,7 @@ class Init:
         cls.ti[1] = cls.__getTableInfo(cls.__GETPRIMARYKEYSQLCODE)
         cls.ti[2] = cls.__getTableInfo(cls.__GETFOREIGNKEYSQLCODE)
         cls.validDescriptions = cls.__getValidDescriptions()
+        cls.validDescriptions.sort()
 
     @classmethod
     def maketrees(cls):
@@ -96,20 +97,3 @@ class Init:
         cls.trees = []
         for r in roots:
             cls.trees.append(Tree(r, cls.ti))
-
-    @classmethod
-    def init(cls, server, port, dbName, UID, PWD):
-        cls.cursor = cls.__connect(server, port, dbName, UID, PWD)
-        if cls.cursor == None:
-            return "FAIL"
-        cls.ti = {}
-        cls.ti[0] = getTableNames()
-        cls.ti[1] = cls.__getTableInfo(cls.__GETPRIMARYKEYSQLCODE)
-        cls.ti[2] = cls.__getTableInfo(cls.__GETFOREIGNKEYSQLCODE)
-        cls.validDescriptions = cls.__getValidDescriptions()
-        roots = AF.getRootParents(cls.ti)
-        cls.trees = []
-        for r in roots:
-            cls.trees.append(Tree(r, cls.ti))
-        return None
-
