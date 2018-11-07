@@ -7,11 +7,12 @@ from DatabasePreprocessing import getDescriptions
 class polyRegressionDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(polyRegressionDialog, self).__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.title = 'Polynomial Regression'
-        self.left = 500
+        self.left = 50
         self.top = 100
-        self.width = 600
-        self.height = 100
+        self.width = 1200
+        self.height = 120
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
@@ -26,17 +27,17 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
 
         self.featureX = QComboBox(self)
         self.featureX.setToolTip('Select feature for X axis')
-        self.featureX.move(50, 20)
-        self.featureX.resize(100, 20)
+        self.featureX.move(15, 14)
+        self.featureX.resize(840, 20)
         label = QLabel('X-Axis Feature', self)
-        label.move(50, 30)
+        label.move(19, 16)
         label.resize(100, 50)
         self.featureY = QComboBox(self)
         self.featureY.setToolTip('Select feature for Y axis')
-        self.featureY.move(200, 20)
-        self.featureY.resize(100, 20)
+        self.featureY.move(15, 60)
+        self.featureY.resize(840, 20)
         label = QLabel('Y-Axis Feature', self)
-        label.move(200, 30)
+        label.move(19, 62)
         label.resize(100, 50)
         descriptions = getDescriptions()
         self.featureX.setInsertPolicy(QComboBox.NoInsert)
@@ -49,10 +50,11 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         self.featureY.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
         self.order = QComboBox(self)
         self.order.setToolTip('Select order of polynomial fit')
-        self.order.move(350, 20)
-        label = QLabel('Order of Polynomial', self)
-        label.move(350, 50)
-        label.resize(150, 50)
+        self.order.move(915, 14)
+        self.order.resize(50,23)
+        label = QLabel(' Order of\nPolynomial', self)
+        label.move(906, 17)
+        label.resize(120, 75)
         for i in range(1, 10):
             self.order.addItem(str(i))
         descriptions = getDescriptions()
