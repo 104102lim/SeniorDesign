@@ -69,5 +69,5 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot poly regression')
         plotButton.clicked.connect(self.parent().plotPolyRegression)
-        plotButton.move(500, 20)
-        plotButton.resize(50, 50)
+         plotButton.move(1020, 18)
+        plotButton.resize(90, 90)
