@@ -405,6 +405,7 @@ class applicationWindow(QtWidgets.QMainWindow):
         ret = Init.connect(machine, portLog, database, userName, passWord)
         if ret is not None:
             # show failed
+            self.dialog.updateConnectFail
             QCoreApplication.processEvents()
             sleep(2)
             self.dialog.close()
@@ -412,12 +413,15 @@ class applicationWindow(QtWidgets.QMainWindow):
             self.loginPrompt()
         else:
             #show connect completed
+            self.dialog.updateConnect
             QCoreApplication.processEvents()
             Init.gettableinfo()
             #show get table info completed
+            self.dialog.updateTable
             QCoreApplication.processEvents()
             Init.maketrees()
             #show trees completed
+            self.dialog.updateTree
             QCoreApplication.processEvents()
             sleep(2)
             self.dialog.close()
