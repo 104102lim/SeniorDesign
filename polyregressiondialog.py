@@ -7,7 +7,6 @@ from DatabasePreprocessing import getDescriptions
 class polyRegressionDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(polyRegressionDialog, self).__init__(parent)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.title = 'Polynomial Regression'
         self.left = 50
         self.top = 100
@@ -48,26 +47,17 @@ class polyRegressionDialog(QtWidgets.QMainWindow):
         self.featureY.setEditable(True)
         self.featureY.setCompleter(QCompleter(descriptions))
         self.featureY.completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
+        label = QLabel(' Order of\nPolynomial', self)
+        label.move(906, 17)
+        label.resize(120, 75)
         self.order = QComboBox(self)
         self.order.setToolTip('Select order of polynomial fit')
         self.order.move(915, 14)
         self.order.resize(50,23)
-        label = QLabel(' Order of\nPolynomial', self)
-        label.move(906, 17)
-        label.resize(120, 75)
         for i in range(1, 10):
             self.order.addItem(str(i))
-        descriptions = getDescriptions()
-        descriptions.sort()
-        for d in descriptions:
-            if (d != "bottom depth"
-                    and d != "top depth"
-                    and d != "Cost per unit"
-                    and d != "Name of mud engineer"): continue
-            self.featureY.addItem(d)
-            self.featureX.addItem(d)
         plotButton = QPushButton('Plot', self)
         plotButton.setToolTip('Use button to plot poly regression')
         plotButton.clicked.connect(self.parent().plotPolyRegression)
-         plotButton.move(1020, 18)
+        plotButton.move(1020, 18)
         plotButton.resize(90, 90)
