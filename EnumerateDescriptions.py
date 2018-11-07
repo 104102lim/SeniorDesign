@@ -40,4 +40,6 @@ def getValidNamesFrame(cursor, tableNames):
         frame = frame.drop(d)
     frame = frame.reset_index()
     frame = frame.drop('index', axis=1)
+    for i in range(len(frame.index)):
+        frame["feat_description"][i] = frame["feat_description"][i].lower()
     return frame
