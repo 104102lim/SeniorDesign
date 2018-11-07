@@ -39,8 +39,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         label.move(200, 30)
         label.resize(100, 50)
         descriptions = getDescriptions()
-        descriptions = [d.lower() for d in descriptions]
-        descriptions.sort()
         self.featureX.setInsertPolicy(QComboBox.NoInsert)
         self.featureX.setEditable(True)
         self.featureX.setCompleter(QCompleter(descriptions))

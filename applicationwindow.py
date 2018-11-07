@@ -18,6 +18,7 @@ import linearregressiondialog as lrd
 import polyregressiondialog as prd
 import logindialog as lid
 import plottingcanvas as ptc
+from DatabasePreprocessing import getDescriptions
 
 class applicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -74,7 +75,7 @@ class applicationWindow(QtWidgets.QMainWindow):
                 self.table.setItem(i, j, QTableWidgetItem(str(self.df.iloc[i, j])))
 
         self.main_widget = QtWidgets.QWidget(self)
-        self.errorLabel = QLabel('NO ERROR', self)
+        self.errorLabel = QLabel('', self)
 
         # Canvas Setup
         self.layout = QtWidgets.QVBoxLayout(self.main_widget)
@@ -265,6 +266,20 @@ class applicationWindow(QtWidgets.QMainWindow):
             feat1s[i] = str(feat1s[i])
             feat2s[i] = str(feat2s[i])
             logics[i] = str(logics[i])
+        descriptions = getDescriptions()
+        for i in range(numfilters):
+            if (feat2s[i] not in descriptions) \
+                    or ((feat1s[i] not in descriptions) and (i == 0)):
+                self.errorLabel.setText("One or more of the feature names were invalid.")
+                self.dialog.close()
+                self.dialog = None
+                return
+            if type(threshs[i]) is str:
+                if threshs[i] == "":
+                    self.errorLabel.setText("One or more threshold value was empty")
+                    self.dialog.close()
+                    self.dialog = None
+                    return
         filterResult = da.filtering(feat1s[0], feat2s, logics, threshs,
                                     [feat1s[i] for i in range(1, numfilters)])
         if (type(filterResult) == str):
@@ -291,6 +306,12 @@ class applicationWindow(QtWidgets.QMainWindow):
         self.mode_poly = False
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
+        descriptions = getDescriptions()
+        if (x not in descriptions) or (y not in descriptions):
+            self.errorLabel.setText("One or more feature names were invalid")
+            self.dialog.close()
+            self.dialog = None
+            return
         self.coefs = da.linearRegression(x, y)
         self.checkyint = self.dialog.yIntercept.isChecked()
         self.checkslope = self.dialog.slopeCheck.isChecked()
@@ -327,6 +348,12 @@ class applicationWindow(QtWidgets.QMainWindow):
         x = str(self.dialog.featureX.currentText())
         y = str(self.dialog.featureY.currentText())
         order = int(self.dialog.order.currentText())
+        descriptions = getDescriptions()
+        if (x not in descriptions) or (y not in descriptions):
+            self.errorLabel.setText("One or more feature names were invalid")
+            self.dialog.close()
+            self.dialog = None
+            return
         self.coefs = da.polynomialRegression(x, y, order)
         if (type(self.coefs) == str):
             self.errorLabel.setText(self.coefs)
@@ -356,7 +383,7 @@ class applicationWindow(QtWidgets.QMainWindow):
         database = str(self.dialog.databaseName.text())
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
-        if (False):
+        if (True):
             '''
             machine = "MSI\SQLEXPRESS"
             portLog = ""
@@ -364,11 +391,11 @@ class applicationWindow(QtWidgets.QMainWindow):
             userName = "SQLBH"
             passWord = "mudtable"
             '''
-            machine = "MYPC\SQLEXPRESS"
-            portLog = ""
+            machine = "MYPC"
+            portLog = "SQLEXPRESS"
             database = "BHBackupRestore"
             userName = "SQLDummy"
-            passWord = "bushdid9/11"
+            passWord = "sqlpass"
         self.dialog.close()
         self.dialog = None
 
@@ -377,7 +404,8 @@ class applicationWindow(QtWidgets.QMainWindow):
         QCoreApplication.processEvents()
         ret = Init.connect(machine, portLog, database, userName, passWord)
         if ret is not None:
-            # show failed
+            # show connect failed
+            self.dialog.updateConnectFail
             QCoreApplication.processEvents()
             sleep(2)
             self.dialog.close()
@@ -385,12 +413,15 @@ class applicationWindow(QtWidgets.QMainWindow):
             self.loginPrompt()
         else:
             #show connect completed
+            self.dialog.updateConnect
             QCoreApplication.processEvents()
             Init.gettableinfo()
             #show get table info completed
+            self.dialog.updateTable
             QCoreApplication.processEvents()
             Init.maketrees()
             #show trees completed
+            self.dialog.updateTree
             QCoreApplication.processEvents()
             sleep(2)
             self.dialog.close()
