@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QComboBox, QLineEdit, QPushButton
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QCompleter
 from DatabasePreprocessing import getDescriptions
 
+
 class filterDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(filterDialog, self).__init__(parent)

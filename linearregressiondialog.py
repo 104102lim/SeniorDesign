@@ -4,10 +4,10 @@ from PyQt5.QtWidgets import QComboBox, QLabel, QPushButton, QCheckBox, QComplete
 
 from DatabasePreprocessing import getDescriptions
 
+
 class linearRegressionDialog(QtWidgets.QMainWindow):
-       def __init__(self):
-        QtWidgets.QMainWindow.__init__(self)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+       def __init__(self, parent=None):
+        super(linearRegressionDialog, self).__init__(parent)
         self.title = 'Linear Regression'
         self.left = 50
         self.top = 100
@@ -40,8 +40,6 @@ class linearRegressionDialog(QtWidgets.QMainWindow):
         label.move(20, 62)
         label.resize(100, 50)
         descriptions = getDescriptions()
-        descriptions = [d.lower() for d in descriptions]
-        descriptions.sort()
         self.featureX.setInsertPolicy(QComboBox.NoInsert)
         self.featureX.setEditable(True)
         self.featureX.setCompleter(QCompleter(descriptions))
