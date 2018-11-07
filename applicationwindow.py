@@ -404,7 +404,7 @@ class applicationWindow(QtWidgets.QMainWindow):
         QCoreApplication.processEvents()
         ret = Init.connect(machine, portLog, database, userName, passWord)
         if ret is not None:
-            # show failed
+            # show connect failed
             QCoreApplication.processEvents()
             sleep(2)
             self.dialog.close()
