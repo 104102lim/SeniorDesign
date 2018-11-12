@@ -382,7 +382,16 @@ class applicationWindow(QtWidgets.QMainWindow):
             self.dialog = None
 
     def about(self):
-        QtWidgets.QMessageBox.about(self, "About", """Senior Design GUI prototype""")
+        QtWidgets.QMessageBox.about(self, "About", "The Baker Hughes Data Analysis Toolkit " +
+                                    "was developed by University of Texas students Paul Heath, " +
+                                    "Sungho Lim, Eric Ramos, Xianxing Liu, and Guiseppe Gallardo.\n\nThis " +
+                                    "application allows the user to run linear and polynomial regression on " +
+                                    "selected datasets. Linear regression contains the options to compute the Y-intercept, " +
+                                    "R^2, and slope of the selected data. Polynomial regression allows the user the option " +
+                                    "to increase or decrease the order of the analysis equation to obtain the best fit of " +
+                                    "the selected data. Users can filter data by applying constraints to " +
+                                    "datasets for closer inspection. Saving, loading, and exporting files " +
+                                    "is supported for the benefit of the user.")
 
     def loginPrompt(self):
         if self.dialog is not None:
