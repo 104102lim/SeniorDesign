@@ -47,9 +47,9 @@ class filterDialog(QtWidgets.QMainWindow):
             self.feature2[i].resize(840, 20)
             self.logic.append(QComboBox(self))
             self.logic[i].move(890, (i*120)+100)
-            self.logic[i].resize(115, 30)
+            self.logic[i].resize(130, 30)
             self.threshold.append(QLineEdit(self))
-            self.threshold[i].move(1025, (i*120)+100)
+            self.threshold[i].move(1035, (i*120)+100)
             self.threshold[i].resize(125,30)
             if i == 0:
                 self.feature1[i].move(20, (i*80)+40)
