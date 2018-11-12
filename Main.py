@@ -16,6 +16,6 @@ if __name__ == '__main__':
     qapp = 0
     qApp = QtWidgets.QApplication(sys.argv)
     AW = aw.applicationWindow()
-    AW.setWindowTitle("Analysis Toolkit Prototype")
+    AW.setWindowTitle("Data Analysis Toolkit")
     AW.loginPrompt()
     sys.exit(qApp.exec_())

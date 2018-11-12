@@ -38,7 +38,7 @@ def getData(features):
             tree = tr
             break
     if tree == None:
-        return "Analysis is impossible - data is not related"
+        return "Analysis is impossible because the features are not related."
 
     # generate SQL to retrieve features from database
     SQL = tree.writeSQL(Init.ti, tables)

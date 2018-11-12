@@ -9,10 +9,10 @@ class filterDialog(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(filterDialog, self).__init__(parent)
         self.title = 'Filter Data'
-        self.left = 500
+        self.left = 200
         self.top = 50
-        self.width = 1300
-        self.height = 500
+        self.width = 1450
+        self.height = 600
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.size())
@@ -32,26 +32,27 @@ class filterDialog(QtWidgets.QMainWindow):
         self.feature2 = []
         self.logic = []
         self.addButton = QPushButton('+', self)
-        self.addButton.move(1100, 80)
+        self.addButton.move(1175, 100)
         self.addButton.clicked.connect(self.addExpression)
         self.filterButton = QPushButton('Filter', self)
-        self.filterButton.move(1200, 80)
+        self.filterButton.move(1300, 100)
         
         for i in range(6):
             self.feature1.append(QComboBox(self))
-            self.feature1[i].move(20, (i*60)+60)
+            self.feature1[i].move(20, (i*80)+60)
             self.feature1[i].resize(840, 20)
             self.feature2.append(QComboBox(self))
-            self.feature2[i].move(20, (i*60)+80)
+            self.feature2[i].move(20, (i*80)+100)
             self.feature2[i].resize(840, 20)
             self.logic.append(QComboBox(self))
-            self.logic[i].move(900, (i*60)+80)
+            self.logic[i].move(900, (i*80)+100)
             self.threshold.append(QLineEdit(self))
-            self.threshold[i].move(1000, (i*60)+80)
+            self.threshold[i].move(1025, (i*80)+100)
+            self.threshold[i].resize(125,30)
             if i == 0:
-                self.feature1[i].move(20, (i*40)+40)
+                self.feature1[i].move(20, (i*80)+40)
                 self.feature1[i].resize(840, 20)
-                self.feature2[i].move(20, (i*40)+80)
+                self.feature2[i].move(20, (i*80)+100)
                 self.feature2[i].resize(840, 20)
                 
                 self.feature1[i].setInsertPolicy(QComboBox.NoInsert)
@@ -59,7 +60,7 @@ class filterDialog(QtWidgets.QMainWindow):
                 self.feature1[i].setCompleter(QCompleter(descriptions))
                 self.feature1[i].completer().setCompletionMode(QCompleter.UnfilteredPopupCompletion)
                 self.label = QLabel('WHERE', self)
-                self.label.move(400, 55)
+                self.label.move(400, 60)
             else:
                 self.threshold[i].hide()
                 self.feature1[i].hide()
@@ -80,12 +81,16 @@ class filterDialog(QtWidgets.QMainWindow):
         
     def addExpression(self):
         if(self.counter == 4):
+            #self.addButton.move(80, 2000)
             self.addButton.hide()
+            #self.filterButton.move(800,(60*self.counter) + 80)
+            #self.filterButton.resize(200,50)
         if(self.counter < 5):
             self.counter += 1
-            self.filterButton.move(1200, (60*self.counter) + 80)
-            self.addButton.move(1100, (60*self.counter) + 80)
+            self.filterButton.move(1300, (80*self.counter) + 100)
+            self.addButton.move(1175, (80*self.counter) + 100)
             self.feature2[self.counter].show()
             self.feature1[self.counter].show()
             self.logic[self.counter].show()
             self.threshold[self.counter].show()
+        
