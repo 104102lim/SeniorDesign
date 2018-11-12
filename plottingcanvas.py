@@ -9,6 +9,7 @@ class plottingCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = self.fig.add_subplot(111)
+        self.axes.grid()
         FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
         FigureCanvas.setSizePolicy(self,
@@ -18,6 +19,7 @@ class plottingCanvas(FigureCanvas):
 
     def clear_figure(self):
         self.axes.cla()
+        self.axes.grid()
         self.draw()
 
     def update_figure(self, data, Xlabel, Ylabel, Linear=False, Poly=False, yint=False, slope=False, rsquare=False):
@@ -32,6 +34,7 @@ class plottingCanvas(FigureCanvas):
         xmin = xmin - plus
         xmax = xmax + plus
         interval = (xmax - xmin) / 1000
+        interval += 0.0000001
         X = np.arange(xmin, xmax, interval)
 
         if (Linear):
@@ -54,11 +57,12 @@ class plottingCanvas(FigureCanvas):
                 txt = txt + "\n" + rsquareTxt + str(data[3])
 
             self.axes.cla()
+            self.axes.grid()
             self.axes.scatter(sX, sY, color='green')
             self.axes.plot(X, Y, color='red')
             self.axes.set_xlabel(xlabel=Xlabel)
             self.axes.set_ylabel(ylabel=Ylabel)
-            self.axes.set_title("Linear Regression: " + Ylabel + " vs. " + Xlabel)
+            self.axes.set_title("Linear Regression: " + Xlabel + " vs. " + Ylabel)
             self.axes.legend(loc='best', title=txt)
 
         if (Poly):
@@ -68,11 +72,12 @@ class plottingCanvas(FigureCanvas):
 
             txt = "Order: " + str(len(data[1][0]) - 1)
             self.axes.cla()
+            self.axes.grid()
             self.axes.scatter(sX, sY, color='green')
             self.axes.plot(X, Y, color='red')
             self.axes.set_xlabel(xlabel=Xlabel)
             self.axes.set_ylabel(ylabel=Ylabel)
-            self.axes.set_title("Polynomial Regression: " + Ylabel + " vs. " + Xlabel)
+            self.axes.set_title("Polynomial Regression: " + Xlabel + " vs. " + Ylabel)
             self.axes.legend(loc='best', title=txt)
 
         self.draw()

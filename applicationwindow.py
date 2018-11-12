@@ -77,6 +77,9 @@ class applicationWindow(QtWidgets.QMainWindow):
 
         self.main_widget = QtWidgets.QWidget(self)
         self.errorLabel = QLabel('', self)
+        font = self.errorLabel.font()
+        font.setPointSize(12)
+        self.errorLabel.setFont(font)
 
         # Canvas Setup
         self.layout = QtWidgets.QVBoxLayout(self.main_widget)
