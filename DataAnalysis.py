@@ -28,9 +28,6 @@ from DatabasePreprocessing import getData, getDescriptions
 #-----------------------------------------------------------------------------------------------
 def linearRegression(feature1, feature2):
     print("------------------ Linear Regression ------------------")
-    # input type checking
-    if (type(feature1) != str or type(feature2) != str):
-        return ("feature(s) should be str type\n")
     print("\n" + feature1 + " vs. " + feature2)
 
     # retrieve dataset
@@ -91,30 +88,13 @@ def linearRegression(feature1, feature2):
 #-----------------------------------------------------------------------------------------------
 def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     print("------------------ Filtering ------------------")
-    # input type checking
-    if (type(targetFeature) != str):
-        return ("Target feature should be str type\n")
-    for i in range(0, len(comparisonFeatures)):
-        if (type(comparisonFeatures[i]) != str):
-            return ("Comparison feature(s) should be str type\n")
         
     if len(comparisonFeatures) != len(logics):
-        return ("Number of comparison features and logics should be same\n")
+        return ("Number of comparison features and logical operators should be same.")
     if len(comparisonFeatures) != len(thresholds):
-        return ("Number of comparison features and thresholds should be same\n")
+        return ("Number of comparison features and thresholds should be same.")
     if len(comparisonFeatures) != (len(operators) + 1):
-        return ("Number of operators should be one less than number of comparison features\n")
-    
-    for i in range(0, len(logics)):
-        if (logics[i] != ">" and logics[i] != "<" and logics[i] != ">=" and logics[i] != "<=" and
-            logics[i] != "=" and logics[i] != "!=" and logics[i] != "Contains" and logics[i] != "Does Not Contain"):
-            return ("logic value(s) error\n")
-    for i in range(0, len(thresholds)):
-        if (type(thresholds[i]) != int and type(thresholds[i]) != float and type(thresholds[i]) != str):
-            return ("threshold(s) should be int, float, or str type\n")
-    for i in range(0, len(operators)):
-        if (operators[i] != "AND" and operators[i] != "OR"):
-            return ("operator(s) should be 'AND' or 'OR'\n")
+        return ("Number of operators should be one less than number of comparison features.")
     
     # get length
     length = len(comparisonFeatures)
@@ -122,7 +102,7 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     # get dataset
     allFeatureNames = []
     allFeatureNames.append(targetFeature)
-    for i in range (0, length):
+    for i in range(0, length):
         allFeatureNames.append(comparisonFeatures[i])
     dataset = getData(allFeatureNames)
     
@@ -240,9 +220,6 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
 #           y-intercept, r^2 (?)
 #-----------------------------------------------------------------------------------------------
 def polynomialRegression(feature1, feature2, order):
-    # input type checking
-    if (type(feature1) != str or type(feature2) != str):
-        return ("feature(s) should be str type\n")
     print("\n" + feature1 + " vs. " + feature2)
 
     dataset = getData([feature1, feature2])
@@ -272,15 +249,15 @@ def polynomialRegression(feature1, feature2, order):
 # feature1 & feature2
 def __featureErrorCheckingForRegression(dataset):
     if len(dataset.columns) == 1:
-        return ("Same features cannot be modeled.\n")
+        return ("Identical features cannot be modeled.")
     f1 = dataset[dataset.columns[0]].values.tolist()
     f2 = dataset[dataset.columns[1]].values.tolist()
     for i in range(0, len(f1)):
         if type(f1[i]) != int and type(f1[i]) != float:
-            return (dataset.columns[0] + " has non-numerical data type.\n")
+            return ("\"" + dataset.columns[0] + "\" has a non-numerical data type.")
     for i in range(0, len(f2)):
         if type(f2[i]) != int and type(f2[i]) != float:
-            return (dataset.columns[1] + " has non-numerical data type.\n")
+            return ("\"" + dataset.columns[1] + "\" has a non-numerical data type.")
     return None
 
 # check whether second feature and threshold compatible
@@ -291,9 +268,9 @@ def __thresholdAndFeatureErrorCheckingForFiltering(f2_name, f2, threshold):
     if type(threshold) == str: # str compatible check
         for i in range(0, len(f2)):
             if type(f2[i]) != str:
-                return ("Threshold " + threshold + " is string, but some of data in " + f2_name + " are not string.\n")
+                return ("Threshold \"" + threshold + "\" is a string, but some of data in \"" + f2_name + "\" are not strings.")
     else: # numeric compatible check
         for i in range(0, len(f2)):
             if type(f2[i]) != int and type(f2[i]) != float:
-                return ("Threshold " + threshold + " is numeric, but some of data in " + f2_name + " are not numeric.\n")
+                return ("Threshold \"" + threshold + "\" is numeric, but some of data in \"" + f2_name + "\" are not numeric.")
     return None
