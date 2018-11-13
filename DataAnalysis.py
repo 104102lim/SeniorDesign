@@ -116,7 +116,7 @@ def filtering(targetFeature, comparisonFeatures, logics, thresholds, operators):
     # filter target feature given comparison features
     for i in range(0, length):
         # check whether threshold and comparison feature are compatible
-        checkError = __thresholdAndFeatureErrorCheckingForFiltering(comparisonFeatures[i], dataset[comparisonFeatures[i]], thresholds[i])
+        checkError = __thresholdAndFeatureErrorCheckingForFiltering(comparisonFeatures[i], dataset[comparisonFeatures[i]], thresholds[i], logics[i])
         if checkError != None: # error cccuring
             return checkError  # output string information
         
@@ -263,14 +263,18 @@ def __featureErrorCheckingForRegression(dataset):
 # check whether second feature and threshold compatible
 # second feature and threshold should have same data type
 # for example, str & str or numeric & numeric
-def __thresholdAndFeatureErrorCheckingForFiltering(f2_name, f2, threshold):
+def __thresholdAndFeatureErrorCheckingForFiltering(f2_name, f2, threshold, logic):
     f2 = f2.values.tolist()
     if type(threshold) == str: # str compatible check
         for i in range(0, len(f2)):
             if type(f2[i]) != str:
                 return ("Threshold \"" + threshold + "\" is a string, but some of data in \"" + f2_name + "\" are not strings.")
+        if (logic != "Contains") and (logic != "Does Not Contain"):
+            return ("\"" + logic + "\" is not applicable to a non-numeric threshold.")
     else: # numeric compatible check
         for i in range(0, len(f2)):
             if type(f2[i]) != int and type(f2[i]) != float:
                 return ("Threshold \"" + threshold + "\" is numeric, but some of data in \"" + f2_name + "\" are not numeric.")
+        if (logic == "Contains") or (logic == "Does Not Contain"):
+            return ("\"" + logic + "\" is not applicable to a numeric threshold.")
     return None
