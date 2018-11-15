@@ -42,7 +42,7 @@ class Init:
                     p = port
             if type(p) is int:
                 cnxn = pyodbc.connect(
-                    "DRIVER={SQL Server}; SERVER=" + server + "," + p + ";" +
+                    "DRIVER={SQL Server}; SERVER=" + server + "," + str(p) + ";" +
                     " DATABASE=" + dbName + "; UID = " + UID + "; PWD = " + PWD)
             elif type(p) is str:
                 cnxn = pyodbc.connect(
