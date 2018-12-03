@@ -406,7 +406,7 @@ class applicationWindow(QtWidgets.QMainWindow):
         database = str(self.dialog.databaseName.text())
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
-        if (True):
+        if (False):
             '''
             machine = "MSI\SQLEXPRESS"
             portLog = ""
