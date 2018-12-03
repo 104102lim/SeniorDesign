@@ -386,12 +386,14 @@ class applicationWindow(QtWidgets.QMainWindow):
                                     "was developed by University of Texas students Paul Heath, " +
                                     "Sungho Lim, Eric Ramos, Xianxing Liu, and Guiseppe Gallardo.\n\nThis " +
                                     "application allows the user to run linear and polynomial regression on " +
-                                    "selected datasets. Linear regression contains the options to compute the Y-intercept, " +
-                                    "R^2, and slope of the selected data. Polynomial regression allows the user the option " +
-                                    "to increase or decrease the order of the analysis equation to obtain the best fit of " +
-                                    "the selected data. Users can filter data by applying constraints to " +
-                                    "datasets for closer inspection. Saving, loading, and exporting files " +
-                                    "is supported for the benefit of the user.")
+                                    "selected datasets. Linear regression contains the options to compute the " +
+                                    "Y-intercept, R^2, and slope of the selected data. Polynomial regression " +
+                                    "allows the user the option to increase or decrease the order of the " +
+                                    "analysis equation to obtain the best fit of the selected data. Users " +
+                                    "can filter data by applying constraints to datasets for closer inspection. " +
+                                    "Assorted file management methods are included for the benefit of the user. " +
+                                    "\n\nThis application uses libraries licensed under the GNU GPL. Consider " +
+                                    "this before any commercial production or distribution.")
 
     def loginPrompt(self):
         if self.dialog is not None:
@@ -406,19 +408,6 @@ class applicationWindow(QtWidgets.QMainWindow):
         database = str(self.dialog.databaseName.text())
         userName = str(self.dialog.username.text())
         passWord = str(self.dialog.password.text())
-        if (False):
-            '''
-            machine = "MSI\SQLEXPRESS"
-            portLog = ""
-            database = "senior_design"
-            userName = "SQLBH"
-            passWord = "mudtable"
-            '''
-            machine = "MYPC"
-            portLog = "SQLEXPRESS"
-            database = "BHBackupRestore"
-            userName = "SQLDummy"
-            passWord = "sqlpass"
         self.dialog.close()
         self.dialog = None
 
